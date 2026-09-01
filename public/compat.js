@@ -96,9 +96,49 @@
     }
   }
 
+  function syncRuntimeOrigin() {
+    try {
+      if (window.location && /^https?:$/.test(window.location.protocol)) {
+        // The legacy GAS frontend hard-coded etosidpalu.com. During migration the
+        // custom domain may still belong to another Vercel project, so always use
+        // the origin that is actually serving this application.
+        window.PUBLIC_SITE_BASE_URL = window.location.origin;
+      }
+    } catch (e) {}
+  }
+
+  function rewriteLegacyPublicationLinks(root) {
+    try {
+      var scope = root && root.querySelectorAll ? root : document;
+      var links = scope.querySelectorAll('a[href^="https://etosidpalu.com/berita/"],a[href^="https://etosidpalu.com/opini/"]');
+      for (var i = 0; i < links.length; i++) {
+        var href = links[i].getAttribute('href') || '';
+        links[i].setAttribute('href', href.replace(/^https:\/\/etosidpalu\.com/i, window.location.origin));
+      }
+    } catch (e) {}
+  }
+
+  function openDirectPublicationRoute() {
+    syncRuntimeOrigin();
+    try {
+      var parts = String(window.location.pathname || '/').split('/').filter(Boolean);
+      if (parts.length < 2 || (parts[0] !== 'berita' && parts[0] !== 'opini')) return;
+      var slug = decodeURIComponent(parts.slice(1).join('/'));
+      var jenis = parts[0] === 'berita' ? 'Berita' : 'Opini';
+      if (!slug || typeof window.loadArticleDetail !== 'function') return;
+      if (window.currentPublication && window.currentPublication.slug === slug) return;
+      window.passedSlug = slug;
+      window.passedJenis = jenis;
+      window.loadArticleDetail(slug, jenis, { replaceUrl: true });
+    } catch (e) {
+      console.error('[Etos route] direct publication gagal:', e);
+    }
+  }
+
   function bootstrapPublicHome() {
     if (window.__etosPublicBootstrapStarted) return;
     window.__etosPublicBootstrapStarted = true;
+    syncRuntimeOrigin();
 
     request('getPublicData', ['program', 0, 100], function (result) {
       var data = parseJson(result, []);
@@ -147,6 +187,7 @@
         window.homePublicationCache = payload.data;
         window.embeddedPublicationsHasMore = !!payload.hasMore;
         callIfAvailable('renderHomePublications');
+        rewriteLegacyPublicationLinks(document);
         callIfAvailable('initRevealObserver');
       }
     }, function (err) {
@@ -154,10 +195,22 @@
     });
   }
 
+  function afterDomReady() {
+    syncRuntimeOrigin();
+    bootstrapPublicHome();
+    // Allow all legacy DOMContentLoaded handlers to finish first. They currently
+    // default to the home view when GAS urlParams are unavailable on Vercel.
+    window.setTimeout(function () {
+      syncRuntimeOrigin();
+      rewriteLegacyPublicationLinks(document);
+      openDirectPublicationRoute();
+    }, 0);
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', bootstrapPublicHome, { once: true });
+    document.addEventListener('DOMContentLoaded', afterDomReady, { once: true });
   } else {
-    window.setTimeout(bootstrapPublicHome, 0);
+    window.setTimeout(afterDomReady, 0);
   }
 
   window.__etosCloseAdminSession = function () {
