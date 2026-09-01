@@ -47,6 +47,7 @@ const PACKED_PARTS = [
   'part-01.txt', 'part-02a.txt', 'part-02b.txt', 'part-03.txt', 'part-04.txt', 'part-05.txt', 'part-06.txt',
 ] as const;
 const COMPAT_VERSION = '20260902-detailfix-2';
+const EDITORIAL_VERSION = '20260902-editorial-1';
 
 let frontendPromise: Promise<string> | null = null;
 
@@ -70,12 +71,16 @@ async function loadFrontendHtml() {
 
 function injectMigrationRuntime(html: string) {
   const cleanup = `<script>(function(){try{if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister().catch(function(){});});}).catch(function(){});}}catch(e){}try{if('caches' in window){caches.keys().then(function(keys){keys.forEach(function(k){caches.delete(k).catch(function(){});});}).catch(function(){});}}catch(e){}})();</script>`;
-  html = html.replace('</head>', `${cleanup}</head>`);
+  const editorialCss = `<link rel="stylesheet" href="/editorial-detail.css?v=${EDITORIAL_VERSION}">`;
+  html = html.replace('</head>', `${cleanup}${editorialCss}</head>`);
 
   const compatTag = `<script src="/compat.js?v=${COMPAT_VERSION}"></script>`;
   const compatPattern = /<script\s+[^>]*src=["']\/compat\.js(?:\?[^"']*)?["'][^>]*><\/script>/i;
   if (compatPattern.test(html)) html = html.replace(compatPattern, compatTag);
   else html = html.replace('</body>', `${compatTag}</body>`);
+
+  const editorialScript = `<script src="/editorial-detail.js?v=${EDITORIAL_VERSION}"></script>`;
+  html = html.replace('</body>', `${editorialScript}</body>`);
   return html;
 }
 
@@ -112,8 +117,29 @@ export async function GET(req: NextRequest, context: { params: Promise<{ path?: 
         path: `/${parts[0]}/${encodeURIComponent(slug)}`,
       };
 
+      const { data: relatedRows } = await db
+        .from(table)
+        .select('*')
+        .neq('slug', slug)
+        .order('published_at', { ascending: false })
+        .limit(6);
+
+      const related = (relatedRows || []).map((row: any) => ({
+        id: row.id,
+        slug: row.slug,
+        jenis,
+        tanggal: displayDate(row.published_at || row.created_at),
+        judul: row.title || '',
+        excerpt: strip(row.content_html).slice(0, 140),
+        thumb: driveImage(row.thumbnail_url || ''),
+        thumbPosition: row.thumbnail_position || '50% 50%',
+        penulis: parts[0] === 'berita' ? 'Admin Etos ID' : (row.author_name || 'Etos ID Palu'),
+        aktivitas: parts[0] === 'berita' ? '' : (row.activity || ''),
+        path: `/${parts[0]}/${encodeURIComponent(String(row.slug || ''))}`,
+      }));
+
       const meta = `\n<meta name="description" content="${esc(desc)}">\n<link rel="canonical" href="${esc(canonical)}">\n<meta property="og:type" content="article">\n<meta property="og:site_name" content="Etos ID Palu">\n<meta property="og:title" content="${esc(title)}">\n<meta property="og:description" content="${esc(desc)}">\n<meta property="og:url" content="${esc(canonical)}">\n${img ? `<meta property="og:image" content="${esc(img)}">` : ''}\n<meta name="twitter:card" content="summary_large_image">\n<meta name="twitter:title" content="${esc(title)}">\n<meta name="twitter:description" content="${esc(desc)}">\n${img ? `<meta name="twitter:image" content="${esc(img)}">` : ''}`;
-      const detailBootstrap = `<script>window.__ETOS_PUBLICATION_DETAIL__=${safeJson(detail)};</script>`;
+      const detailBootstrap = `<script>window.__ETOS_PUBLICATION_DETAIL__=${safeJson(detail)};window.__ETOS_RELATED_PUBLICATIONS__=${safeJson(related)};</script>`;
 
       html = html.replace(
         '<title>Etos ID Palu - Portal Publikasi</title>',
