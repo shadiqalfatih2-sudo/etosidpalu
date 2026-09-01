@@ -92,8 +92,8 @@ export async function POST(req: NextRequest) {
     switch(fn){
       case 'getPublicData': { const type=String(args[0]||''); if(type==='program') result=asJsonString(await activePrograms()); else if(type==='awardee') result=asJsonString(await publicAwardees()); else if(type==='hero') result=asJsonString(await heroSlides()); else if(type==='berita_opini') result=asJsonString(await publications(Number(args[1]||0),Number(args[2]||10))); else result='[]'; break; }
       case 'getDetailBySlug': result=asJsonString(await detail(String(args[0]||''))); break;
-      case 'loginAdmin': { const {data,error}=await db.rpc('open_admin_session',{p_username:String(args[0]||''),p_password:String(args[1]||'')}); if(error) throw error; const row=Array.isArray(data)?data[0]:data; result=asJsonString(row?.ok?{status:'success',role:row.role,token:row.token}:{status:'error',message:row?.message||'Login gagal.'}); break; }
-      case 'logoutAdmin': { if(token) await db.rpc('close_admin_session',{p_token:token}); result=asJsonString({status:'success'}); break; }
+      case 'loginAdmin': { const {data,error}=await db.rpc('etos_open_admin_session',{p_username:String(args[0]||''),p_password:String(args[1]||''),p_client_key:clientKey(req)}); if(error) throw error; result=asJsonString(data||{status:'error',message:'Login gagal.'}); break; }
+      case 'logoutAdmin': { if(token) await db.rpc('etos_close_admin_session',{p_token:token}); result=asJsonString({status:'success'}); break; }
       case 'getAdminData': { const {data,error}=await db.rpc('etos_admin_read',{p_token:token,p_type:String(args[0]||'')}); if(error) throw error; result=asJsonString(data||[]); break; }
       case 'getAdminProgramPhotos': { const {data,error}=await db.rpc('etos_admin_program_media',{p_token:token}); if(error) throw error; result=asJsonString(data); break; }
       case 'saveAwardeeAdmin': { const {data,error}=await db.rpc('etos_admin_mutation',{p_token:token,p_action:'save_awardee',p_data:args[0]||{}}); if(error) throw error; result=asJsonString(data); break; }
