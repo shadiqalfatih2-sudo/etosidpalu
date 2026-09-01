@@ -99,21 +99,63 @@
   function syncRuntimeOrigin() {
     try {
       if (window.location && /^https?:$/.test(window.location.protocol)) {
-        // The legacy GAS frontend hard-coded etosidpalu.com. During migration the
-        // custom domain may still belong to another Vercel project, so always use
-        // the origin that is actually serving this application.
         window.PUBLIC_SITE_BASE_URL = window.location.origin;
       }
     } catch (e) {}
   }
 
+  function publicationPath(jenis, slug) {
+    var segment = String(jenis || '').toLowerCase() === 'berita' ? 'berita' : 'opini';
+    return '/' + segment + '/' + encodeURIComponent(String(slug || '').trim());
+  }
+
+  function installPublicationNavigationFix() {
+    syncRuntimeOrigin();
+
+    window.getPublicationPublicUrl = function (jenis, slug) {
+      return window.location.origin + publicationPath(jenis, slug);
+    };
+
+    window.openPublication = function (event, slug, jenis) {
+      if (event && (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button === 1)) {
+        return true;
+      }
+
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
+      var cleanSlug = String(slug || '').trim();
+      if (!cleanSlug) return false;
+
+      try {
+        if (typeof window.saveDashboardReturnState === 'function') {
+          window.saveDashboardReturnState();
+        }
+      } catch (e) {}
+
+      // Use a real top-level same-origin navigation. The Next.js catch-all route
+      // renders the publication URL directly, so legacy SPA/iframe handlers can
+      // no longer reset the view to the homepage.
+      window.location.assign(publicationPath(jenis, cleanSlug));
+      return false;
+    };
+  }
+
   function rewriteLegacyPublicationLinks(root) {
     try {
       var scope = root && root.querySelectorAll ? root : document;
-      var links = scope.querySelectorAll('a[href^="https://etosidpalu.com/berita/"],a[href^="https://etosidpalu.com/opini/"]');
+      var links = scope.querySelectorAll('a[href*="/berita/"],a[href*="/opini/"]');
       for (var i = 0; i < links.length; i++) {
         var href = links[i].getAttribute('href') || '';
-        links[i].setAttribute('href', href.replace(/^https:\/\/etosidpalu\.com/i, window.location.origin));
+        try {
+          var parsed = new URL(href, window.location.href);
+          if (parsed.pathname.indexOf('/berita/') === 0 || parsed.pathname.indexOf('/opini/') === 0) {
+            links[i].setAttribute('href', window.location.origin + parsed.pathname + parsed.search + parsed.hash);
+            links[i].removeAttribute('target');
+          }
+        } catch (e) {}
       }
     } catch (e) {}
   }
@@ -197,11 +239,11 @@
 
   function afterDomReady() {
     syncRuntimeOrigin();
+    installPublicationNavigationFix();
     bootstrapPublicHome();
-    // Allow all legacy DOMContentLoaded handlers to finish first. They currently
-    // default to the home view when GAS urlParams are unavailable on Vercel.
     window.setTimeout(function () {
       syncRuntimeOrigin();
+      installPublicationNavigationFix();
       rewriteLegacyPublicationLinks(document);
       openDirectPublicationRoute();
     }, 0);
