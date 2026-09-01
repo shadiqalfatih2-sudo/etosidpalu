@@ -47,7 +47,7 @@ const PACKED_PARTS = [
   'part-01.txt', 'part-02a.txt', 'part-02b.txt', 'part-03.txt', 'part-04.txt', 'part-05.txt', 'part-06.txt',
 ] as const;
 const COMPAT_VERSION = '20260902-homefix-1';
-const EDITORIAL_VERSION = '20260902-editorial-1';
+const EDITORIAL_VERSION = '20260902-editorial-wide-2';
 
 let frontendPromise: Promise<string> | null = null;
 
