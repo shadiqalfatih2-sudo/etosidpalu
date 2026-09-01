@@ -1,4 +1,4 @@
-const SOURCE = 'https://raw.githubusercontent.com/shadiqalfatih2-sudo/etosidpalu/bbf116a71c422b5a7c7a5b3726a845dc0357a9a6/public/editorial-detail.css';
+const SOURCE = 'https://raw.githubusercontent.com/shadiqalfatih2-sudo/etosidpalu/d58ba1f233e6bb3c35a3035a8ef9dac5fa28ee99/public/editorial-detail.css';
 
 export const runtime = 'nodejs';
 
