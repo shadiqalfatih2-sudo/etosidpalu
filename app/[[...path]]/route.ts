@@ -43,6 +43,8 @@ export const runtime = 'nodejs';
 
 const FRONTEND_REF = '250c2643563287a4da7c9a2d8c37ae5d1204a2a1';
 const FRONTEND_BASE = `https://raw.githubusercontent.com/shadiqalfatih2-sudo/etosidpalu/${FRONTEND_REF}/public/packed`;
+const ASSET_REF = 'bbf116a71c422b5a7c7a5b3726a845dc0357a9a6';
+const ASSET_BASE = `https://raw.githubusercontent.com/shadiqalfatih2-sudo/etosidpalu/${ASSET_REF}/public`;
 const PACKED_PARTS = [
   'part-01.txt', 'part-02a.txt', 'part-02b.txt', 'part-03.txt', 'part-04.txt', 'part-05.txt', 'part-06.txt',
 ] as const;
@@ -71,22 +73,35 @@ async function loadFrontendHtml() {
 
 function injectMigrationRuntime(html: string) {
   const cleanup = `<script>(function(){try{if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister().catch(function(){});});}).catch(function(){});}}catch(e){}try{if('caches' in window){caches.keys().then(function(keys){keys.forEach(function(k){caches.delete(k).catch(function(){});});}).catch(function(){});}}catch(e){}})();</script>`;
-  const editorialCss = `<link rel="stylesheet" href="/editorial-detail.css?v=${EDITORIAL_VERSION}">`;
+  const editorialCss = `<link rel="stylesheet" href="${ASSET_BASE}/editorial-detail.css?v=${EDITORIAL_VERSION}">`;
   html = html.replace('</head>', `${cleanup}${editorialCss}</head>`);
 
-  const compatTag = `<script src="/compat.js?v=${COMPAT_VERSION}"></script>`;
+  const compatTag = `<script src="${ASSET_BASE}/compat.js?v=${COMPAT_VERSION}"></script>`;
   const compatPattern = /<script\s+[^>]*src=["']\/compat\.js(?:\?[^"']*)?["'][^>]*><\/script>/i;
   if (compatPattern.test(html)) html = html.replace(compatPattern, compatTag);
   else html = html.replace('</body>', `${compatTag}</body>`);
 
-  const editorialScript = `<script src="/editorial-detail.js?v=${EDITORIAL_VERSION}"></script>`;
+  const editorialScript = `<script src="${ASSET_BASE}/editorial-detail.js?v=${EDITORIAL_VERSION}"></script>`;
   html = html.replace('</body>', `${editorialScript}</body>`);
   return html;
 }
 
+const CLEANUP_SW = `self.addEventListener('install',function(){self.skipWaiting();});self.addEventListener('activate',function(e){e.waitUntil((async function(){try{var keys=await caches.keys();await Promise.all(keys.map(function(k){return caches.delete(k);}));}catch(_){}try{await self.registration.unregister();}catch(_){}try{var cs=await self.clients.matchAll({type:'window',includeUncontrolled:true});cs.forEach(function(c){c.navigate(c.url);});}catch(_){}})());});self.addEventListener('fetch',function(){});`;
+
 export async function GET(req: NextRequest, context: { params: Promise<{ path?: string[] }> }) {
   const params = await context.params;
   const parts = params.path || [];
+
+  if (parts.length === 1 && parts[0] === 'sw.js') {
+    return new Response(CLEANUP_SW, {
+      headers: {
+        'Content-Type': 'application/javascript; charset=utf-8',
+        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+        'Service-Worker-Allowed': '/',
+      },
+    });
+  }
+
   let html = injectMigrationRuntime(await loadFrontendHtml());
 
   if (parts.length >= 2 && (parts[0] === 'berita' || parts[0] === 'opini')) {
