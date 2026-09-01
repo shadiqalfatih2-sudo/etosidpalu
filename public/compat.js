@@ -26,7 +26,8 @@
         'Content-Type': 'application/json',
         'X-Etos-Admin-Token': token
       },
-      body: JSON.stringify({ fn: String(prop), args: Array.isArray(args) ? args : [] })
+      body: JSON.stringify({ fn: String(prop), args: Array.isArray(args) ? args : [] }),
+      cache: 'no-store'
     }).then(function (r) {
       return r.json().then(function (body) {
         if (!r.ok) {
@@ -77,7 +78,7 @@
 
   window.google = window.google || {};
   window.google.script = window.google.script || {};
-  Object.defineProperty(window.google.script, 'run', { get: chain });
+  Object.defineProperty(window.google.script, 'run', { configurable: true, get: chain });
 
   function parseJson(value, fallback) {
     try {
@@ -90,10 +91,30 @@
 
   function callIfAvailable(name, args) {
     try {
-      if (typeof window[name] === 'function') window[name].apply(window, Array.isArray(args) ? args : []);
+      if (typeof window[name] === 'function') {
+        return window[name].apply(window, Array.isArray(args) ? args : []);
+      }
     } catch (e) {
-      console.error('[Etos bootstrap] ' + name + ' gagal:', e);
+      console.error('[Etos compat] ' + name + ' gagal:', e);
     }
+  }
+
+  function cleanupLegacyBrowserState() {
+    try {
+      if ('serviceWorker' in navigator && navigator.serviceWorker.getRegistrations) {
+        navigator.serviceWorker.getRegistrations().then(function (regs) {
+          regs.forEach(function (reg) { reg.unregister().catch(function () {}); });
+        }).catch(function () {});
+      }
+    } catch (e) {}
+
+    try {
+      if ('caches' in window && caches.keys) {
+        caches.keys().then(function (keys) {
+          keys.forEach(function (key) { caches.delete(key).catch(function () {}); });
+        }).catch(function () {});
+      }
+    } catch (e) {}
   }
 
   function syncRuntimeOrigin() {
@@ -104,9 +125,18 @@
     } catch (e) {}
   }
 
+  function normalizeJenis(value) {
+    return String(value || '').toLowerCase() === 'berita' ? 'Berita' : 'Opini';
+  }
+
   function publicationPath(jenis, slug) {
-    var segment = String(jenis || '').toLowerCase() === 'berita' ? 'berita' : 'opini';
+    var segment = normalizeJenis(jenis) === 'Berita' ? 'berita' : 'opini';
     return '/' + segment + '/' + encodeURIComponent(String(slug || '').trim());
+  }
+
+  function isPublicationRoute() {
+    var parts = String(window.location.pathname || '/').split('/').filter(Boolean);
+    return parts.length >= 2 && (parts[0] === 'berita' || parts[0] === 'opini');
   }
 
   function installPublicationNavigationFix() {
@@ -120,27 +150,36 @@
       if (event && (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button === 1)) {
         return true;
       }
-
       if (event) {
         event.preventDefault();
         event.stopPropagation();
       }
-
       var cleanSlug = String(slug || '').trim();
       if (!cleanSlug) return false;
-
       try {
-        if (typeof window.saveDashboardReturnState === 'function') {
-          window.saveDashboardReturnState();
-        }
+        if (typeof window.saveDashboardReturnState === 'function') window.saveDashboardReturnState();
       } catch (e) {}
-
-      // Use a real top-level same-origin navigation. The Next.js catch-all route
-      // renders the publication URL directly, so legacy SPA/iframe handlers can
-      // no longer reset the view to the homepage.
       window.location.assign(publicationPath(jenis, cleanSlug));
       return false;
     };
+
+    if (!window.__etosPublicationCaptureInstalled) {
+      window.__etosPublicationCaptureInstalled = true;
+      document.addEventListener('click', function (event) {
+        if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+        var target = event.target;
+        var link = target && target.closest ? target.closest('a[href]') : null;
+        if (!link) return;
+        try {
+          var url = new URL(link.getAttribute('href') || '', window.location.href);
+          if (url.origin !== window.location.origin) return;
+          if (url.pathname.indexOf('/berita/') !== 0 && url.pathname.indexOf('/opini/') !== 0) return;
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          window.location.assign(url.pathname + url.search + url.hash);
+        } catch (e) {}
+      }, true);
+    }
   }
 
   function rewriteLegacyPublicationLinks(root) {
@@ -160,6 +199,112 @@
     } catch (e) {}
   }
 
+  function setHidden(id, hidden) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (hidden) el.classList.add('hidden');
+    else el.classList.remove('hidden');
+  }
+
+  function showDetailError(message) {
+    setHidden('read-loader', true);
+    var content = document.getElementById('read-content');
+    if (!content) return;
+    content.innerHTML = '<p class="text-center text-amber-700 font-bold py-10"></p>';
+    var p = content.querySelector('p');
+    if (p) p.textContent = message || 'Tulisan belum dapat dimuat. Silakan coba lagi.';
+    content.classList.remove('hidden');
+  }
+
+  function renderPublicationDetail(data, cleanSlug, requestedJenis) {
+    if (!data) {
+      showDetailError('Konten tidak ditemukan atau belum diterbitkan.');
+      return;
+    }
+
+    try { callIfAvailable('navigate', ['article-detail']); } catch (e) {}
+    setHidden('read-loader', true);
+
+    data.slug = data.slug || cleanSlug;
+    data.jenis = normalizeJenis(data.jenis || requestedJenis);
+    data.url = data.url || (window.location.origin + publicationPath(data.jenis, cleanSlug));
+    window.currentPublication = data;
+    window.passedSlug = cleanSlug;
+    window.passedJenis = data.jenis;
+
+    var pageTitle = (data.judul || 'Publikasi') + ' | Etos ID Palu';
+    document.title = pageTitle;
+    try {
+      if (typeof window.syncPublicRoute === 'function') {
+        window.syncPublicRoute(publicationPath(data.jenis, cleanSlug), pageTitle, true);
+      }
+    } catch (e) {}
+
+    var badge = document.getElementById('read-badge');
+    var title = document.getElementById('read-title');
+    var author = document.getElementById('read-author');
+    var date = document.getElementById('read-date');
+    var image = document.getElementById('read-img');
+    var body = document.getElementById('read-body');
+    var content = document.getElementById('read-content');
+
+    if (badge) badge.innerText = data.jenis;
+    if (title) title.innerText = data.judul || '';
+    if (author) {
+      var authorText = data.penulis || 'Etos ID Palu';
+      if (data.aktivitas) authorText += ' (' + data.aktivitas + ')';
+      author.innerText = authorText;
+    }
+    if (date) date.innerText = data.tanggal || '';
+    if (image) {
+      image.src = data.thumb || '';
+      image.alt = data.judul || 'Thumbnail publikasi Etos ID Palu';
+      image.style.objectPosition = data.thumbPosition || '50% 50%';
+      if (data.thumb) image.classList.remove('hidden');
+      else image.classList.add('hidden');
+    }
+    if (body) {
+      try {
+        body.innerHTML = typeof window.renderArticleContent === 'function'
+          ? window.renderArticleContent(data.isi || '')
+          : String(data.isi || '');
+      } catch (e) {
+        body.textContent = String(data.isi || '');
+      }
+    }
+    if (content) content.classList.remove('hidden');
+    setHidden('read-loader', true);
+  }
+
+  function directLoadArticleDetail(slug, jenis, options) {
+    options = options || {};
+    var cleanSlug = String(slug || '').trim();
+    if (!cleanSlug) return;
+    var cleanJenis = normalizeJenis(jenis || window.passedJenis || 'Opini');
+
+    callIfAvailable('navigate', ['article-detail']);
+    setHidden('read-content', true);
+    setHidden('read-loader', false);
+
+    var embedded = window.__ETOS_PUBLICATION_DETAIL__;
+    if (embedded && String(embedded.slug || '') === cleanSlug) {
+      renderPublicationDetail(embedded, cleanSlug, cleanJenis);
+      return;
+    }
+
+    request('getDetailBySlug', [cleanSlug], function (resStr) {
+      var data = parseJson(resStr, null);
+      renderPublicationDetail(data, cleanSlug, cleanJenis);
+    }, function (err) {
+      console.error('[Etos detail] gagal:', err);
+      showDetailError('Tulisan belum dapat dimuat. Silakan coba lagi.');
+    });
+  }
+
+  function installDirectPublicationLoader() {
+    window.loadArticleDetail = directLoadArticleDetail;
+  }
+
   function openDirectPublicationRoute() {
     syncRuntimeOrigin();
     try {
@@ -167,20 +312,19 @@
       if (parts.length < 2 || (parts[0] !== 'berita' && parts[0] !== 'opini')) return;
       var slug = decodeURIComponent(parts.slice(1).join('/'));
       var jenis = parts[0] === 'berita' ? 'Berita' : 'Opini';
-      if (!slug || typeof window.loadArticleDetail !== 'function') return;
-      if (window.currentPublication && window.currentPublication.slug === slug) return;
+      if (!slug) return;
       window.passedSlug = slug;
       window.passedJenis = jenis;
-      window.loadArticleDetail(slug, jenis, { replaceUrl: true });
+      directLoadArticleDetail(slug, jenis, { replaceUrl: true });
     } catch (e) {
       console.error('[Etos route] direct publication gagal:', e);
+      showDetailError('Tulisan belum dapat dimuat. Silakan coba lagi.');
     }
   }
 
   function bootstrapPublicHome() {
     if (window.__etosPublicBootstrapStarted) return;
     window.__etosPublicBootstrapStarted = true;
-    syncRuntimeOrigin();
 
     request('getPublicData', ['program', 0, 100], function (result) {
       var data = parseJson(result, []);
@@ -238,15 +382,17 @@
   }
 
   function afterDomReady() {
+    cleanupLegacyBrowserState();
     syncRuntimeOrigin();
     installPublicationNavigationFix();
-    bootstrapPublicHome();
-    window.setTimeout(function () {
-      syncRuntimeOrigin();
-      installPublicationNavigationFix();
-      rewriteLegacyPublicationLinks(document);
+    installDirectPublicationLoader();
+    rewriteLegacyPublicationLinks(document);
+
+    if (isPublicationRoute()) {
       openDirectPublicationRoute();
-    }, 0);
+    } else {
+      bootstrapPublicHome();
+    }
   }
 
   if (document.readyState === 'loading') {
