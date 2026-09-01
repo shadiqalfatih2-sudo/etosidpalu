@@ -8,10 +8,22 @@ function esc(value: unknown) { return String(value ?? '').replace(/[&<>"']/g, c 
 function strip(value: unknown) { return String(value||'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim(); }
 function driveImage(url:string){ const m=String(url||'').match(/(?:\/d\/|[?&]id=)([a-zA-Z0-9_-]{10,})/); return m?.[1]?`https://lh3.googleusercontent.com/d/${m[1]}=w2000`:url; }
 
+export const runtime = 'nodejs';
+
+const PACKED_PARTS = [
+  'part-01.txt','part-02a.txt','part-02b.txt','part-03.txt','part-04.txt','part-05.txt','part-06.txt',
+] as const;
+
+async function loadFrontendHtml() {
+  const chunks = await Promise.all(PACKED_PARTS.map((name) =>
+    readFile(path.join(process.cwd(), 'public', 'packed', name), 'utf8')
+  ));
+  return gunzipSync(Buffer.from(chunks.join(''), 'base64')).toString('utf8');
+}
+
 export async function GET(req: NextRequest, context: { params: Promise<{ path?: string[] }> }) {
   const params=await context.params; const parts=params.path||[];
-  const packed=await readFile(path.join(process.cwd(),'public','index.html.gz.b64'),'utf8');
-  let html=gunzipSync(Buffer.from(packed,'base64')).toString('utf8');
+  let html=await loadFrontendHtml();
   if(parts.length>=2 && (parts[0]==='berita'||parts[0]==='opini')) {
     const slug=decodeURIComponent(parts.slice(1).join('/')); const db=supabaseServer();
     const table=parts[0]==='berita'?'news':'articles'; const {data}=await db.from(table).select('*').eq('slug',slug).maybeSingle();
