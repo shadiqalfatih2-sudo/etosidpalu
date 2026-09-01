@@ -88,9 +88,9 @@
     }
   }
 
-  function callIfAvailable(name) {
+  function callIfAvailable(name, args) {
     try {
-      if (typeof window[name] === 'function') window[name]();
+      if (typeof window[name] === 'function') window[name].apply(window, Array.isArray(args) ? args : []);
     } catch (e) {
       console.error('[Etos bootstrap] ' + name + ' gagal:', e);
     }
@@ -106,11 +106,9 @@
       window.programCache = data;
       window.programsReady = true;
       window.programsLoading = false;
-      callIfAvailable('storeProgramCache');
+      callIfAvailable('storeProgramCache', [data]);
       callIfAvailable('renderHomePrograms');
-      try {
-        if (window.currentView === 'programs') callIfAvailable('renderPrograms');
-      } catch (e) {}
+      if (window.currentView === 'programs') callIfAvailable('renderPrograms', [data]);
       callIfAvailable('initRevealObserver');
     }, function (err) {
       window.programsLoading = false;
