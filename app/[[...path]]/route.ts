@@ -1,5 +1,3 @@
-import { readFile } from 'node:fs/promises';
-import path from 'node:path';
 import { gunzipSync } from 'node:zlib';
 import { NextRequest } from 'next/server';
 import { supabaseServer } from '@/lib/supabase';
@@ -10,15 +8,30 @@ function driveImage(url:string){ const m=String(url||'').match(/(?:\/d\/|[?&]id=
 
 export const runtime = 'nodejs';
 
+const FRONTEND_REF = '250c2643563287a4da7c9a2d8c37ae5d1204a2a1';
+const FRONTEND_BASE = `https://raw.githubusercontent.com/shadiqalfatih2-sudo/etosidpalu/${FRONTEND_REF}/public/packed`;
 const PACKED_PARTS = [
   'part-01.txt','part-02a.txt','part-02b.txt','part-03.txt','part-04.txt','part-05.txt','part-06.txt',
 ] as const;
 
+let frontendPromise: Promise<string> | null = null;
+
+async function fetchPackedPart(name: string) {
+  const response = await fetch(`${FRONTEND_BASE}/${name}`, { cache: 'force-cache' });
+  if (!response.ok) throw new Error(`Frontend bundle ${name} gagal dimuat (${response.status}).`);
+  return response.text();
+}
+
 async function loadFrontendHtml() {
-  const chunks = await Promise.all(PACKED_PARTS.map((name) =>
-    readFile(path.join(process.cwd(), 'public', 'packed', name), 'utf8')
-  ));
-  return gunzipSync(Buffer.from(chunks.join(''), 'base64')).toString('utf8');
+  if (!frontendPromise) {
+    frontendPromise = Promise.all(PACKED_PARTS.map(fetchPackedPart)).then((chunks) =>
+      gunzipSync(Buffer.from(chunks.join('').replace(/\s+/g, ''), 'base64')).toString('utf8')
+    ).catch((error) => {
+      frontendPromise = null;
+      throw error;
+    });
+  }
+  return frontendPromise;
 }
 
 export async function GET(req: NextRequest, context: { params: Promise<{ path?: string[] }> }) {
