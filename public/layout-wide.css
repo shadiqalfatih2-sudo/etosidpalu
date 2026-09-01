@@ -1,0 +1,171 @@
+/* ETOS ID Palu — wide desktop composition
+   Keeps the existing visual language while using large screens more effectively. */
+
+@media (min-width: 1121px) {
+  :root {
+    --etos-wide-frame: min(2200px, calc(100vw - clamp(2rem, 4vw, 4.5rem)));
+    --etos-wide-reading: min(980px, calc(100vw - 4rem));
+  }
+
+  /* Main horizontal rhythm: almost full-width, still with a deliberate safe edge. */
+  .site-nav-inner,
+  .section-frame,
+  .footer-frame,
+  .ecosystem-strip,
+  .ethos-statement-frame,
+  .hero-slide-content {
+    width: var(--etos-wide-frame) !important;
+    max-width: none !important;
+  }
+
+  #site-main > .app-view:not(#view-home) {
+    width: min(1800px, calc(100vw - clamp(2rem, 4vw, 4.5rem))) !important;
+    max-width: none !important;
+  }
+
+  /* Reading pages stay comfortable even though the rest of the site is wide. */
+  #view-article-detail {
+    width: var(--etos-wide-reading) !important;
+    max-width: 980px !important;
+  }
+
+  /* Navigation uses the extra width instead of clustering at the center. */
+  .site-nav-inner {
+    grid-template-columns: minmax(270px, 1fr) auto minmax(270px, 1fr) !important;
+    gap: clamp(2rem, 3vw, 4.5rem) !important;
+  }
+
+  .site-nav-links {
+    gap: clamp(1.8rem, 2.4vw, 3.25rem) !important;
+  }
+
+  /* Section titles can breathe horizontally and no longer form a narrow text block. */
+  .section-header-row {
+    width: 100% !important;
+    align-items: flex-end !important;
+    justify-content: space-between !important;
+    gap: clamp(3rem, 6vw, 8rem) !important;
+  }
+
+  .section-header-row > div:first-child {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+
+  .section-header-row h2,
+  .about-heading h2,
+  .values-heading h2 {
+    max-width: min(1320px, 78vw) !important;
+    font-size: clamp(3rem, 4.4vw, 5.35rem) !important;
+    line-height: .96 !important;
+  }
+
+  .values-heading {
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    text-align: left !important;
+  }
+
+  .values-heading .section-kicker {
+    justify-content: flex-start !important;
+  }
+
+  .values-intro {
+    max-width: 1180px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Partner block expands as a true horizontal feature instead of a centered card. */
+  .partner-card {
+    grid-template-columns: minmax(170px, .28fr) minmax(0, 1.5fr) minmax(180px, auto) !important;
+    gap: clamp(2rem, 4vw, 5.5rem) !important;
+  }
+
+  /* Program area uses the screen width; left copy is substantial but never dominates. */
+  .program-preview-section .section-frame {
+    grid-template-columns: minmax(320px, .46fr) minmax(0, 1.54fr) !important;
+    gap: clamp(3rem, 5vw, 7rem) !important;
+  }
+
+  .program-preview-section .section-header-row h2 {
+    max-width: 620px !important;
+  }
+
+  .home-program-grid {
+    gap: clamp(1rem, 1.35vw, 1.6rem) !important;
+  }
+
+  /* Awardee cards use the available width rather than sitting in a narrow island. */
+  .awardee-preview-grid,
+  .awardee-public-grid {
+    width: 100% !important;
+    gap: clamp(1rem, 1.4vw, 1.6rem) !important;
+  }
+
+  .awardee-preview-grid .awardee-photo-wrap {
+    min-height: 0 !important;
+  }
+
+  /* Publications spread naturally across the screen. */
+  .publication-columns {
+    grid-template-columns: minmax(360px, .72fr) minmax(0, 1.28fr) !important;
+    gap: clamp(3rem, 5vw, 7rem) !important;
+  }
+
+  .publication-columns.is-news-only .news-column {
+    grid-template-columns: minmax(220px, .2fr) minmax(0, 1fr) !important;
+    gap: clamp(2.5rem, 4vw, 5rem) !important;
+  }
+
+  /* Social CTA should feel like a wide closing statement. */
+  .social-section .section-frame {
+    width: var(--etos-wide-frame) !important;
+  }
+
+  .instagram-banner {
+    padding-left: clamp(3rem, 5vw, 6rem) !important;
+    padding-right: clamp(3rem, 5vw, 6rem) !important;
+  }
+
+  /* Secondary public pages get the same wide framing. */
+  .program-hero,
+  .program-about,
+  .program-detail-shell,
+  .awardee-page-hero,
+  .awardee-toolbar,
+  .awardee-public-grid,
+  #view-articles > div:first-child,
+  #article-list {
+    width: 100% !important;
+  }
+}
+
+@media (min-width: 1600px) {
+  /* On very wide displays, keep copy readable while letting cards occupy the space. */
+  .section-header-row h2,
+  .values-heading h2 {
+    max-width: 1450px !important;
+  }
+
+  .awardee-preview-grid,
+  .awardee-public-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+
+  .home-program-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (min-width: 2100px) {
+  .awardee-preview-grid,
+  .awardee-public-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  }
+
+  .home-program-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+}
