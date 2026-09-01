@@ -7,7 +7,10 @@
   }
 
   function endpointFor(prop) {
-    return String(prop) === 'loginAdmin' ? '/api/admin/login' : '/api/rpc';
+    prop = String(prop);
+    if (prop === 'loginAdmin') return '/api/admin/login';
+    if (prop === 'uploadImageToDrive') return '/api/upload';
+    return '/api/rpc';
   }
 
   function chain() {
@@ -33,7 +36,7 @@
             return r.json().then(function (body) {
               if (!r.ok) {
                 if (r.status === 401 || r.status === 403) clearAdminToken();
-                throw new Error(body.error || 'Request gagal');
+                throw new Error(body.error || body.message || 'Request gagal');
               }
               return body;
             });
