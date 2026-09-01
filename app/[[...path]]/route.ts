@@ -43,12 +43,10 @@ export const runtime = 'nodejs';
 
 const FRONTEND_REF = '250c2643563287a4da7c9a2d8c37ae5d1204a2a1';
 const FRONTEND_BASE = `https://raw.githubusercontent.com/shadiqalfatih2-sudo/etosidpalu/${FRONTEND_REF}/public/packed`;
-const ASSET_REF = 'bbf116a71c422b5a7c7a5b3726a845dc0357a9a6';
-const ASSET_BASE = `https://raw.githubusercontent.com/shadiqalfatih2-sudo/etosidpalu/${ASSET_REF}/public`;
 const PACKED_PARTS = [
   'part-01.txt', 'part-02a.txt', 'part-02b.txt', 'part-03.txt', 'part-04.txt', 'part-05.txt', 'part-06.txt',
 ] as const;
-const COMPAT_VERSION = '20260902-detailfix-2';
+const COMPAT_VERSION = '20260902-homefix-1';
 const EDITORIAL_VERSION = '20260902-editorial-1';
 
 let frontendPromise: Promise<string> | null = null;
@@ -73,15 +71,15 @@ async function loadFrontendHtml() {
 
 function injectMigrationRuntime(html: string) {
   const cleanup = `<script>(function(){try{if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister().catch(function(){});});}).catch(function(){});}}catch(e){}try{if('caches' in window){caches.keys().then(function(keys){keys.forEach(function(k){caches.delete(k).catch(function(){});});}).catch(function(){});}}catch(e){}})();</script>`;
-  const editorialCss = `<link rel="stylesheet" href="${ASSET_BASE}/editorial-detail.css?v=${EDITORIAL_VERSION}">`;
+  const editorialCss = `<link rel="stylesheet" href="/editorial-detail.css?v=${EDITORIAL_VERSION}">`;
   html = html.replace('</head>', `${cleanup}${editorialCss}</head>`);
 
-  const compatTag = `<script src="${ASSET_BASE}/compat.js?v=${COMPAT_VERSION}"></script>`;
-  const compatPattern = /<script\s+[^>]*src=["']\/compat\.js(?:\?[^"']*)?["'][^>]*><\/script>/i;
+  const compatTag = `<script src="/compat.js?v=${COMPAT_VERSION}"></script>`;
+  const compatPattern = /<script\s+[^>]*src=["'](?:https?:\/\/[^"']+)?\/compat\.js(?:\?[^"']*)?["'][^>]*><\/script>/i;
   if (compatPattern.test(html)) html = html.replace(compatPattern, compatTag);
   else html = html.replace('</body>', `${compatTag}</body>`);
 
-  const editorialScript = `<script src="${ASSET_BASE}/editorial-detail.js?v=${EDITORIAL_VERSION}"></script>`;
+  const editorialScript = `<script src="/editorial-detail.js?v=${EDITORIAL_VERSION}"></script>`;
   html = html.replace('</body>', `${editorialScript}</body>`);
   return html;
 }
