@@ -2,8 +2,17 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
 export const metadata: Metadata = {
-  title: 'Etos ID Palu',
-  description: 'Portal resmi Etos ID Palu',
+  metadataBase: new URL('https://www.etosidpalu.com'),
+  applicationName: 'Etos ID Palu',
+  title: {
+    default: 'Etos ID Palu | We Are Resilient Leader',
+    template: '%s',
+  },
+  description: 'Portal resmi Etos ID Palu.',
+  authors: [{ name: 'Etos ID Palu' }],
+  creator: 'Etos ID Palu',
+  publisher: 'Etos ID Palu',
+  formatDetection: { telephone: false, email: false, address: false },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
