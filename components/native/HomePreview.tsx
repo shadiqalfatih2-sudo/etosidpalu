@@ -115,7 +115,7 @@ function Programs({ programs }: { programs: NativeProgram[] }) {
             key={program.id}
           >
             <div className={`${styles.programImage} etos-home-program-image etos-program-editorial-media`}>
-              {program.preview ? <img src={program.preview} alt={program.name} /> : null}
+              {program.preview ? <img src={program.preview} alt={program.name} loading="lazy" decoding="async" fetchPriority="low" /> : null}
               <div className="etos-program-media-wash" />
               <div className={`${styles.programIndex} etos-program-index-v3`}>{String(index + 1).padStart(2, '0')}</div>
             </div>
@@ -148,7 +148,7 @@ function Awardees({ awardees }: { awardees: NativeAwardee[] }) {
         {awardees.slice(0, 5).map((awardee) => (
           <Link className={`${styles.awardeeCard} etos-home-awardee-card`} href={`/awardee/${encodeURIComponent(awardee.id)}`} key={awardee.id}>
             <div className={`${styles.imageWrap} etos-home-awardee-image`}>
-              {awardee.photo ? <img src={awardee.photo} alt={awardee.name} style={{ objectPosition: awardee.photoPosition }} /> : null}
+              {awardee.photo ? <img src={awardee.photo} alt={awardee.name} style={{ objectPosition: awardee.photoPosition }} loading="lazy" decoding="async" fetchPriority="low" /> : null}
             </div>
             <div className={styles.cardBody}>
               <small>{awardee.cohort ? `Angkatan ${awardee.cohort}` : 'Awardee Etos ID'}</small>
@@ -179,7 +179,7 @@ function Publications({ publications }: { publications: NativePublication[] }) {
       {lead ? (
         <div className={`${styles.publicationLayout} etos-home-publication-layout`}>
           <Link className={`${styles.leadPublication} etos-lead-publication`} href={publicationHref(lead)}>
-            <div className={`${styles.leadImage} etos-lead-publication-image`}>{lead.thumbnail ? <img src={lead.thumbnail} alt="" /> : null}</div>
+            <div className={`${styles.leadImage} etos-lead-publication-image`}>{lead.thumbnail ? <img src={lead.thumbnail} alt="" loading="lazy" decoding="async" fetchPriority="low" /> : null}</div>
             <div className={`${styles.leadBody} etos-lead-publication-copy`}>
               <div className={styles.meta}>{lead.kind} <span>•</span> {formatDate(lead.publishedAt)}</div>
               <h3>{lead.title}</h3>
@@ -195,7 +195,7 @@ function Publications({ publications }: { publications: NativePublication[] }) {
                   <small>{item.kind} • {formatDate(item.publishedAt)}</small>
                   <h3>{item.title}</h3>
                 </div>
-                <div className={`${styles.publicationRowImage} etos-publication-row-image`}>{item.thumbnail ? <img src={item.thumbnail} alt="" /> : null}</div>
+                <div className={`${styles.publicationRowImage} etos-publication-row-image`}>{item.thumbnail ? <img src={item.thumbnail} alt="" loading="lazy" decoding="async" fetchPriority="low" /> : null}</div>
               </Link>
             ))}
           </div>
