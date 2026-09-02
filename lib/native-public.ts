@@ -40,6 +40,13 @@ export type NativePublication = {
   publishedAt: string;
 };
 
+export type NativePublicationDetail = NativePublication & {
+  author: string;
+  activity: string;
+  contentHtml: string;
+  thumbnailPosition: string;
+};
+
 export type NativeHomeStats = {
   awardees: number;
   programs: number;
@@ -80,6 +87,48 @@ export function mediaUrl(value: unknown) {
 
 function publicationDate(row: Record<string, unknown>) {
   return String(row.published_at || row.created_at || '');
+}
+
+function mapNews(row: Record<string, any>, full = false): NativePublication | NativePublicationDetail {
+  const excerpt = stripHtml(row.content_html).slice(0, 180);
+  const base: NativePublication = {
+    id: String(row.id),
+    kind: 'Berita',
+    title: String(row.title || ''),
+    slug: String(row.slug || ''),
+    excerpt,
+    thumbnail: mediaUrl(row.thumbnail_url),
+    publishedAt: publicationDate(row),
+  };
+  if (!full) return base;
+  return {
+    ...base,
+    author: 'Admin Etos ID',
+    activity: '',
+    contentHtml: String(row.content_html || ''),
+    thumbnailPosition: String(row.thumbnail_position || '50% 50%'),
+  };
+}
+
+function mapArticle(row: Record<string, any>, full = false): NativePublication | NativePublicationDetail {
+  const excerpt = stripHtml(row.content_html).slice(0, 180);
+  const base: NativePublication = {
+    id: String(row.id),
+    kind: 'Opini',
+    title: String(row.title || ''),
+    slug: String(row.slug || ''),
+    excerpt,
+    thumbnail: mediaUrl(row.thumbnail_url),
+    publishedAt: publicationDate(row),
+  };
+  if (!full) return base;
+  return {
+    ...base,
+    author: String(row.author_name || 'Etos ID Palu'),
+    activity: String(row.activity || ''),
+    contentHtml: String(row.content_html || ''),
+    thumbnailPosition: String(row.thumbnail_position || '50% 50%'),
+  };
 }
 
 export async function getNativeHomeData() {
@@ -141,26 +190,8 @@ export async function getNativeHomeData() {
     }));
 
   const publications: NativePublication[] = [
-    ...(newsRows || [])
-      .filter((row) => active(row.status))
-      .map((row) => ({
-        id: String(row.id),
-        kind: 'Berita' as const,
-        title: String(row.title || ''),
-        slug: String(row.slug || ''),
-        excerpt: stripHtml(row.content_html).slice(0, 180),
-        thumbnail: mediaUrl(row.thumbnail_url),
-        publishedAt: publicationDate(row),
-      })),
-    ...(articleRows || []).map((row) => ({
-      id: String(row.id),
-      kind: 'Opini' as const,
-      title: String(row.title || ''),
-      slug: String(row.slug || ''),
-      excerpt: stripHtml(row.content_html).slice(0, 180),
-      thumbnail: mediaUrl(row.thumbnail_url),
-      publishedAt: publicationDate(row),
-    })),
+    ...(newsRows || []).filter((row) => active(row.status)).map((row) => mapNews(row, false) as NativePublication),
+    ...(articleRows || []).map((row) => mapArticle(row, false) as NativePublication),
   ].sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
 
   const stats: NativeHomeStats = {
@@ -176,4 +207,32 @@ export async function getNativeHomeData() {
     publications: publications.slice(0, 6),
     stats,
   };
+}
+
+export async function getNativePublicationDetail(kindParam: string, slug: string) {
+  const kind = String(kindParam || '').toLowerCase();
+  if (kind !== 'berita' && kind !== 'opini') return null;
+
+  const db = supabaseServer();
+  const table = kind === 'berita' ? 'news' : 'articles';
+  const { data: row, error } = await db.from(table).select('*').eq('slug', slug).maybeSingle();
+  if (error) throw error;
+  if (!row) return null;
+
+  if (kind === 'berita' && !active(row.status)) return null;
+  if (kind === 'opini' && String(row.status || '').toLowerCase() !== 'approved') return null;
+
+  const detail = (kind === 'berita' ? mapNews(row, true) : mapArticle(row, true)) as NativePublicationDetail;
+
+  let relatedQuery = db.from(table).select('*').neq('slug', slug).order('published_at', { ascending: false }).limit(8);
+  if (kind === 'opini') relatedQuery = relatedQuery.eq('status', 'Approved');
+  const { data: relatedRows, error: relatedError } = await relatedQuery;
+  if (relatedError) throw relatedError;
+
+  const related = (relatedRows || [])
+    .filter((item) => kind === 'opini' || active(item.status))
+    .slice(0, 5)
+    .map((item) => (kind === 'berita' ? mapNews(item, false) : mapArticle(item, false)) as NativePublication);
+
+  return { detail, related };
 }
