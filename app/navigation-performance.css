@@ -27,16 +27,16 @@
   100%{transform:translateX(270%) scaleX(.72)}
 }
 
-/* The page enters gently after the server payload is ready. */
+/* Fade only: avoids creating a transformed containing block around the sticky header. */
 .native-home,
 .native-directory,
 .native-publication-detail,
 .native-submit-form{
-  animation:etos-route-enter .28s cubic-bezier(.22,.72,.26,1) both;
+  animation:etos-route-enter .24s ease-out both;
 }
 @keyframes etos-route-enter{
-  from{opacity:.78;transform:translateY(5px)}
-  to{opacity:1;transform:translateY(0)}
+  from{opacity:.76}
+  to{opacity:1}
 }
 
 /* Prefetchable loading shells for dynamic public routes. */
