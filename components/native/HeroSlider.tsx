@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import type { NativeHero, NativeHomeStats } from '@/lib/native-public';
 import styles from './HomePreview.module.css';
 
-export function HeroSlider({ heroes, stats }: { heroes: NativeHero[]; stats: NativeHomeStats }) {
+export function HeroSlider({ heroes }: { heroes: NativeHero[]; stats: NativeHomeStats }) {
   const slides = useMemo(() => heroes.filter((item) => item.photo), [heroes]);
   const [active, setActive] = useState(0);
   const leadTitle = slides[0]?.subtitle || 'Membentuk Nalar Kritis, Menempa Etos Peradaban.';
@@ -23,62 +23,67 @@ export function HeroSlider({ heroes, stats }: { heroes: NativeHero[]; stats: Nat
         .etos-hero-profile-strip{
           display:grid;
           grid-template-columns:repeat(3,minmax(0,1fr));
-          margin:14px 0 22px;
-          border:1px solid #e0e8e2;
-          border-radius:17px;
-          overflow:hidden;
-          background:#fff;
-          box-shadow:0 10px 34px rgba(24,73,54,.045);
+          gap:12px;
+          width:min(1180px,94%);
+          margin:18px auto 30px;
         }
         .etos-hero-profile-item{
           min-width:0;
           display:grid;
           grid-template-columns:auto minmax(0,1fr);
-          gap:14px;
+          gap:12px;
           align-items:start;
-          padding:18px 20px 19px;
+          padding:14px 16px 15px;
+          border:1px solid #e1e8e3;
+          border-radius:14px;
+          background:#fff;
+          box-shadow:0 8px 26px rgba(24,73,54,.035);
         }
-        .etos-hero-profile-item + .etos-hero-profile-item{border-left:1px solid #e5ebe7}
         .etos-hero-profile-index{
-          width:31px;
-          height:31px;
+          width:27px;
+          height:27px;
           border-radius:50%;
           display:grid;
           place-items:center;
-          background:#edf5f0;
+          background:#eef5f1;
           color:#1f6b50;
-          font:900 9px/1 Inter,ui-sans-serif,system-ui,sans-serif;
+          font:900 8px/1 Inter,ui-sans-serif,system-ui,sans-serif;
           letter-spacing:.04em;
         }
         .etos-hero-profile-meta{
-          margin:0 0 5px;
+          margin:1px 0 4px;
           color:#2d7d5e;
-          font-size:9px;
+          font-size:8px;
           font-weight:900;
-          letter-spacing:.12em;
+          letter-spacing:.13em;
           text-transform:uppercase;
         }
         .etos-hero-profile-item strong{
           display:block;
           color:#17372b;
           font-family:Georgia,'Times New Roman',serif;
-          font-size:20px;
+          font-size:18px;
           line-height:1.12;
           font-weight:600;
-          letter-spacing:-.02em;
+          letter-spacing:-.018em;
         }
         .etos-hero-profile-item p{
-          margin:6px 0 0;
+          margin:5px 0 0;
+          max-width:31rem;
           color:#6a776f;
-          font-size:12px;
-          line-height:1.55;
+          font-size:11px;
+          line-height:1.5;
         }
         @media(max-width:820px){
-          .etos-hero-profile-strip{grid-template-columns:1fr;margin:12px 0 18px}
-          .etos-hero-profile-item{padding:14px 15px;gap:12px}
-          .etos-hero-profile-item + .etos-hero-profile-item{border-left:0;border-top:1px solid #e5ebe7}
-          .etos-hero-profile-item strong{font-size:18px}
-          .etos-hero-profile-item p{font-size:11px}
+          .etos-hero-profile-strip{
+            grid-template-columns:1fr;
+            gap:9px;
+            width:calc(100% - 12px);
+            margin:14px auto 24px;
+          }
+          .etos-hero-profile-item{padding:12px 13px 13px;gap:11px}
+          .etos-hero-profile-item strong{font-size:17px}
+          .etos-hero-profile-item p{font-size:10.5px;line-height:1.48}
         }
       `}</style>
 
@@ -109,29 +114,29 @@ export function HeroSlider({ heroes, stats }: { heroes: NativeHero[]; stats: Nat
         </div>
       </div>
 
-      <div className="etos-hero-profile-strip" aria-label="Profil singkat Etos ID Palu">
+      <div className="etos-hero-profile-strip" aria-label="Profil Program Etos ID">
         <article className="etos-hero-profile-item">
           <span className="etos-hero-profile-index">01</span>
           <div>
-            <div className="etos-hero-profile-meta">{stats.awardees} Awardee</div>
-            <strong>Komunitas Pembelajar</strong>
-            <p>Mahasiswa bertumbuh bersama melalui pembinaan karakter, spiritualitas, dan kepemimpinan.</p>
+            <div className="etos-hero-profile-meta">Profil Etos ID</div>
+            <strong>Integritas</strong>
+            <p>Berpikir, berkata, berperilaku, dan bertindak dengan baik dan benar; teguh pada kode etik dan prinsip moral.</p>
           </div>
         </article>
         <article className="etos-hero-profile-item">
           <span className="etos-hero-profile-index">02</span>
           <div>
-            <div className="etos-hero-profile-meta">{stats.programs} Program</div>
-            <strong>Pembinaan Terstruktur</strong>
-            <p>Program dirancang saling terhubung untuk membangun kapasitas, resiliensi, dan kolaborasi.</p>
+            <div className="etos-hero-profile-meta">Profil Etos ID</div>
+            <strong>Profesional</strong>
+            <p>Bekerja tuntas dan akurat dengan kompetensi terbaik, penuh tanggung jawab, dan komitmen tinggi.</p>
           </div>
         </article>
         <article className="etos-hero-profile-item">
           <span className="etos-hero-profile-index">03</span>
           <div>
-            <div className="etos-hero-profile-meta">{stats.publications} Publikasi</div>
-            <strong>Gagasan &amp; Dampak</strong>
-            <p>Cerita, pengalaman, dan kontribusi awardee diolah menjadi pengetahuan yang dapat dibagikan.</p>
+            <div className="etos-hero-profile-meta">Profil Etos ID</div>
+            <strong>Transformatif</strong>
+            <p>Memberi kontribusi melalui beragam kanal secara adil dan bertanggung jawab.</p>
           </div>
         </article>
       </div>
