@@ -30,6 +30,22 @@ function active(value: unknown) {
   return !['nonaktif', 'inactive', 'draft', 'hidden'].includes(status);
 }
 
+function mediaUrl(value: unknown) {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  const patterns = [
+    /\/file\/d\/([a-zA-Z0-9_-]{10,})/,
+    /\/d\/([a-zA-Z0-9_-]{10,})/,
+    /[?&]id=([a-zA-Z0-9_-]{10,})/,
+    /googleusercontent\.com\/d\/([a-zA-Z0-9_-]{10,})/,
+  ];
+  for (const pattern of patterns) {
+    const match = raw.match(pattern);
+    if (match?.[1]) return `https://lh3.googleusercontent.com/d/${match[1]}=w2000`;
+  }
+  return raw;
+}
+
 export async function getNativeHomeData() {
   const db = supabaseServer();
   const [{ data: awardees, error: awardeeError }, { data: news, error: newsError }, { data: articles, error: articleError }] = await Promise.all([
@@ -49,18 +65,18 @@ export async function getNativeHomeData() {
     studyProgram: String(row.study_program || ''),
     university: String(row.university || ''),
     summary: String(row.profile_summary || ''),
-    photo: String(row.photo_url || ''),
+    photo: mediaUrl(row.photo_url),
     photoPosition: String(row.photo_position || '50% 50%'),
   }));
 
   const publications: NativePublication[] = [
     ...(news || []).filter((row) => active(row.status)).map((row) => ({
       id: String(row.id), kind: 'Berita' as const, title: String(row.title || ''), slug: String(row.slug || ''),
-      excerpt: stripHtml(row.content_html).slice(0, 170), thumbnail: String(row.thumbnail_url || ''), publishedAt: String(row.published_at || row.created_at || ''),
+      excerpt: stripHtml(row.content_html).slice(0, 170), thumbnail: mediaUrl(row.thumbnail_url), publishedAt: String(row.published_at || row.created_at || ''),
     })),
     ...(articles || []).map((row) => ({
       id: String(row.id), kind: 'Opini' as const, title: String(row.title || ''), slug: String(row.slug || ''),
-      excerpt: stripHtml(row.content_html).slice(0, 170), thumbnail: String(row.thumbnail_url || ''), publishedAt: String(row.published_at || row.created_at || ''),
+      excerpt: stripHtml(row.content_html).slice(0, 170), thumbnail: mediaUrl(row.thumbnail_url), publishedAt: String(row.published_at || row.created_at || ''),
     })),
   ].sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()).slice(0, 6);
 
