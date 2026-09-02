@@ -186,7 +186,7 @@ export function NativeAdminDashboard() {
     return (
       <main className={styles.page}>
         <section className={styles.adminShell}>
-          <Link className={styles.back} href="/native-preview">← Kembali ke Portal</Link>
+          <Link className={styles.back} href="/">← Kembali ke Portal</Link>
           <div className={styles.loginWrap}>
             <div className={styles.loginIntro}>
               <div className={styles.eyebrow}>ADMIN ETOS ID PALU</div>
@@ -213,7 +213,7 @@ export function NativeAdminDashboard() {
       <section className={styles.adminShell}>
         <div className={styles.adminTop}>
           <div><div className={styles.eyebrow}>ADMIN WORKSPACE • {role || 'ADMIN'}</div><h1>Dashboard Konten</h1></div>
-          <div className={styles.adminActions}><Link className={styles.ghostButton} href="/native-preview">Lihat Portal</Link><button className={styles.ghostButton} onClick={logout}>Keluar</button></div>
+          <div className={styles.adminActions}><Link className={styles.ghostButton} href="/">Lihat Portal</Link><button className={styles.ghostButton} onClick={logout}>Keluar</button></div>
         </div>
 
         <div className={styles.dashboardStats}>
