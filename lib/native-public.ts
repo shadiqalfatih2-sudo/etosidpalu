@@ -209,7 +209,9 @@ const getNativeHomeDataCached = unstable_cache(
           description: stripHtml(row.description),
           preview: mediaUrl(row.preview_url),
           icon: String(row.icon || 'ph-sparkle'),
-          photos: (photosByProgram.get(id) || []).sort((a, b) => a.order - b.order),
+          photos: (photosByProgram.get(id) || [])
+            .sort((a, b) => a.order - b.order)
+            .slice(0, 8),
         };
       });
 
@@ -247,7 +249,7 @@ const getNativeHomeDataCached = unstable_cache(
       stats,
     };
   },
-  ['native-home-v4'],
+  ['native-home-v5'],
   { revalidate: 300, tags: ['public-home'] },
 );
 
