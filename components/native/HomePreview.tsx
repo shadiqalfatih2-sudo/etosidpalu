@@ -9,6 +9,7 @@ import type {
 import { BrandMark } from './BrandMark';
 import { HeroSlider } from './HeroSlider';
 import { HomeDirectories } from './HomeDirectories';
+import { MobileMenu } from './MobileMenu';
 import styles from './HomePreview.module.css';
 
 function publicationHref(item: NativePublication) {
@@ -62,18 +63,7 @@ export function SiteHeader() {
       <div className={`${styles.actions} etos-header-actions`}>
         <Link className={`${styles.primaryButton} etos-header-primary`} href="/kirim-tulisan">Kirim Tulisan</Link>
         <Link className={`${styles.secondaryButton} etos-header-admin`} href="/admin">Admin</Link>
-        <details className="etos-mobile-menu">
-          <summary>Menu</summary>
-          <nav className="etos-mobile-menu-panel" aria-label="Navigasi mobile">
-            <a href="/#beranda">Beranda</a>
-            <a href="/#tentang">Tentang</a>
-            <a href="/#program">Program</a>
-            <a href="/#awardee">Awardee</a>
-            <a href="/#publikasi">Berita & Opini</a>
-            <Link href="/kirim-tulisan">Kirim Tulisan</Link>
-            <Link href="/admin">Admin</Link>
-          </nav>
-        </details>
+        <MobileMenu />
       </div>
     </header>
   );
