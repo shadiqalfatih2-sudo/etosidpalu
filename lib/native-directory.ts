@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { supabaseServer } from './supabase';
 import { mediaUrl, type NativeAwardee, type NativeProgram } from './native-public';
 
@@ -61,13 +62,13 @@ export async function getNativeAwardees(): Promise<NativeAwardeeProfile[]> {
   return (data || []).filter((row) => active(row.display_status)).map(mapAwardee);
 }
 
-export async function getNativeAwardeeDetail(id: string): Promise<NativeAwardeeProfile | null> {
+export const getNativeAwardeeDetail = cache(async (id: string): Promise<NativeAwardeeProfile | null> => {
   const db = supabaseServer();
   const { data, error } = await db.from('awardees').select('*').eq('id', id).maybeSingle();
   if (error) throw error;
   if (!data || !active(data.display_status)) return null;
   return mapAwardee(data);
-}
+});
 
 export async function getNativePrograms(): Promise<NativeProgram[]> {
   const db = supabaseServer();
@@ -76,7 +77,7 @@ export async function getNativePrograms(): Promise<NativeProgram[]> {
   return (data || []).filter((row) => active(row.status)).map(mapProgram);
 }
 
-export async function getNativeProgramDetail(id: string): Promise<NativeProgramDetail | null> {
+export const getNativeProgramDetail = cache(async (id: string): Promise<NativeProgramDetail | null> => {
   const db = supabaseServer();
   const [{ data: program, error: programError }, { data: photos, error: photosError }] = await Promise.all([
     db.from('programs').select('*').eq('id', id).maybeSingle(),
@@ -109,4 +110,4 @@ export async function getNativeProgramDetail(id: string): Promise<NativeProgramD
   }
 
   return { ...base, photos: mappedPhotos };
-}
+});
