@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { NavigationFeedback } from '@/components/native/NavigationFeedback';
 import './visual-polish.css';
 import './visual-polish-v2.css';
 import './visual-polish-v3.css';
+import './navigation-performance.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.etosidpalu.com'),
@@ -21,7 +23,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="id">
-      <body style={{ margin: 0 }}>{children}</body>
+      <body style={{ margin: 0 }}>
+        <NavigationFeedback />
+        {children}
+      </body>
     </html>
   );
 }
