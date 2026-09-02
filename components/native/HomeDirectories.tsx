@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { NativeAwardee, NativeProgram, NativeProgramPhoto } from '@/lib/native-public';
 import homeStyles from './HomePreview.module.css';
 import styles from './HomeDirectories.module.css';
@@ -62,7 +62,14 @@ function ProgramDrawer({ program, onClose }: { program: NativeProgram; onClose: 
             <h3>Dokumentasi</h3>
             <div className={styles.gallery}>
               {photos.map((photo) => (
-                <button className={styles.galleryButton} type="button" key={photo.id} onClick={() => setActivePhoto(photo)} aria-label={`Lihat ${photo.caption || program.name}`}>
+                <button
+                  className={styles.galleryButton}
+                  type="button"
+                  key={photo.id}
+                  onClick={() => setActivePhoto(photo)}
+                  aria-label={`Lihat ${photo.caption || program.name}`}
+                  aria-pressed={activePhoto?.id === photo.id}
+                >
                   <img src={photo.url} alt={photo.caption || program.name} style={{ objectPosition: photo.position || '50% 50%' }} loading="lazy" decoding="async" fetchPriority="low" />
                 </button>
               ))}
@@ -115,28 +122,44 @@ function AwardeeDrawer({ awardee, onClose }: { awardee: NativeAwardee; onClose: 
 }
 
 function DetailDrawer({ state, onClose }: { state: DrawerState; onClose: () => void }) {
+  const [closing, setClosing] = useState(false);
+
+  const closeWithMotion = useCallback(() => {
+    if (closing) return;
+    setClosing(true);
+    window.setTimeout(() => {
+      setClosing(false);
+      onClose();
+    }, 200);
+  }, [closing, onClose]);
+
   useEffect(() => {
     if (!state) return;
+    setClosing(false);
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
+      if (event.key === 'Escape') closeWithMotion();
     };
     window.addEventListener('keydown', onKey);
     return () => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener('keydown', onKey);
     };
-  }, [state, onClose]);
+  }, [state, closeWithMotion]);
 
   if (!state) return null;
 
   return (
-    <div className={styles.drawerBackdrop} role="presentation" onMouseDown={(event) => { if (event.currentTarget === event.target) onClose(); }}>
+    <div
+      className={`${styles.drawerBackdrop}${closing ? ` ${styles.closing}` : ''}`}
+      role="presentation"
+      onMouseDown={(event) => { if (event.currentTarget === event.target) closeWithMotion(); }}
+    >
       <aside className={styles.drawer} role="dialog" aria-modal="true" aria-label={state.kind === 'program' ? `Detail program ${state.item.name}` : `Profil awardee ${state.item.name}`}>
         {state.kind === 'program'
-          ? <ProgramDrawer program={state.item} onClose={onClose} />
-          : <AwardeeDrawer awardee={state.item} onClose={onClose} />}
+          ? <ProgramDrawer program={state.item} onClose={closeWithMotion} />
+          : <AwardeeDrawer awardee={state.item} onClose={closeWithMotion} />}
       </aside>
     </div>
   );
