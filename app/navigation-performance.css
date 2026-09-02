@@ -1,99 +1,91 @@
-/* ETOS ID Palu — navigation feedback and lightweight route motion */
+/* ETOS ID Palu — functional navigation feedback */
 
-.etos-navigation-progress{
-  position:fixed;
-  inset:0 0 auto;
-  height:3px;
-  z-index:9999;
-  pointer-events:none;
-  overflow:hidden;
-  opacity:0;
-  transform:translateY(-4px);
-  transition:opacity .12s ease,transform .12s ease;
+.etos-navigation-progress {
+  position: fixed;
+  inset: 0 0 auto;
+  height: 2px;
+  z-index: 9999;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-3px);
+  transition: opacity var(--etos-fast) ease, transform var(--etos-fast) ease;
 }
-.etos-navigation-progress.is-active{opacity:1;transform:translateY(0)}
-.etos-navigation-progress span{
+.etos-navigation-progress.is-active { opacity:1; transform:translateY(0); }
+.etos-navigation-progress span {
   display:block;
-  width:42%;
+  width:38%;
   height:100%;
-  border-radius:0 999px 999px 0;
-  background:#2c7d5c;
-  box-shadow:0 1px 7px rgba(28,103,77,.28);
-  animation:etos-nav-progress 1.05s cubic-bezier(.4,0,.2,1) infinite;
+  background:var(--etos-primary);
+  animation:etos-nav-progress 1s cubic-bezier(.4,0,.2,1) infinite;
 }
-@keyframes etos-nav-progress{
-  0%{transform:translateX(-120%) scaleX(.55)}
-  55%{transform:translateX(110%) scaleX(1)}
-  100%{transform:translateX(270%) scaleX(.72)}
+@keyframes etos-nav-progress {
+  0% { transform:translateX(-125%) scaleX(.6); }
+  55% { transform:translateX(115%) scaleX(1); }
+  100% { transform:translateX(285%) scaleX(.76); }
 }
 
-/* Fade only: avoids creating a transformed containing block around the sticky header. */
+/* Route motion stays nearly invisible: orientation, not decoration. */
 .native-home,
 .native-directory,
+.native-publication,
 .native-publication-detail,
-.native-submit-form{
-  animation:etos-route-enter .24s ease-out both;
+.native-submit-form {
+  animation:etos-route-enter 220ms ease-out both;
 }
-@keyframes etos-route-enter{
-  from{opacity:.76}
-  to{opacity:1}
-}
+@keyframes etos-route-enter { from { opacity:.82; } to { opacity:1; } }
 
-/* Prefetchable loading shells for dynamic public routes. */
-.etos-public-loading{min-height:100vh;background:#fff;color:#14231c;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-.etos-loading-hero{padding:46px 2.2vw 38px;border-bottom:1px solid #edf1ee;background:#fbfcfb}
-.etos-loading-hero-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(260px,.45fr);gap:44px;align-items:end;margin-top:18px}
-.etos-loading-line,.etos-loading-media,.etos-loading-sidebar-item{position:relative;overflow:hidden;background:#e9eeeb}
-.etos-loading-line:after,.etos-loading-media:after,.etos-loading-sidebar-item:after{
-  content:"";position:absolute;inset:0;transform:translateX(-110%);
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.72),transparent);
-  animation:etos-skeleton 1.35s ease-in-out infinite;
-}
-@keyframes etos-skeleton{100%{transform:translateX(110%)}}
-.etos-loading-eyebrow{width:154px;height:9px;border-radius:999px}
-.etos-loading-title{height:44px;width:min(760px,90%);border-radius:8px;margin-top:11px}
-.etos-loading-title-short{width:min(520px,67%);margin-top:9px}
-.etos-loading-copy{height:58px;width:100%;max-width:350px;border-radius:9px;justify-self:end}
-.etos-loading-grid{padding:34px 1.9vw 64px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
-.etos-loading-grid-awardee{grid-template-columns:repeat(5,minmax(0,1fr));gap:22px 13px}
-.etos-loading-card{border:1px solid #e2e8e4;border-radius:15px;overflow:hidden;background:#fff}
-.etos-loading-media{aspect-ratio:16/10}
-.etos-loading-grid-awardee .etos-loading-media{aspect-ratio:1/1.08;border-radius:0}
-.etos-loading-card-copy{padding:17px}
-.etos-loading-meta{height:7px;width:38%;border-radius:999px}
-.etos-loading-card-title{height:21px;width:78%;border-radius:5px;margin-top:11px}
-.etos-loading-card-text{height:11px;width:92%;border-radius:999px;margin-top:12px}
+/* Loading shells reserve layout and avoid white flashes on truly dynamic routes. */
+.etos-public-loading { min-height:100vh; background:var(--etos-bg); color:var(--etos-text); font-family:var(--etos-font-sans); }
+.etos-loading-hero { padding:42px var(--etos-inline) 34px; border-bottom:1px solid var(--etos-border); background:var(--etos-surface-muted); }
+.etos-loading-hero-grid { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(260px,.45fr); gap:44px; align-items:end; margin-top:18px; }
+.etos-loading-line,.etos-loading-media,.etos-loading-sidebar-item { position:relative; overflow:hidden; background:#e9eeeb; }
+.etos-loading-line::after,.etos-loading-media::after,.etos-loading-sidebar-item::after { content:""; position:absolute; inset:0; transform:translateX(-110%); background:linear-gradient(90deg,transparent,rgba(255,255,255,.68),transparent); animation:etos-skeleton 1.35s ease-in-out infinite; }
+@keyframes etos-skeleton { 100% { transform:translateX(110%); } }
+.etos-loading-eyebrow { width:150px; height:8px; border-radius:999px; }
+.etos-loading-title { height:42px; width:min(740px,90%); border-radius:7px; margin-top:11px; }
+.etos-loading-title-short { width:min(510px,67%); margin-top:9px; }
+.etos-loading-copy { height:56px; width:100%; max-width:350px; border-radius:8px; justify-self:end; }
+.etos-loading-grid { padding:32px var(--etos-inline) 60px; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:18px 16px; }
+.etos-loading-grid-awardee { grid-template-columns:repeat(4,minmax(0,1fr)); gap:24px 14px; }
+.etos-loading-card { background:transparent; }
+.etos-loading-media { aspect-ratio:4/3; border-radius:var(--etos-radius-md); }
+.etos-loading-grid-awardee .etos-loading-media { aspect-ratio:4/5; }
+.etos-loading-card-copy { padding:13px 1px; }
+.etos-loading-meta { height:7px; width:36%; border-radius:999px; }
+.etos-loading-card-title { height:20px; width:76%; border-radius:4px; margin-top:10px; }
+.etos-loading-card-text { height:10px; width:90%; border-radius:999px; margin-top:11px; }
 
-.etos-loading-publication{padding:30px 1.9vw 68px;display:grid;grid-template-columns:minmax(0,1.68fr) minmax(285px,.42fr);gap:clamp(30px,4vw,58px)}
-.etos-loading-article-main{min-width:0}
-.etos-loading-article-title{height:43px;width:90%;border-radius:8px;margin-top:14px}
-.etos-loading-article-media{aspect-ratio:16/9;border-radius:12px;margin:24px 0 28px}
-.etos-loading-body-line{height:14px;border-radius:999px;margin-top:13px;width:96%}
-.etos-loading-body-line.line-1{width:88%}.etos-loading-body-line.line-2{width:76%}
-.etos-loading-sidebar{padding-top:22px}
-.etos-loading-sidebar-item{height:88px;border-radius:10px;margin-bottom:13px}
-.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.etos-loading-publication { padding:30px var(--etos-inline) 68px; display:grid; grid-template-columns:minmax(0,1.58fr) minmax(290px,.42fr); gap:clamp(42px,5vw,76px); }
+.etos-loading-article-main { min-width:0; }
+.etos-loading-article-title { height:42px; width:88%; border-radius:7px; margin-top:14px; }
+.etos-loading-article-media { aspect-ratio:16/9; border-radius:var(--etos-radius-md); margin:24px 0 28px; }
+.etos-loading-body-line { height:13px; border-radius:999px; margin-top:13px; width:94%; }
+.etos-loading-body-line.line-1 { width:86%; }
+.etos-loading-body-line.line-2 { width:74%; }
+.etos-loading-sidebar { padding-top:18px; }
+.etos-loading-sidebar-item { height:84px; border-radius:var(--etos-radius-sm); margin-bottom:12px; }
+.sr-only { position:absolute!important; width:1px!important; height:1px!important; padding:0!important; margin:-1px!important; overflow:hidden!important; clip:rect(0,0,0,0)!important; white-space:nowrap!important; border:0!important; }
 
-@media(max-width:1050px){
-  .etos-loading-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .etos-loading-grid-awardee{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .etos-loading-publication{grid-template-columns:1fr}
+@media(max-width:1050px) {
+  .etos-loading-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .etos-loading-grid-awardee { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .etos-loading-publication { grid-template-columns:1fr; }
 }
-@media(max-width:820px){
-  .etos-loading-hero{padding:36px 16px 30px}
-  .etos-loading-hero-grid{grid-template-columns:1fr;gap:18px}
-  .etos-loading-copy{justify-self:start;max-width:520px}
-  .etos-loading-grid{padding:28px 16px 54px;gap:11px}
-  .etos-loading-grid-awardee{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .etos-loading-publication{padding:22px 16px 56px}
+@media(max-width:820px) {
+  .etos-loading-hero { padding:34px 16px 28px; }
+  .etos-loading-hero-grid { grid-template-columns:1fr; gap:18px; }
+  .etos-loading-copy { justify-self:start; max-width:520px; }
+  .etos-loading-grid { padding:28px 16px 54px; gap:18px 11px; }
+  .etos-loading-publication { padding:22px 16px 56px; }
 }
-@media(max-width:560px){
-  .etos-loading-grid{grid-template-columns:1fr}
-  .etos-loading-grid-awardee{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .etos-loading-title{height:34px}
-  .etos-loading-copy{height:48px}
+@media(max-width:560px) {
+  .etos-loading-grid { grid-template-columns:1fr; }
+  .etos-loading-grid-awardee { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .etos-loading-title { height:33px; }
+  .etos-loading-copy { height:46px; }
 }
-@media(prefers-reduced-motion:reduce){
-  .etos-navigation-progress,.native-home,.native-directory,.native-publication-detail,.native-submit-form{animation:none!important;transition:none!important}
-  .etos-loading-line:after,.etos-loading-media:after,.etos-loading-sidebar-item:after{animation:none!important;display:none}
+@media(prefers-reduced-motion:reduce) {
+  .etos-navigation-progress,.native-home,.native-directory,.native-publication,.native-publication-detail,.native-submit-form { animation:none!important; transition:none!important; }
+  .etos-loading-line::after,.etos-loading-media::after,.etos-loading-sidebar-item::after { animation:none!important; display:none; }
 }
