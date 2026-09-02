@@ -1,0 +1,87 @@
+:root { color-scheme: light; }
+
+.page {
+  min-height: 100vh;
+  background: #fff;
+  color: #14231c;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.header {
+  min-height: 88px;
+  padding: 0 2.2vw;
+  border-top: 3px solid #2c7d5c;
+  border-bottom: 1px solid #e4e9e5;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 36px;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(255,255,255,.96);
+  backdrop-filter: blur(14px);
+}
+
+.brandRow { display:flex; align-items:center; gap:16px; white-space:nowrap; }
+.brand { font-weight:900; font-size:22px; letter-spacing:-.04em; color:#24a140; }
+.brand span { color:#14231c; }
+.tagline { border:1px solid #d9dfda; border-radius:999px; padding:8px 13px; font-weight:800; font-size:14px; }
+.nav { display:flex; justify-content:center; gap:34px; }
+.nav a { color:#1b2520; text-decoration:none; text-transform:uppercase; letter-spacing:.12em; font-size:13px; font-weight:800; }
+.actions { display:flex; gap:10px; }
+.primaryButton,.secondaryButton { text-decoration:none; font-weight:800; border-radius:999px; padding:14px 21px; font-size:13px; text-transform:uppercase; letter-spacing:.06em; }
+.primaryButton { background:#257f5d; color:white; }
+.secondaryButton { color:#225e48; border:1px solid #d8e1db; }
+
+.hero {
+  padding: 92px 2.2vw 74px;
+  border-bottom: 1px solid #edf0ed;
+  background: linear-gradient(180deg,#fbfcfb 0%,#fff 100%);
+}
+.eyebrow { color:#277c5c; letter-spacing:.2em; font-weight:900; font-size:12px; margin-bottom:24px; }
+.hero h1 { margin:0; max-width:1280px; font-family: Georgia, "Times New Roman", serif; font-size:clamp(48px,6vw,96px); line-height:.96; letter-spacing:-.045em; font-weight:600; }
+.hero p { max-width:760px; margin:30px 0 0; color:#647268; line-height:1.7; font-size:17px; }
+
+.section { padding:78px 2.2vw 96px; }
+.section + .section { border-top:1px solid #edf0ed; }
+.sectionHead { display:flex; align-items:end; justify-content:space-between; gap:30px; margin-bottom:38px; }
+.sectionHead span { color:#2d7e5f; font-size:12px; letter-spacing:.2em; font-weight:900; }
+.sectionHead h2 { margin:9px 0 0; font-family:Georgia,"Times New Roman",serif; font-size:clamp(38px,4vw,64px); line-height:1; letter-spacing:-.035em; font-weight:600; }
+.sectionHead > a { text-decoration:none; color:#fff; background:#165d44; border-radius:999px; padding:15px 22px; font-weight:800; font-size:12px; text-transform:uppercase; letter-spacing:.08em; }
+
+.awardeeGrid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:18px; }
+.awardeeCard { min-width:0; border-top:1px solid #dfe6e0; }
+.imageWrap { aspect-ratio: .86; overflow:hidden; background:#e7ece8; border-radius:14px; margin-top:16px; }
+.imageWrap img { width:100%; height:100%; object-fit:cover; display:block; }
+.cardBody { padding:18px 2px; }
+.cardBody small,.publicationBody small { color:#2e8060; font-weight:900; letter-spacing:.12em; text-transform:uppercase; }
+.cardBody h3,.publicationBody h3 { margin:9px 0 7px; font-size:22px; line-height:1.15; letter-spacing:-.025em; }
+.cardBody p,.publicationBody p { margin:0; color:#66736a; line-height:1.55; }
+
+.publicationGrid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:30px 18px; }
+.publicationCard { color:inherit; text-decoration:none; border-top:1px solid #dde5df; padding-top:16px; }
+.publicationImage { aspect-ratio:16/10; overflow:hidden; background:#e7ece8; border-radius:12px; }
+.publicationImage img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .3s ease; }
+.publicationCard:hover .publicationImage img { transform:scale(1.025); }
+.publicationBody { padding:18px 1px 0; }
+.publicationBody h3 { font-family:Georgia,"Times New Roman",serif; font-size:27px; font-weight:600; }
+
+@media (max-width: 1100px) {
+  .header { grid-template-columns:1fr auto; }
+  .nav { display:none; }
+  .awardeeGrid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .publicationGrid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+
+@media (max-width: 680px) {
+  .header { padding:0 18px; min-height:76px; gap:12px; }
+  .tagline { display:none; }
+  .actions .secondaryButton { display:none; }
+  .primaryButton { padding:12px 15px; font-size:11px; }
+  .hero,.section { padding-left:18px; padding-right:18px; }
+  .hero { padding-top:58px; }
+  .hero h1 { font-size:48px; }
+  .sectionHead { align-items:flex-start; flex-direction:column; }
+  .awardeeGrid,.publicationGrid { grid-template-columns:1fr; }
+}
