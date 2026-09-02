@@ -1,4 +1,5 @@
 import { cache } from 'react';
+import { unstable_cache } from 'next/cache';
 import { supabaseServer } from './supabase';
 
 export type NativeHero = {
@@ -10,6 +11,14 @@ export type NativeHero = {
   link: string;
 };
 
+export type NativeProgramPhoto = {
+  id: string;
+  url: string;
+  caption: string;
+  position: string;
+  order: number;
+};
+
 export type NativeProgram = {
   id: string;
   name: string;
@@ -18,6 +27,7 @@ export type NativeProgram = {
   description: string;
   preview: string;
   icon: string;
+  photos?: NativeProgramPhoto[];
 };
 
 export type NativeAwardee = {
@@ -29,6 +39,8 @@ export type NativeAwardee = {
   summary: string;
   photo: string;
   photoPosition: string;
+  status?: string;
+  portfolio?: string;
 };
 
 export type NativePublication = {
@@ -132,82 +144,115 @@ function mapArticle(row: Record<string, any>, full = false): NativePublication |
   };
 }
 
+const getNativeHomeDataCached = unstable_cache(
+  async () => {
+    const db = supabaseServer();
+    const [
+      { data: heroRows, error: heroError },
+      { data: programRows, error: programError },
+      { data: programPhotoRows, error: programPhotoError },
+      { data: awardeeRows, error: awardeeError },
+      { data: newsRows, error: newsError },
+      { data: articleRows, error: articleError },
+    ] = await Promise.all([
+      db.from('hero_slides').select('id,title,subtitle,photo_url,photo_position,link_url,status,sort_order').order('sort_order'),
+      db.from('programs').select('id,name,category,summary,description,preview_url,icon,status,sort_order').order('sort_order'),
+      db.from('program_photos').select('id,program_id,photo_url,caption,photo_position,sort_order,status').order('sort_order'),
+      db.from('awardees').select('id,name,cohort,study_program,university,profile_summary,photo_url,photo_position,display_status,awardee_status,portfolio_url,sort_order').order('sort_order'),
+      db.from('news').select('id,title,slug,content_html,thumbnail_url,published_at,created_at,status').order('published_at', { ascending: false }),
+      db.from('articles').select('id,title,slug,content_html,thumbnail_url,published_at,created_at,status').eq('status', 'Approved').order('published_at', { ascending: false }),
+    ]);
+
+    if (heroError) throw heroError;
+    if (programError) throw programError;
+    if (programPhotoError) throw programPhotoError;
+    if (awardeeError) throw awardeeError;
+    if (newsError) throw newsError;
+    if (articleError) throw articleError;
+
+    const photosByProgram = new Map<string, NativeProgramPhoto[]>();
+    for (const row of programPhotoRows || []) {
+      if (!active(row.status) || !row.photo_url) continue;
+      const programId = String(row.program_id || '');
+      if (!programId) continue;
+      const current = photosByProgram.get(programId) || [];
+      current.push({
+        id: String(row.id),
+        url: mediaUrl(row.photo_url),
+        caption: String(row.caption || ''),
+        position: String(row.photo_position || '50% 50%'),
+        order: Number(row.sort_order || 1),
+      });
+      photosByProgram.set(programId, current);
+    }
+
+    const heroes: NativeHero[] = (heroRows || [])
+      .filter((row) => active(row.status))
+      .map((row) => ({
+        id: String(row.id),
+        title: String(row.title || 'Etos ID Palu'),
+        subtitle: String(row.subtitle || ''),
+        photo: mediaUrl(row.photo_url),
+        photoPosition: String(row.photo_position || '50% 50%'),
+        link: String(row.link_url || ''),
+      }));
+
+    const programs: NativeProgram[] = (programRows || [])
+      .filter((row) => active(row.status))
+      .map((row) => {
+        const id = String(row.id);
+        return {
+          id,
+          name: String(row.name || ''),
+          category: String(row.category || 'Program Pembinaan Wilayah'),
+          summary: String(row.summary || stripHtml(row.description).slice(0, 190)),
+          description: stripHtml(row.description),
+          preview: mediaUrl(row.preview_url),
+          icon: String(row.icon || 'ph-sparkle'),
+          photos: (photosByProgram.get(id) || []).sort((a, b) => a.order - b.order),
+        };
+      });
+
+    const awardees: NativeAwardee[] = (awardeeRows || [])
+      .filter((row) => active(row.display_status))
+      .map((row) => ({
+        id: String(row.id),
+        name: String(row.name || ''),
+        cohort: String(row.cohort || ''),
+        studyProgram: String(row.study_program || ''),
+        university: String(row.university || ''),
+        summary: String(row.profile_summary || ''),
+        photo: mediaUrl(row.photo_url),
+        photoPosition: String(row.photo_position || '50% 50%'),
+        status: String(row.awardee_status || 'Aktif'),
+        portfolio: String(row.portfolio_url || ''),
+      }));
+
+    const publications: NativePublication[] = [
+      ...(newsRows || []).filter((row) => active(row.status)).map((row) => mapNews(row, false) as NativePublication),
+      ...(articleRows || []).map((row) => mapArticle(row, false) as NativePublication),
+    ].sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+
+    const stats: NativeHomeStats = {
+      awardees: awardees.length,
+      programs: programs.length,
+      publications: publications.length,
+    };
+
+    return {
+      heroes: heroes.slice(0, 5),
+      programs,
+      awardees,
+      publications: publications.slice(0, 6),
+      stats,
+    };
+  },
+  ['native-home-v4'],
+  { revalidate: 300, tags: ['public-home'] },
+);
+
 export async function getNativeHomeData() {
-  const db = supabaseServer();
-  const [
-    { data: heroRows, error: heroError },
-    { data: programRows, error: programError },
-    { data: awardeeRows, error: awardeeError },
-    { data: newsRows, error: newsError },
-    { data: articleRows, error: articleError },
-  ] = await Promise.all([
-    db.from('hero_slides').select('*').order('sort_order'),
-    db.from('programs').select('*').order('sort_order'),
-    db.from('awardees').select('*').order('sort_order'),
-    db.from('news').select('*').order('published_at', { ascending: false }),
-    db.from('articles').select('*').eq('status', 'Approved').order('published_at', { ascending: false }),
-  ]);
-
-  if (heroError) throw heroError;
-  if (programError) throw programError;
-  if (awardeeError) throw awardeeError;
-  if (newsError) throw newsError;
-  if (articleError) throw articleError;
-
-  const heroes: NativeHero[] = (heroRows || [])
-    .filter((row) => active(row.status))
-    .map((row) => ({
-      id: String(row.id),
-      title: String(row.title || 'Etos ID Palu'),
-      subtitle: String(row.subtitle || ''),
-      photo: mediaUrl(row.photo_url),
-      photoPosition: String(row.photo_position || '50% 50%'),
-      link: String(row.link_url || ''),
-    }));
-
-  const programs: NativeProgram[] = (programRows || [])
-    .filter((row) => active(row.status))
-    .map((row) => ({
-      id: String(row.id),
-      name: String(row.name || ''),
-      category: String(row.category || 'Program Pembinaan Wilayah'),
-      summary: String(row.summary || stripHtml(row.description).slice(0, 190)),
-      description: String(row.description || ''),
-      preview: mediaUrl(row.preview_url),
-      icon: String(row.icon || 'ph-sparkle'),
-    }));
-
-  const awardees: NativeAwardee[] = (awardeeRows || [])
-    .filter((row) => active(row.display_status))
-    .map((row) => ({
-      id: String(row.id),
-      name: String(row.name || ''),
-      cohort: String(row.cohort || ''),
-      studyProgram: String(row.study_program || ''),
-      university: String(row.university || ''),
-      summary: String(row.profile_summary || ''),
-      photo: mediaUrl(row.photo_url),
-      photoPosition: String(row.photo_position || '50% 50%'),
-    }));
-
-  const publications: NativePublication[] = [
-    ...(newsRows || []).filter((row) => active(row.status)).map((row) => mapNews(row, false) as NativePublication),
-    ...(articleRows || []).map((row) => mapArticle(row, false) as NativePublication),
-  ].sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
-
-  const stats: NativeHomeStats = {
-    awardees: awardees.length,
-    programs: programs.length,
-    publications: publications.length,
-  };
-
-  return {
-    heroes: heroes.slice(0, 5),
-    programs: programs.slice(0, 8),
-    awardees: awardees.slice(0, 8),
-    publications: publications.slice(0, 6),
-    stats,
-  };
+  return getNativeHomeDataCached();
 }
 
 export const getNativePublicationDetail = cache(async (kindParam: string, slug: string) => {
