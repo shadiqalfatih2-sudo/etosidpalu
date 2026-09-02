@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { ProgramDirectory } from '@/components/native/DirectoryPages';
 import { getNativePrograms } from '@/lib/native-directory';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: 'Program | Etos ID Palu',
