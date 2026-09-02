@@ -56,20 +56,37 @@ function mapProgram(row: Record<string, any>): NativeProgram {
   };
 }
 
+const getNativeAwardeesCached = unstable_cache(
+  async (): Promise<NativeAwardeeProfile[]> => {
+    const db = supabaseServer();
+    const { data, error } = await db
+      .from('awardees')
+      .select('id,name,awardee_status,cohort,study_program,university,profile_summary,photo_url,photo_position,portfolio_url,display_status,sort_order')
+      .order('sort_order');
+    if (error) throw error;
+    return (data || []).filter((row) => active(row.display_status)).map(mapAwardee);
+  },
+  ['native-awardee-directory-v2'],
+  { revalidate: 300, tags: ['public-awardees'] },
+);
+
 export async function getNativeAwardees(): Promise<NativeAwardeeProfile[]> {
-  const db = supabaseServer();
-  const { data, error } = await db.from('awardees').select('*').order('sort_order');
-  if (error) throw error;
-  return (data || []).filter((row) => active(row.display_status)).map(mapAwardee);
+  return getNativeAwardeesCached();
 }
 
-export const getNativeAwardeeDetail = cache(async (id: string): Promise<NativeAwardeeProfile | null> => {
-  const db = supabaseServer();
-  const { data, error } = await db.from('awardees').select('*').eq('id', id).maybeSingle();
-  if (error) throw error;
-  if (!data || !active(data.display_status)) return null;
-  return mapAwardee(data);
-});
+const getNativeAwardeeDetailCached = unstable_cache(
+  async (id: string): Promise<NativeAwardeeProfile | null> => {
+    const db = supabaseServer();
+    const { data, error } = await db.from('awardees').select('*').eq('id', id).maybeSingle();
+    if (error) throw error;
+    if (!data || !active(data.display_status)) return null;
+    return mapAwardee(data);
+  },
+  ['native-awardee-detail-v2'],
+  { revalidate: 300, tags: ['public-awardees'] },
+);
+
+export const getNativeAwardeeDetail = cache((id: string) => getNativeAwardeeDetailCached(id));
 
 const getNativeProgramsCached = unstable_cache(
   async (): Promise<NativeProgram[]> => {
