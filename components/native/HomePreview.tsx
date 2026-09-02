@@ -153,7 +153,7 @@ function Awardees({ awardees }: { awardees: NativeAwardee[] }) {
             <div className={styles.cardBody}>
               <small>{awardee.cohort ? `Angkatan ${awardee.cohort}` : 'Awardee Etos ID'}</small>
               <h3>{awardee.name}</h3>
-              <p>{awardee.studyProgram}{awardee.university ? ` • ${awardee.university}` : ''}</p>
+              {(awardee.studyProgram || awardee.university) ? <p>{[awardee.studyProgram, awardee.university].filter(Boolean).join(' • ')}</p> : null}
             </div>
           </Link>
         ))}
