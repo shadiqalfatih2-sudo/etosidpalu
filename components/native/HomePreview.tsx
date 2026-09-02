@@ -37,8 +37,8 @@ export function SiteHeader() {
       <nav className={styles.nav} aria-label="Navigasi utama">
         <Link href="/native-preview">Beranda</Link>
         <Link href="/native-preview#tentang">Tentang</Link>
-        <Link href="/native-preview#program">Program</Link>
-        <Link href="/native-preview#awardee">Awardee</Link>
+        <Link href="/native-preview/program">Program</Link>
+        <Link href="/native-preview/awardee">Awardee</Link>
         <Link href="/native-preview#publikasi">Berita & Opini</Link>
       </nav>
       <div className={styles.actions}>
@@ -65,8 +65,8 @@ function Hero({ heroes, stats }: { heroes: NativeHero[]; stats: NativeHomeStats 
           <h1>{lead?.subtitle || 'Membentuk Nalar Kritis, Menempa Etos Peradaban.'}</h1>
           <p>Ruang tumbuh bagi mahasiswa untuk menguatkan karakter, kepemimpinan, spiritualitas, dan kontribusi sosial yang berdampak.</p>
           <div className={styles.heroActions}>
-            <Link href="#program" className={styles.heroPrimary}>Jelajahi Program</Link>
-            <Link href="#awardee" className={styles.heroGhost}>Kenal Lebih Dekat Awardee</Link>
+            <Link href="/native-preview/program" className={styles.heroPrimary}>Jelajahi Program</Link>
+            <Link href="/native-preview/awardee" className={styles.heroGhost}>Kenal Lebih Dekat Awardee</Link>
           </div>
         </div>
       </div>
@@ -102,7 +102,7 @@ function About() {
         <div className={styles.aboutCopy}>
           <p>Etos ID Palu menghadirkan pembinaan yang tidak berhenti pada capaian akademik. Prosesnya dirancang sebagai ekosistem tumbuh: mengasah nalar, memperkuat spiritualitas, membangun kepemimpinan, dan menghubungkan gagasan dengan kebutuhan masyarakat.</p>
           <p>Di sini, awardee belajar untuk tidak hanya menjadi penerima manfaat, tetapi juga menjadi pribadi yang mampu mengubah pengalaman menjadi kontribusi nyata.</p>
-          <Link href="#program">Lihat ekosistem pembinaan <span>→</span></Link>
+          <Link href="/native-preview/program">Lihat ekosistem pembinaan <span>→</span></Link>
         </div>
       </div>
     </section>
@@ -121,7 +121,7 @@ function Programs({ programs }: { programs: NativeProgram[] }) {
       </div>
       <div className={styles.programGrid}>
         {programs.slice(0, 6).map((program, index) => (
-          <article className={styles.programCard} key={program.id}>
+          <Link className={styles.programCard} href={`/native-preview/program/${encodeURIComponent(program.id)}`} key={program.id}>
             <div className={styles.programImage}>
               {program.preview ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -135,10 +135,10 @@ function Programs({ programs }: { programs: NativeProgram[] }) {
                 <p>{program.summary}</p>
               </div>
             </div>
-          </article>
+          </Link>
         ))}
       </div>
-      <div className={styles.sectionFootNote}>Program aktif ditarik langsung dari Supabase dan akan otomatis mengikuti pembaruan data admin.</div>
+      <div className={styles.sectionFootNote}><Link href="/native-preview/program">Lihat seluruh program aktif →</Link></div>
     </section>
   );
 }
@@ -151,11 +151,11 @@ function Awardees({ awardees }: { awardees: NativeAwardee[] }) {
           <div className={styles.sectionLabel}><span />Awardee Etos ID Palu</div>
           <h2>Orang-orang yang bertumbuh dan membawa gagasan menjadi dampak.</h2>
         </div>
-        <Link href="/#home-awardees" className={styles.darkPill}>Lihat Semua Awardee</Link>
+        <Link href="/native-preview/awardee" className={styles.darkPill}>Lihat Semua Awardee</Link>
       </div>
       <div className={styles.awardeeGrid}>
         {awardees.slice(0, 4).map((awardee) => (
-          <article className={styles.awardeeCard} key={awardee.id}>
+          <Link className={styles.awardeeCard} href={`/native-preview/awardee/${encodeURIComponent(awardee.id)}`} key={awardee.id}>
             <div className={styles.imageWrap}>
               {awardee.photo ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -167,7 +167,7 @@ function Awardees({ awardees }: { awardees: NativeAwardee[] }) {
               <h3>{awardee.name}</h3>
               <p>{awardee.studyProgram}{awardee.university ? ` • ${awardee.university}` : ''}</p>
             </div>
-          </article>
+          </Link>
         ))}
       </div>
     </section>
@@ -184,7 +184,7 @@ function Publications({ publications }: { publications: NativePublication[] }) {
           <div className={styles.sectionLabel}><span />Berita & Opini</div>
           <h2>Catatan perjalanan, gagasan, dan dampak dari ekosistem Etos ID Palu.</h2>
         </div>
-        <Link href="/#home-publications">Lihat Selengkapnya</Link>
+        <Link href="/native-preview#publikasi">Lihat Selengkapnya</Link>
       </div>
 
       {lead ? (
@@ -249,10 +249,10 @@ function Footer() {
         <p>We Are Resilient Leader</p>
       </div>
       <div className={styles.footerLinks}>
-        <a href="#tentang">Tentang</a>
-        <a href="#program">Program</a>
-        <a href="#awardee">Awardee</a>
-        <a href="#publikasi">Berita & Opini</a>
+        <Link href="/native-preview#tentang">Tentang</Link>
+        <Link href="/native-preview/program">Program</Link>
+        <Link href="/native-preview/awardee">Awardee</Link>
+        <Link href="/native-preview#publikasi">Berita & Opini</Link>
       </div>
       <div className={styles.footerMeta}>© {new Date().getFullYear()} Etos ID Palu. Native Next.js migration preview.</div>
     </footer>
