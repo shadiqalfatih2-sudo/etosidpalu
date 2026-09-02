@@ -19,6 +19,69 @@ export function HeroSlider({ heroes, stats }: { heroes: NativeHero[]; stats: Nat
 
   return (
     <section className={`${styles.hero} etos-hero`} id="beranda">
+      <style>{`
+        .etos-hero-profile-strip{
+          display:grid;
+          grid-template-columns:repeat(3,minmax(0,1fr));
+          margin:14px 0 22px;
+          border:1px solid #e0e8e2;
+          border-radius:17px;
+          overflow:hidden;
+          background:#fff;
+          box-shadow:0 10px 34px rgba(24,73,54,.045);
+        }
+        .etos-hero-profile-item{
+          min-width:0;
+          display:grid;
+          grid-template-columns:auto minmax(0,1fr);
+          gap:14px;
+          align-items:start;
+          padding:18px 20px 19px;
+        }
+        .etos-hero-profile-item + .etos-hero-profile-item{border-left:1px solid #e5ebe7}
+        .etos-hero-profile-index{
+          width:31px;
+          height:31px;
+          border-radius:50%;
+          display:grid;
+          place-items:center;
+          background:#edf5f0;
+          color:#1f6b50;
+          font:900 9px/1 Inter,ui-sans-serif,system-ui,sans-serif;
+          letter-spacing:.04em;
+        }
+        .etos-hero-profile-meta{
+          margin:0 0 5px;
+          color:#2d7d5e;
+          font-size:9px;
+          font-weight:900;
+          letter-spacing:.12em;
+          text-transform:uppercase;
+        }
+        .etos-hero-profile-item strong{
+          display:block;
+          color:#17372b;
+          font-family:Georgia,'Times New Roman',serif;
+          font-size:20px;
+          line-height:1.12;
+          font-weight:600;
+          letter-spacing:-.02em;
+        }
+        .etos-hero-profile-item p{
+          margin:6px 0 0;
+          color:#6a776f;
+          font-size:12px;
+          line-height:1.55;
+        }
+        @media(max-width:820px){
+          .etos-hero-profile-strip{grid-template-columns:1fr;margin:12px 0 18px}
+          .etos-hero-profile-item{padding:14px 15px;gap:12px}
+          .etos-hero-profile-item + .etos-hero-profile-item{border-left:0;border-top:1px solid #e5ebe7}
+          .etos-hero-profile-item strong{font-size:18px}
+          .etos-hero-profile-item p{font-size:11px}
+        }
+      `}</style>
+
       <div className={`${styles.heroMedia} etos-hero-media`}>
         <div className="etos-hero-slides" aria-hidden="true">
           {slides.map((slide, index) => (
@@ -46,33 +109,31 @@ export function HeroSlider({ heroes, stats }: { heroes: NativeHero[]; stats: Nat
         </div>
       </div>
 
-      <div className={`${styles.heroBottom} etos-hero-bottom`}>
-        <div className={`${styles.statsStrip} etos-home-stats`}>
-          <div><strong>{stats.awardees}</strong><span>Awardee</span></div>
-          <div><strong>{stats.programs}</strong><span>Program</span></div>
-          <div><strong>{stats.publications}</strong><span>Publikasi</span></div>
-        </div>
-        <div className={`${styles.heroThumbs} etos-hero-thumbs`}>
-          {slides.map((slide, index) => (
-            <button
-              type="button"
-              className={`etos-hero-thumb-button${index === active ? ' is-active' : ''}`}
-              key={slide.id}
-              onClick={() => setActive(index)}
-              aria-label={`Tampilkan foto ${index + 1}`}
-            >
-              <img
-                src={slide.photo}
-                alt=""
-                style={{ objectPosition: slide.photoPosition }}
-                loading="lazy"
-                fetchPriority="low"
-                decoding="async"
-              />
-              <span>{String(index + 1).padStart(2, '0')}</span>
-            </button>
-          ))}
-        </div>
+      <div className="etos-hero-profile-strip" aria-label="Profil singkat Etos ID Palu">
+        <article className="etos-hero-profile-item">
+          <span className="etos-hero-profile-index">01</span>
+          <div>
+            <div className="etos-hero-profile-meta">{stats.awardees} Awardee</div>
+            <strong>Komunitas Pembelajar</strong>
+            <p>Mahasiswa bertumbuh bersama melalui pembinaan karakter, spiritualitas, dan kepemimpinan.</p>
+          </div>
+        </article>
+        <article className="etos-hero-profile-item">
+          <span className="etos-hero-profile-index">02</span>
+          <div>
+            <div className="etos-hero-profile-meta">{stats.programs} Program</div>
+            <strong>Pembinaan Terstruktur</strong>
+            <p>Program dirancang saling terhubung untuk membangun kapasitas, resiliensi, dan kolaborasi.</p>
+          </div>
+        </article>
+        <article className="etos-hero-profile-item">
+          <span className="etos-hero-profile-index">03</span>
+          <div>
+            <div className="etos-hero-profile-meta">{stats.publications} Publikasi</div>
+            <strong>Gagasan &amp; Dampak</strong>
+            <p>Cerita, pengalaman, dan kontribusi awardee diolah menjadi pengetahuan yang dapat dibagikan.</p>
+          </div>
+        </article>
       </div>
     </section>
   );
