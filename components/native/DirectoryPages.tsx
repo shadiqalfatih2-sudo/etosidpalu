@@ -12,6 +12,10 @@ function safeTextHtml(value: string) {
   });
 }
 
+function awardeeStudyLine(awardee: NativeAwardeeProfile) {
+  return [awardee.studyProgram, awardee.university].filter(Boolean).join(' • ');
+}
+
 export function AwardeeDirectory({ awardees }: { awardees: NativeAwardeeProfile[] }) {
   return (
     <main className={`${styles.page} native-directory native-awardee-directory`}>
@@ -25,16 +29,19 @@ export function AwardeeDirectory({ awardees }: { awardees: NativeAwardeeProfile[
       </section>
       <section className={`${styles.directorySection} native-directory-section`}>
         <div className={`${styles.awardeeGrid} native-awardee-directory-grid`}>
-          {awardees.map((awardee) => (
-            <Link href={`/awardee/${encodeURIComponent(awardee.id)}`} className={`${styles.awardeeCard} native-awardee-directory-card`} key={awardee.id}>
-              <div className={`${styles.awardeeImage} native-awardee-directory-image`}>
-                {awardee.photo ? <img src={awardee.photo} alt={awardee.name} style={{ objectPosition: awardee.photoPosition }} /> : null}
-              </div>
-              <div className={styles.cardMeta}>{awardee.cohort ? `Angkatan ${awardee.cohort}` : awardee.status}</div>
-              <h2>{awardee.name}</h2>
-              <p>{awardee.studyProgram}{awardee.university ? ` • ${awardee.university}` : ''}</p>
-            </Link>
-          ))}
+          {awardees.map((awardee) => {
+            const studyLine = awardeeStudyLine(awardee);
+            return (
+              <Link href={`/awardee/${encodeURIComponent(awardee.id)}`} className={`${styles.awardeeCard} native-awardee-directory-card`} key={awardee.id}>
+                <div className={`${styles.awardeeImage} native-awardee-directory-image`}>
+                  {awardee.photo ? <img src={awardee.photo} alt={awardee.name} style={{ objectPosition: awardee.photoPosition }} /> : null}
+                </div>
+                <div className={styles.cardMeta}>{awardee.cohort ? `Angkatan ${awardee.cohort}` : awardee.status}</div>
+                <h2>{awardee.name}</h2>
+                {studyLine ? <p>{studyLine}</p> : null}
+              </Link>
+            );
+          })}
         </div>
       </section>
     </main>
@@ -42,6 +49,13 @@ export function AwardeeDirectory({ awardees }: { awardees: NativeAwardeeProfile[
 }
 
 export function AwardeeProfile({ awardee }: { awardee: NativeAwardeeProfile }) {
+  const facts = [
+    awardee.status ? { label: 'Status', value: awardee.status } : null,
+    awardee.cohort ? { label: 'Angkatan', value: awardee.cohort } : null,
+    awardee.studyProgram ? { label: 'Program Studi', value: awardee.studyProgram } : null,
+    awardee.university ? { label: 'Universitas', value: awardee.university } : null,
+  ].filter(Boolean) as Array<{ label: string; value: string }>;
+
   return (
     <main className={`${styles.page} native-directory native-awardee-profile`}>
       <SiteHeader />
@@ -54,13 +68,12 @@ export function AwardeeProfile({ awardee }: { awardee: NativeAwardeeProfile }) {
           <div className={`${styles.profileContent} native-profile-content`}>
             <div className={styles.eyebrow}>AWARDEE ETOS ID PALU</div>
             <h1>{awardee.name}</h1>
-            <div className={`${styles.profileFacts} native-profile-facts`}>
-              <div><span>Status</span><strong>{awardee.status}</strong></div>
-              <div><span>Angkatan</span><strong>{awardee.cohort || '—'}</strong></div>
-              <div><span>Program Studi</span><strong>{awardee.studyProgram || '—'}</strong></div>
-              <div><span>Universitas</span><strong>{awardee.university || '—'}</strong></div>
-            </div>
-            <div className={styles.profileSummary}>{awardee.summary || 'Profil awardee belum dilengkapi.'}</div>
+            {facts.length ? (
+              <div className={`${styles.profileFacts} native-profile-facts`}>
+                {facts.map((fact) => <div key={fact.label}><span>{fact.label}</span><strong>{fact.value}</strong></div>)}
+              </div>
+            ) : null}
+            {awardee.summary ? <div className={styles.profileSummary}>{awardee.summary}</div> : null}
             {awardee.portfolio ? <a className={styles.outlineButton} href={awardee.portfolio} target="_blank" rel="noreferrer">Lihat Portofolio / CV →</a> : null}
           </div>
         </div>
