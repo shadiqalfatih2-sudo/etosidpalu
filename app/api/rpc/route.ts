@@ -13,6 +13,8 @@ const ALLOWED_METHODS = new Set([
   'saveProgramPhotoAdmin',
   'saveBeritaAdmin',
   'saveArtikelReview',
+  'saveProgramAdmin',
+  'saveHeroAdmin',
   'updateArtikelStatus',
 ]);
 
