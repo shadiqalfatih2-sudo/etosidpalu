@@ -15,37 +15,15 @@ function asDate(value: unknown) {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const db = supabaseServer();
-  const [programResult, awardeeResult, newsResult, articleResult] = await Promise.all([
-    db.from('programs').select('id,status,updated_at,created_at'),
-    db.from('awardees').select('id,display_status,updated_at,created_at'),
+  const [newsResult, articleResult] = await Promise.all([
     db.from('news').select('slug,status,published_at,updated_at,created_at'),
     db.from('articles').select('slug,status,published_at,updated_at,created_at').eq('status', 'Approved'),
   ]);
 
   const base: MetadataRoute.Sitemap = [
     { url: SITE, lastModified: new Date(), changeFrequency: 'daily', priority: 1 },
-    { url: `${SITE}/program`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
-    { url: `${SITE}/awardee`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.85 },
     { url: `${SITE}/kirim-tulisan`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.55 },
   ];
-
-  const programs = (programResult.data || [])
-    .filter((row) => isActive(row.status))
-    .map((row) => ({
-      url: `${SITE}/program/${encodeURIComponent(String(row.id))}`,
-      lastModified: asDate(row.updated_at || row.created_at),
-      changeFrequency: 'monthly' as const,
-      priority: 0.75,
-    }));
-
-  const awardees = (awardeeResult.data || [])
-    .filter((row) => isActive(row.display_status))
-    .map((row) => ({
-      url: `${SITE}/awardee/${encodeURIComponent(String(row.id))}`,
-      lastModified: asDate(row.updated_at || row.created_at),
-      changeFrequency: 'monthly' as const,
-      priority: 0.7,
-    }));
 
   const news = (newsResult.data || [])
     .filter((row) => isActive(row.status) && row.slug)
@@ -65,5 +43,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.75,
     }));
 
-  return [...base, ...programs, ...awardees, ...news, ...articles];
+  return [...base, ...news, ...articles];
 }
