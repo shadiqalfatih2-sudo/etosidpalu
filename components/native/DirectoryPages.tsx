@@ -34,7 +34,7 @@ export function AwardeeDirectory({ awardees }: { awardees: NativeAwardeeProfile[
             return (
               <Link href={`/awardee/${encodeURIComponent(awardee.id)}`} className={`${styles.awardeeCard} native-awardee-directory-card`} key={awardee.id}>
                 <div className={`${styles.awardeeImage} native-awardee-directory-image`}>
-                  {awardee.photo ? <img src={awardee.photo} alt={awardee.name} style={{ objectPosition: awardee.photoPosition }} /> : null}
+                  {awardee.photo ? <img src={awardee.photo} alt={awardee.name} style={{ objectPosition: awardee.photoPosition }} loading="lazy" decoding="async" fetchPriority="low" /> : null}
                 </div>
                 <div className={styles.cardMeta}>{awardee.cohort ? `Angkatan ${awardee.cohort}` : awardee.status}</div>
                 <h2>{awardee.name}</h2>
@@ -63,7 +63,7 @@ export function AwardeeProfile({ awardee }: { awardee: NativeAwardeeProfile }) {
         <Link href="/awardee" className={styles.back}>← Semua Awardee</Link>
         <div className={`${styles.profileGrid} native-profile-grid`}>
           <div className={`${styles.profilePhoto} native-profile-photo`}>
-            {awardee.photo ? <img src={awardee.photo} alt={awardee.name} style={{ objectPosition: awardee.photoPosition }} /> : null}
+            {awardee.photo ? <img src={awardee.photo} alt={awardee.name} style={{ objectPosition: awardee.photoPosition }} loading="eager" decoding="async" fetchPriority="high" /> : null}
           </div>
           <div className={`${styles.profileContent} native-profile-content`}>
             <div className={styles.eyebrow}>AWARDEE ETOS ID PALU</div>
@@ -102,7 +102,7 @@ export function ProgramDirectory({ programs }: { programs: NativeProgram[] }) {
               key={program.id}
             >
               <div className={`${styles.programImage} native-program-directory-image etos-program-directory-media-v3`}>
-                {program.preview ? <img src={program.preview} alt={program.name} /> : null}
+                {program.preview ? <img src={program.preview} alt={program.name} loading="lazy" decoding="async" fetchPriority="low" /> : null}
                 <span className={`${styles.programNumber} etos-program-directory-number-v3`}>{String(index + 1).padStart(2, '0')}</span>
               </div>
               <div className="etos-program-directory-body-v3">
@@ -131,12 +131,12 @@ export function ProgramDetail({ program }: { program: NativeProgramDetail }) {
           <div><div className={styles.eyebrow}>{program.category}</div><h1>{program.name}</h1></div>
           <p>{program.summary}</p>
         </div>
-        {hero ? <div className={`${styles.programHeroImage} native-program-detail-hero`}><img src={hero} alt={program.name} /></div> : null}
+        {hero ? <div className={`${styles.programHeroImage} native-program-detail-hero`}><img src={hero} alt={program.name} loading="eager" decoding="async" fetchPriority="high" /></div> : null}
         <div className={`${styles.programBodyGrid} native-program-body-grid`}>
           <div><div className={styles.bodyLabel}>Tentang Program</div><div className={styles.programDescription} dangerouslySetInnerHTML={{ __html: safeDescription }} /></div>
           <div className={styles.programAside}><div className={styles.bodyLabel}>Dokumentasi</div><strong>{program.photos.length}</strong><span>foto program tersedia</span></div>
         </div>
-        {program.photos.length > 1 ? <div className={`${styles.gallery} native-program-gallery`}>{program.photos.slice(1).map((photo) => <figure key={photo.id}><img src={photo.url} alt={photo.caption || program.name} style={{ objectPosition: photo.position }} />{photo.caption ? <figcaption>{photo.caption}</figcaption> : null}</figure>)}</div> : null}
+        {program.photos.length > 1 ? <div className={`${styles.gallery} native-program-gallery`}>{program.photos.slice(1).map((photo) => <figure key={photo.id}><img src={photo.url} alt={photo.caption || program.name} style={{ objectPosition: photo.position }} loading="lazy" decoding="async" fetchPriority="low" />{photo.caption ? <figcaption>{photo.caption}</figcaption> : null}</figure>)}</div> : null}
       </section>
     </main>
   );
