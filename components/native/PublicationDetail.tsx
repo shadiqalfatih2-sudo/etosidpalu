@@ -19,7 +19,7 @@ function formatDate(value: string) {
 }
 
 function href(item: NativePublication) {
-  return `/native-preview/${item.kind === 'Berita' ? 'berita' : 'opini'}/${encodeURIComponent(item.slug)}`;
+  return `/${item.kind === 'Berita' ? 'berita' : 'opini'}/${encodeURIComponent(item.slug)}`;
 }
 
 function cleanArticleHtml(value: string) {
@@ -46,7 +46,7 @@ export function NativePublicationDetailView({
     <main className={styles.page}>
       <SiteHeader />
       <div className={styles.shell}>
-        <Link href="/native-preview#publikasi" className={styles.back}>← Kembali ke Berita & Opini</Link>
+        <Link href="/#publikasi" className={styles.back}>← Kembali ke Berita & Opini</Link>
         <div className={styles.headGrid}>
           <article className={styles.article}>
             <div className={styles.meta}>{detail.kind} <span>•</span> {formatDate(detail.publishedAt)}</div>
@@ -87,7 +87,7 @@ export function NativePublicationDetailView({
                 </Link>
               ))}
             </div>
-            <Link href="/native-preview#publikasi" className={styles.more}>Lihat semua publikasi →</Link>
+            <Link href="/#publikasi" className={styles.more}>Lihat semua publikasi →</Link>
           </aside>
         </div>
       </div>
