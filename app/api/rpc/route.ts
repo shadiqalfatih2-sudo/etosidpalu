@@ -19,11 +19,30 @@ const ALLOWED_METHODS = new Set([
   'updateArtikelStatus',
 ]);
 
+const PUBLIC_WRITE_METHODS = new Set([
+  'saveAwardeeAdmin',
+  'saveProgramPhotoAdmin',
+  'saveBeritaAdmin',
+  'saveArtikelReview',
+  'saveProgramAdmin',
+  'saveHeroAdmin',
+  'updateArtikelStatus',
+]);
+
 function invalidatePublicCache(fn: string) {
+  if (!PUBLIC_WRITE_METHODS.has(fn)) return;
+
+  revalidateTag('public-home', 'max');
+  revalidatePath('/', 'page');
+
   if (fn === 'saveProgramAdmin' || fn === 'saveProgramPhotoAdmin') {
     revalidateTag('public-programs', 'max');
     revalidatePath('/program', 'page');
-    revalidatePath('/');
+  }
+
+  if (fn === 'saveAwardeeAdmin') {
+    revalidateTag('public-awardees', 'max');
+    revalidatePath('/awardee', 'page');
   }
 }
 
