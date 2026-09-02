@@ -9,7 +9,7 @@ import type {
 import styles from './HomePreview.module.css';
 
 function publicationHref(item: NativePublication) {
-  return `/${item.kind === 'Berita' ? 'berita' : 'opini'}/${encodeURIComponent(item.slug)}`;
+  return `/native-preview/${item.kind === 'Berita' ? 'berita' : 'opini'}/${encodeURIComponent(item.slug)}`;
 }
 
 function formatDate(value: string) {
