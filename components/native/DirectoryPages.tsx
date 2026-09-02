@@ -81,18 +81,22 @@ export function ProgramDirectory({ programs }: { programs: NativeProgram[] }) {
         </div>
       </section>
       <section className={`${styles.directorySection} native-directory-section`}>
-        <div className={`${styles.programGrid} native-program-directory-grid`}>
+        <div className={`${styles.programGrid} native-program-directory-grid etos-program-directory-grid-v3`}>
           {programs.map((program, index) => (
-            <Link href={`/program/${encodeURIComponent(program.id)}`} className={`${styles.programCard} native-program-directory-card`} key={program.id}>
-              <div className={`${styles.programImage} native-program-directory-image`}>
+            <Link
+              href={`/program/${encodeURIComponent(program.id)}`}
+              className={`${styles.programCard} native-program-directory-card etos-program-directory-card-v3`}
+              key={program.id}
+            >
+              <div className={`${styles.programImage} native-program-directory-image etos-program-directory-media-v3`}>
                 {program.preview ? <img src={program.preview} alt={program.name} /> : null}
-                <div className={styles.programShade} />
-                <span className={styles.programNumber}>{String(index + 1).padStart(2, '0')}</span>
-                <div className={styles.programText}>
-                  <small>{program.category}</small>
-                  <h2>{program.name}</h2>
-                  <p>{program.summary}</p>
-                </div>
+                <span className={`${styles.programNumber} etos-program-directory-number-v3`}>{String(index + 1).padStart(2, '0')}</span>
+              </div>
+              <div className="etos-program-directory-body-v3">
+                <small>{program.category || 'Program Pembinaan'}</small>
+                <h2>{program.name}</h2>
+                <p>{program.summary}</p>
+                <span>Lihat detail <b>↗</b></span>
               </div>
             </Link>
           ))}
