@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { supabaseServer } from './supabase';
 
 export type NativeHero = {
@@ -209,7 +210,7 @@ export async function getNativeHomeData() {
   };
 }
 
-export async function getNativePublicationDetail(kindParam: string, slug: string) {
+export const getNativePublicationDetail = cache(async (kindParam: string, slug: string) => {
   const kind = String(kindParam || '').toLowerCase();
   if (kind !== 'berita' && kind !== 'opini') return null;
 
@@ -235,4 +236,4 @@ export async function getNativePublicationDetail(kindParam: string, slug: string
     .map((item) => (kind === 'berita' ? mapNews(item, false) : mapArticle(item, false)) as NativePublication);
 
   return { detail, related };
-}
+});
