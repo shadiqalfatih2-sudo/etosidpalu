@@ -29,6 +29,9 @@ export function HeroSlider({ heroes, stats }: { heroes: NativeHero[]; stats: Nat
               src={slide.photo}
               alt=""
               style={{ objectPosition: slide.photoPosition }}
+              loading={index === 0 ? 'eager' : 'lazy'}
+              fetchPriority={index === 0 ? 'high' : 'low'}
+              decoding="async"
             />
           ))}
         </div>
@@ -59,7 +62,14 @@ export function HeroSlider({ heroes, stats }: { heroes: NativeHero[]; stats: Nat
               onClick={() => setActive(index)}
               aria-label={`Tampilkan foto ${index + 1}`}
             >
-              <img src={slide.photo} alt="" style={{ objectPosition: slide.photoPosition }} />
+              <img
+                src={slide.photo}
+                alt=""
+                style={{ objectPosition: slide.photoPosition }}
+                loading="lazy"
+                fetchPriority="low"
+                decoding="async"
+              />
               <span>{String(index + 1).padStart(2, '0')}</span>
             </button>
           ))}
