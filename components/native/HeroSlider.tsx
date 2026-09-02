@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
 import type { NativeHero, NativeHomeStats } from '@/lib/native-public';
 import styles from './HomePreview.module.css';
 
@@ -41,8 +40,8 @@ export function HeroSlider({ heroes, stats }: { heroes: NativeHero[]; stats: Nat
           <h1>{current?.subtitle || leadTitle}</h1>
           <p>Ruang tumbuh bagi mahasiswa untuk menguatkan karakter, kepemimpinan, spiritualitas, dan kontribusi sosial yang berdampak.</p>
           <div className={styles.heroActions}>
-            <Link href="/program" className={styles.heroPrimary}>Jelajahi Program</Link>
-            <Link href="/awardee" className={styles.heroGhost}>Kenal Lebih Dekat Awardee</Link>
+            <a href="/#program" className={styles.heroPrimary}>Jelajahi Program</a>
+            <a href="/#awardee" className={styles.heroGhost}>Kenal Lebih Dekat Awardee</a>
           </div>
         </div>
       </div>
