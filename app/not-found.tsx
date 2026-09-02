@@ -13,8 +13,8 @@ export default function NotFound() {
         <p style={{ maxWidth: '580px', fontSize: '17px', lineHeight: 1.8, color: '#627169', margin: '0 0 32px' }}>Alamat yang dibuka tidak tersedia atau sudah dipindahkan. Kembali ke portal utama, jelajahi program, atau temui awardee Etos ID Palu.</p>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
           <Link href="/" style={{ textDecoration: 'none', background: '#1f6b50', color: '#fff', padding: '13px 18px', borderRadius: '999px', fontSize: '13px', fontWeight: 800 }}>Kembali ke Beranda</Link>
-          <Link href="/program" style={{ textDecoration: 'none', border: '1px solid #d8e3dd', color: '#245f49', padding: '13px 18px', borderRadius: '999px', fontSize: '13px', fontWeight: 800 }}>Lihat Program</Link>
-          <Link href="/awardee" style={{ textDecoration: 'none', border: '1px solid #d8e3dd', color: '#245f49', padding: '13px 18px', borderRadius: '999px', fontSize: '13px', fontWeight: 800 }}>Lihat Awardee</Link>
+          <a href="/#program" style={{ textDecoration: 'none', border: '1px solid #d8e3dd', color: '#245f49', padding: '13px 18px', borderRadius: '999px', fontSize: '13px', fontWeight: 800 }}>Lihat Program</a>
+          <a href="/#awardee" style={{ textDecoration: 'none', border: '1px solid #d8e3dd', color: '#245f49', padding: '13px 18px', borderRadius: '999px', fontSize: '13px', fontWeight: 800 }}>Lihat Awardee</a>
         </div>
       </section>
     </main>
