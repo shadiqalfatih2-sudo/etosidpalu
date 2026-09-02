@@ -8,6 +8,7 @@ import type {
 } from '@/lib/native-public';
 import { BrandMark } from './BrandMark';
 import { HeroSlider } from './HeroSlider';
+import { HomeDirectories } from './HomeDirectories';
 import styles from './HomePreview.module.css';
 
 function publicationHref(item: NativePublication) {
@@ -44,18 +45,18 @@ export function SiteHeader() {
         @media(max-width:620px){.etos-mobile-menu summary{padding:9px 11px;font-size:9px}.etos-mobile-menu-panel{right:-2px}}
       `}</style>
 
-      <Link className={`${styles.brandRow} etos-brand-row`} href="/" aria-label="Etos ID Palu">
+      <a className={`${styles.brandRow} etos-brand-row`} href="/#beranda" aria-label="Etos ID Palu">
         <BrandMark />
         <div className={`${styles.brandDivider} etos-brand-divider`} />
         <div className={`${styles.tagline} etos-tagline`}>We Are Resilient Leader</div>
-      </Link>
+      </a>
 
       <nav className={`${styles.nav} etos-desktop-nav`} aria-label="Navigasi utama">
-        <Link href="/">Beranda</Link>
-        <Link href="/#tentang">Tentang</Link>
-        <Link href="/program">Program</Link>
-        <Link href="/awardee">Awardee</Link>
-        <Link href="/#publikasi">Berita & Opini</Link>
+        <a href="/#beranda">Beranda</a>
+        <a href="/#tentang">Tentang</a>
+        <a href="/#program">Program</a>
+        <a href="/#awardee">Awardee</a>
+        <a href="/#publikasi">Berita & Opini</a>
       </nav>
 
       <div className={`${styles.actions} etos-header-actions`}>
@@ -64,11 +65,11 @@ export function SiteHeader() {
         <details className="etos-mobile-menu">
           <summary>Menu</summary>
           <nav className="etos-mobile-menu-panel" aria-label="Navigasi mobile">
-            <Link href="/">Beranda</Link>
-            <Link href="/#tentang">Tentang</Link>
-            <Link href="/program">Program</Link>
-            <Link href="/awardee">Awardee</Link>
-            <Link href="/#publikasi">Berita & Opini</Link>
+            <a href="/#beranda">Beranda</a>
+            <a href="/#tentang">Tentang</a>
+            <a href="/#program">Program</a>
+            <a href="/#awardee">Awardee</a>
+            <a href="/#publikasi">Berita & Opini</a>
             <Link href="/kirim-tulisan">Kirim Tulisan</Link>
             <Link href="/admin">Admin</Link>
           </nav>
@@ -89,74 +90,8 @@ function About() {
         <div className={`${styles.aboutCopy} etos-about-copy-v3`}>
           <p>Etos ID Palu menghadirkan pembinaan yang tidak berhenti pada capaian akademik. Prosesnya dirancang sebagai ekosistem tumbuh: mengasah nalar, memperkuat spiritualitas, membangun kepemimpinan, dan menghubungkan gagasan dengan kebutuhan masyarakat.</p>
           <p>Di sini, awardee belajar untuk tidak hanya menjadi penerima manfaat, tetapi juga menjadi pribadi yang mampu mengubah pengalaman menjadi kontribusi nyata.</p>
-          <Link href="/program">Lihat ekosistem pembinaan <span>→</span></Link>
+          <a href="/#program">Lihat ekosistem pembinaan <span>→</span></a>
         </div>
-      </div>
-    </section>
-  );
-}
-
-function Programs({ programs }: { programs: NativeProgram[] }) {
-  return (
-    <section className={`${styles.programSection} etos-program-section etos-program-section-v3`} id="program">
-      <div className={`${styles.sectionHeadWide} etos-program-head-v3`}>
-        <div>
-          <div className={styles.sectionLabel}><span />Program Etos ID Palu</div>
-          <h2>Program yang membentuk cara berpikir, karakter, dan keberanian untuk memberi dampak.</h2>
-        </div>
-        <p>Setiap program dirancang sebagai bagian dari satu perjalanan pembinaan: ringkas dalam tampilan, kuat dalam pengalaman, dan terhubung dengan kebutuhan awardee.</p>
-      </div>
-
-      <div className={`${styles.programGrid} etos-home-program-grid etos-program-grid-v3`}>
-        {programs.slice(0, 8).map((program, index) => (
-          <Link
-            className={`${styles.programCard} etos-home-program-card etos-program-editorial-card`}
-            href={`/program/${encodeURIComponent(program.id)}`}
-            key={program.id}
-          >
-            <div className={`${styles.programImage} etos-home-program-image etos-program-editorial-media`}>
-              {program.preview ? <img src={program.preview} alt={program.name} loading="lazy" decoding="async" fetchPriority="low" /> : null}
-              <div className="etos-program-media-wash" />
-              <div className={`${styles.programIndex} etos-program-index-v3`}>{String(index + 1).padStart(2, '0')}</div>
-            </div>
-            <div className="etos-program-editorial-body">
-              <div className="etos-program-editorial-meta">{program.category || 'Program Pembinaan'}</div>
-              <h3>{program.name}</h3>
-              <p>{program.summary}</p>
-              <span className="etos-program-editorial-link">Lihat program <b>↗</b></span>
-            </div>
-          </Link>
-        ))}
-      </div>
-
-      <div className={styles.sectionFootNote}><Link href="/program">Lihat seluruh program aktif →</Link></div>
-    </section>
-  );
-}
-
-function Awardees({ awardees }: { awardees: NativeAwardee[] }) {
-  return (
-    <section className={`${styles.awardeeSection} etos-awardee-section`} id="awardee">
-      <div className={styles.awardeeHead}>
-        <div>
-          <div className={styles.sectionLabel}><span />Awardee Etos ID Palu</div>
-          <h2>Orang-orang yang bertumbuh dan membawa gagasan menjadi dampak.</h2>
-        </div>
-        <Link href="/awardee" className={styles.darkPill}>Lihat Semua Awardee</Link>
-      </div>
-      <div className={`${styles.awardeeGrid} etos-home-awardee-grid`}>
-        {awardees.slice(0, 5).map((awardee) => (
-          <Link className={`${styles.awardeeCard} etos-home-awardee-card`} href={`/awardee/${encodeURIComponent(awardee.id)}`} key={awardee.id}>
-            <div className={`${styles.imageWrap} etos-home-awardee-image`}>
-              {awardee.photo ? <img src={awardee.photo} alt={awardee.name} style={{ objectPosition: awardee.photoPosition }} loading="lazy" decoding="async" fetchPriority="low" /> : null}
-            </div>
-            <div className={styles.cardBody}>
-              <small>{awardee.cohort ? `Angkatan ${awardee.cohort}` : 'Awardee Etos ID'}</small>
-              <h3>{awardee.name}</h3>
-              {(awardee.studyProgram || awardee.university) ? <p>{[awardee.studyProgram, awardee.university].filter(Boolean).join(' • ')}</p> : null}
-            </div>
-          </Link>
-        ))}
       </div>
     </section>
   );
@@ -173,7 +108,7 @@ function Publications({ publications }: { publications: NativePublication[] }) {
           <div className={styles.sectionLabel}><span />Berita & Opini</div>
           <h2>Catatan perjalanan, gagasan, dan dampak dari ekosistem Etos ID Palu.</h2>
         </div>
-        <Link href="/#publikasi">Lihat Selengkapnya</Link>
+        <a href="/#publikasi">Lihat Selengkapnya</a>
       </div>
 
       {lead ? (
@@ -226,10 +161,10 @@ function Footer() {
         <span className="etos-footer-location-copy">Palu, Sulawesi Tengah</span>
       </div>
       <div className={styles.footerLinks}>
-        <Link href="/#tentang">Tentang</Link>
-        <Link href="/program">Program</Link>
-        <Link href="/awardee">Awardee</Link>
-        <Link href="/#publikasi">Berita & Opini</Link>
+        <a href="/#tentang">Tentang</a>
+        <a href="/#program">Program</a>
+        <a href="/#awardee">Awardee</a>
+        <a href="/#publikasi">Berita & Opini</a>
       </div>
       <div className={styles.footerMeta}>© {new Date().getFullYear()} Etos ID Palu.</div>
     </footer>
@@ -250,12 +185,11 @@ export function NativeHomePreview({
   stats: NativeHomeStats;
 }) {
   return (
-    <main className={`${styles.page} native-home`}>
+    <main className={`${styles.page} native-home`} id="beranda">
       <SiteHeader />
       <HeroSlider heroes={heroes} stats={stats} />
       <About />
-      <Programs programs={programs} />
-      <Awardees awardees={awardees} />
+      <HomeDirectories programs={programs} awardees={awardees} />
       <Publications publications={publications} />
       <ClosingCta />
       <Footer />
