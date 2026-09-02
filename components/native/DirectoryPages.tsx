@@ -26,7 +26,7 @@ export function AwardeeDirectory({ awardees }: { awardees: NativeAwardeeProfile[
       <section className={styles.directorySection}>
         <div className={styles.awardeeGrid}>
           {awardees.map((awardee) => (
-            <Link href={`/native-preview/awardee/${encodeURIComponent(awardee.id)}`} className={styles.awardeeCard} key={awardee.id}>
+            <Link href={`/awardee/${encodeURIComponent(awardee.id)}`} className={styles.awardeeCard} key={awardee.id}>
               <div className={styles.awardeeImage}>
                 {awardee.photo ? (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -49,7 +49,7 @@ export function AwardeeProfile({ awardee }: { awardee: NativeAwardeeProfile }) {
     <main className={styles.page}>
       <SiteHeader />
       <section className={styles.profileShell}>
-        <Link href="/native-preview/awardee" className={styles.back}>← Semua Awardee</Link>
+        <Link href="/awardee" className={styles.back}>← Semua Awardee</Link>
         <div className={styles.profileGrid}>
           <div className={styles.profilePhoto}>
             {awardee.photo ? (
@@ -91,7 +91,7 @@ export function ProgramDirectory({ programs }: { programs: NativeProgram[] }) {
       <section className={styles.directorySection}>
         <div className={styles.programGrid}>
           {programs.map((program, index) => (
-            <Link href={`/native-preview/program/${encodeURIComponent(program.id)}`} className={styles.programCard} key={program.id}>
+            <Link href={`/program/${encodeURIComponent(program.id)}`} className={styles.programCard} key={program.id}>
               <div className={styles.programImage}>
                 {program.preview ? (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -120,7 +120,7 @@ export function ProgramDetail({ program }: { program: NativeProgramDetail }) {
     <main className={styles.page}>
       <SiteHeader />
       <section className={styles.programDetailShell}>
-        <Link href="/native-preview/program" className={styles.back}>← Semua Program</Link>
+        <Link href="/program" className={styles.back}>← Semua Program</Link>
         <div className={styles.programDetailHead}>
           <div>
             <div className={styles.eyebrow}>{program.category}</div>
