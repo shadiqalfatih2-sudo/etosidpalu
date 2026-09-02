@@ -33,19 +33,6 @@ function formatDate(value: string) {
 export function SiteHeader() {
   return (
     <header className={`${styles.header} etos-site-header`}>
-      <style>{`
-        .etos-mobile-menu{display:none;position:relative}
-        .etos-mobile-menu summary{list-style:none;cursor:pointer;border:1px solid #d8e1db;border-radius:999px;padding:10px 13px;color:#225e48;background:#fff;font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;user-select:none}
-        .etos-mobile-menu summary::-webkit-details-marker{display:none}
-        .etos-mobile-menu[open] summary{background:#eef5f1}
-        .etos-mobile-menu-panel{position:absolute;right:0;top:calc(100% + 10px);width:min(270px,84vw);padding:8px;background:#fff;border:1px solid #dce4df;border-radius:14px;box-shadow:0 18px 55px rgba(19,54,40,.16);display:flex;flex-direction:column;z-index:80}
-        .etos-mobile-menu-panel a{color:#1b2b23;text-decoration:none;padding:11px 12px;border-radius:9px;font-size:12px;font-weight:800}
-        .etos-mobile-menu-panel a:hover{background:#f1f6f3;color:#155d43}
-        .etos-mobile-menu-panel a+a{border-top:1px solid #eef2ef}
-        @media(max-width:1180px){.etos-mobile-menu{display:block}}
-        @media(max-width:620px){.etos-mobile-menu summary{padding:9px 11px;font-size:9px}.etos-mobile-menu-panel{right:-2px}}
-      `}</style>
-
       <a className={`${styles.brandRow} etos-brand-row`} href="/#beranda" aria-label="Etos ID Palu">
         <BrandMark />
         <div className={`${styles.brandDivider} etos-brand-divider`} />
@@ -174,10 +161,11 @@ export function NativeHomePreview({
   publications: NativePublication[];
   stats: NativeHomeStats;
 }) {
+  void stats;
   return (
     <main className={`${styles.page} native-home`} id="beranda">
       <SiteHeader />
-      <HeroSlider heroes={heroes} stats={stats} />
+      <HeroSlider heroes={heroes} />
       <About />
       <HomeDirectories programs={programs} awardees={awardees} />
       <Publications publications={publications} />
