@@ -106,7 +106,7 @@ export function NativeSubmitForm() {
     <main className={styles.page}>
       <SiteHeader />
       <section className={styles.submitShell}>
-        <Link className={styles.back} href="/native-preview">← Kembali ke Beranda</Link>
+        <Link className={styles.back} href="/">← Kembali ke Beranda</Link>
         <div className={styles.submitGrid}>
           <div className={styles.intro}>
             <div className={styles.eyebrow}>KIRIM TULISAN</div>
