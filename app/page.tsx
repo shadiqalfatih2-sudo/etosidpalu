@@ -18,7 +18,43 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': 'https://www.etosidpalu.com/#organization',
+      name: 'Etos ID Palu',
+      url: 'https://www.etosidpalu.com',
+      logo: 'https://www.etosidpalu.com/assets/etos-id.png',
+      sameAs: ['https://www.instagram.com/etosidpalu/'],
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Palu',
+        addressRegion: 'Sulawesi Tengah',
+        addressCountry: 'ID',
+      },
+    },
+    {
+      '@type': 'WebSite',
+      '@id': 'https://www.etosidpalu.com/#website',
+      url: 'https://www.etosidpalu.com',
+      name: 'Etos ID Palu',
+      publisher: { '@id': 'https://www.etosidpalu.com/#organization' },
+      inLanguage: 'id-ID',
+    },
+  ],
+};
+
 export default async function HomePage() {
   const data = await getNativeHomeData();
-  return <NativeHomePreview {...data} />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, '\\u003c') }}
+      />
+      <NativeHomePreview {...data} />
+    </>
+  );
 }
