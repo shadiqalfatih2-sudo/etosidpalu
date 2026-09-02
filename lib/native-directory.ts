@@ -1,4 +1,5 @@
 import { cache } from 'react';
+import { unstable_cache } from 'next/cache';
 import { supabaseServer } from './supabase';
 import { mediaUrl, type NativeAwardee, type NativeProgram } from './native-public';
 
@@ -70,44 +71,61 @@ export const getNativeAwardeeDetail = cache(async (id: string): Promise<NativeAw
   return mapAwardee(data);
 });
 
+const getNativeProgramsCached = unstable_cache(
+  async (): Promise<NativeProgram[]> => {
+    const db = supabaseServer();
+    const { data, error } = await db
+      .from('programs')
+      .select('id,name,category,summary,description,preview_url,icon,status,sort_order')
+      .order('sort_order');
+    if (error) throw error;
+    return (data || []).filter((row) => active(row.status)).map(mapProgram);
+  },
+  ['native-program-directory-v2'],
+  { revalidate: 300, tags: ['public-programs'] },
+);
+
 export async function getNativePrograms(): Promise<NativeProgram[]> {
-  const db = supabaseServer();
-  const { data, error } = await db.from('programs').select('*').order('sort_order');
-  if (error) throw error;
-  return (data || []).filter((row) => active(row.status)).map(mapProgram);
+  return getNativeProgramsCached();
 }
 
-export const getNativeProgramDetail = cache(async (id: string): Promise<NativeProgramDetail | null> => {
-  const db = supabaseServer();
-  const [{ data: program, error: programError }, { data: photos, error: photosError }] = await Promise.all([
-    db.from('programs').select('*').eq('id', id).maybeSingle(),
-    db.from('program_photos').select('*').eq('program_id', id).order('sort_order'),
-  ]);
+const getNativeProgramDetailCached = unstable_cache(
+  async (id: string): Promise<NativeProgramDetail | null> => {
+    const db = supabaseServer();
+    const [{ data: program, error: programError }, { data: photos, error: photosError }] = await Promise.all([
+      db.from('programs').select('*').eq('id', id).maybeSingle(),
+      db.from('program_photos').select('*').eq('program_id', id).order('sort_order'),
+    ]);
 
-  if (programError) throw programError;
-  if (photosError) throw photosError;
-  if (!program || !active(program.status)) return null;
+    if (programError) throw programError;
+    if (photosError) throw photosError;
+    if (!program || !active(program.status)) return null;
 
-  const mappedPhotos: NativeProgramPhoto[] = (photos || [])
-    .filter((photo) => active(photo.status) && photo.photo_url)
-    .map((photo) => ({
-      id: String(photo.id),
-      url: mediaUrl(photo.photo_url),
-      caption: String(photo.caption || ''),
-      position: String(photo.photo_position || '50% 50%'),
-      order: Number(photo.sort_order || 1),
-    }));
+    const mappedPhotos: NativeProgramPhoto[] = (photos || [])
+      .filter((photo) => active(photo.status) && photo.photo_url)
+      .map((photo) => ({
+        id: String(photo.id),
+        url: mediaUrl(photo.photo_url),
+        caption: String(photo.caption || ''),
+        position: String(photo.photo_position || '50% 50%'),
+        order: Number(photo.sort_order || 1),
+      }));
 
-  const base = mapProgram(program);
-  if (base.preview && !mappedPhotos.some((photo) => photo.url === base.preview)) {
-    mappedPhotos.unshift({
-      id: `preview-${base.id}`,
-      url: base.preview,
-      caption: '',
-      position: '50% 50%',
-      order: 0,
-    });
-  }
+    const base = mapProgram(program);
+    if (base.preview && !mappedPhotos.some((photo) => photo.url === base.preview)) {
+      mappedPhotos.unshift({
+        id: `preview-${base.id}`,
+        url: base.preview,
+        caption: '',
+        position: '50% 50%',
+        order: 0,
+      });
+    }
 
-  return { ...base, photos: mappedPhotos };
-});
+    return { ...base, photos: mappedPhotos };
+  },
+  ['native-program-detail-v2'],
+  { revalidate: 300, tags: ['public-programs'] },
+);
+
+export const getNativeProgramDetail = cache((id: string) => getNativeProgramDetailCached(id));
