@@ -44,6 +44,12 @@ function invalidatePublicCache(fn: string) {
     revalidateTag('public-awardees', 'max');
     revalidatePath('/awardee', 'page');
   }
+
+  if (fn === 'saveBeritaAdmin' || fn === 'saveArtikelReview' || fn === 'updateArtikelStatus') {
+    revalidateTag('public-publications', 'max');
+    revalidatePath('/berita/[slug]', 'page');
+    revalidatePath('/opini/[slug]', 'page');
+  }
 }
 
 export async function POST(req: NextRequest) {
