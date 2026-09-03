@@ -4,6 +4,7 @@ import { NavigationFeedback } from '@/components/native/NavigationFeedback';
 import './design-system.css';
 import './navigation-performance.css';
 import './motion-system.css';
+import './homepage-refinement.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.etosidpalu.com'),
