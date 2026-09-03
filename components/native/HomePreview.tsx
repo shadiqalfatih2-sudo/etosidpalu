@@ -60,7 +60,7 @@ export function SiteHeader() {
 function About() {
   return (
     <section className={`${styles.about} etos-about etos-about-v3`} id="tentang">
-      <div className={styles.sectionLabel} data-etos-reveal="line"><span />Tentang Etos ID Palu</div>
+      <div className={styles.sectionLabel} data-etos-reveal="soft"><span />Tentang Etos ID Palu</div>
       <div className={`${styles.aboutGrid} etos-about-grid-v3`}>
         <div className="etos-about-title-wrap" data-etos-reveal="soft">
           <h2>Menumbuhkan pemimpin muda yang tangguh, berakar pada nilai, dan hadir membawa dampak.</h2>
