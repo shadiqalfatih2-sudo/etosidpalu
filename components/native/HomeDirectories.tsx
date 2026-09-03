@@ -165,7 +165,7 @@ function DetailDrawer({ state, onClose }: { state: DrawerState; onClose: () => v
   );
 }
 
-function ProgramPartner() {
+export function ProgramPartner() {
   return (
     <section className="etos-partner-section" id="mitra-program" aria-labelledby="mitra-program-title">
       <div className="etos-partner-shell" data-etos-reveal="soft">
@@ -245,8 +245,6 @@ export function HomeDirectories({ programs, awardees }: { programs: NativeProgra
           </div>
         ) : null}
       </section>
-
-      <ProgramPartner />
 
       <section className={`${homeStyles.awardeeSection} etos-awardee-section`} id="awardee">
         <div className={homeStyles.awardeeHead} data-etos-reveal="soft">
