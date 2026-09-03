@@ -46,7 +46,7 @@ function deleteMethod(group: Group) {
   if (group === 'Berita') return 'saveBeritaAdmin';
   if (group === 'Artikel') return 'saveArtikelReview';
   if (group === 'Program') return 'saveProgramAdmin';
-  if (group === 'ProgramFoto') return 'saveProgramFotoAdmin';
+  if (group === 'ProgramFoto') return 'saveProgramPhotoAdmin';
   if (group === 'Awardee') return 'saveAwardeeAdmin';
   return 'saveHeroAdmin';
 }
