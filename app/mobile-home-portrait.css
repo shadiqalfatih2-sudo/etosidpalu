@@ -1,5 +1,5 @@
 /* ETOS ID Palu — portrait source of truth.
-   Scope: hero, About, and Program intro only. The program cards themselves stay untouched. */
+   Scope: hero, About, and Program intro/card rhythm on portrait screens. */
 
 .etos-hero-secondary-mobile,
 .etos-about-title-mobile,
@@ -28,6 +28,7 @@
     border-radius: 18px !important;
     background: #153d2e !important;
     overflow: hidden !important;
+    box-shadow: 0 14px 34px rgba(15, 52, 38, .08);
   }
 
   .etos-hero-slides {
@@ -52,7 +53,7 @@
   .etos-hero-slide {
     z-index: 1;
     transform: scale(1.012) !important;
-    transition: opacity 980ms cubic-bezier(.2,.65,.25,1), transform 6.2s ease-out !important;
+    transition: opacity 1050ms cubic-bezier(.2,.65,.25,1), transform 6.4s ease-out !important;
   }
 
   .etos-hero-slide.is-active {
@@ -63,7 +64,8 @@
     inset: 0 0 auto !important;
     z-index: 1;
     height: var(--etos-hero-photo-h) !important;
-    background: linear-gradient(180deg, rgba(8,34,24,.015) 50%, rgba(8,34,24,.28) 100%) !important;
+    background:
+      linear-gradient(180deg, rgba(8,34,24,.01) 42%, rgba(8,34,24,.08) 68%, rgba(8,34,24,.34) 100%) !important;
   }
 
   .etos-hero-content {
@@ -78,8 +80,40 @@
   }
 
   .etos-hero-copy-panel {
-    padding: 20px 18px 22px;
-    background: #153d2e;
+    position: relative;
+    isolation: isolate;
+    padding: 24px 18px 24px;
+    background: linear-gradient(180deg, #173f30 0%, #153d2e 52%, #12382a 100%);
+  }
+
+  .etos-hero-copy-panel::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: 0;
+    right: 0;
+    top: -66px;
+    height: 68px;
+    pointer-events: none;
+    background: linear-gradient(
+      180deg,
+      rgba(21,61,46,0) 0%,
+      rgba(21,61,46,.14) 28%,
+      rgba(21,61,46,.5) 62%,
+      rgba(23,63,48,.92) 88%,
+      #173f30 100%
+    );
+  }
+
+  .etos-hero-copy-panel::after {
+    content: "";
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    top: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.16), transparent);
+    pointer-events: none;
   }
 
   .etos-hero-kicker {
@@ -126,6 +160,7 @@
     font-size: 10.5px !important;
     line-height: 1 !important;
     letter-spacing: .045em !important;
+    box-shadow: 0 8px 20px rgba(7, 29, 21, .12);
   }
 
   .etos-hero-secondary {
@@ -278,7 +313,7 @@
     font-weight: 820;
   }
 
-  /* Program: keep cards untouched; only make the intro feel intentional. */
+  /* Program: strong headline + editorial note. */
   .etos-program-section {
     padding-top: 54px !important;
     padding-bottom: 64px !important;
@@ -288,7 +323,7 @@
 
   .etos-program-head-v3 {
     display: block !important;
-    margin-bottom: 30px !important;
+    margin-bottom: 34px !important;
   }
 
   .etos-program-head-v3 > div {
@@ -305,25 +340,90 @@
   }
 
   .etos-program-head-v3 > p {
-    display: -webkit-box !important;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    overflow: hidden;
+    position: relative;
+    display: block !important;
     max-width: 35rem !important;
-    margin: 20px 0 0 !important;
-    padding: 14px 15px 14px 16px !important;
-    color: #45594f !important;
-    background: #edf4ef !important;
-    border: 1px solid #d4e2d9 !important;
-    border-left: 3px solid var(--etos-accent) !important;
-    border-radius: 12px !important;
-    font-size: 13.25px !important;
-    line-height: 1.56 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 21px 0 0 !important;
+    padding: 17px 17px 17px 20px !important;
+    overflow: visible !important;
+    -webkit-box-orient: initial !important;
+    -webkit-line-clamp: unset !important;
+    color: #40564b !important;
+    background: linear-gradient(135deg, #edf5f0 0%, #f7faf8 100%) !important;
+    border: 1px solid #d7e4dc !important;
+    border-radius: 14px !important;
+    box-shadow: 0 10px 26px rgba(29, 83, 61, .055);
+    font-size: 13px !important;
+    line-height: 1.57 !important;
     letter-spacing: -.006em !important;
   }
 
+  .etos-program-head-v3 > p::before {
+    content: "RANGKAIAN PEMBINAAN";
+    display: block;
+    margin: 0 0 8px;
+    color: var(--etos-accent);
+    font-size: 7.75px;
+    line-height: 1.2;
+    font-weight: 880;
+    letter-spacing: .13em;
+  }
+
+  .etos-program-head-v3 > p::after {
+    content: "";
+    position: absolute;
+    left: -1px;
+    top: 14px;
+    bottom: 14px;
+    width: 3px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #2d7d5e 0%, #55a17f 100%);
+  }
+
+  /* One wrapped element per Program card: the summary becomes the editorial object. */
+  .etos-program-editorial-body {
+    min-height: 0 !important;
+    padding: 14px 0 2px !important;
+  }
+
+  .etos-program-editorial-body p {
+    position: relative;
+    display: block !important;
+    margin: 10px 0 0 !important;
+    padding: 12px 13px 12px !important;
+    overflow: visible !important;
+    -webkit-box-orient: initial !important;
+    -webkit-line-clamp: unset !important;
+    color: #46594f !important;
+    background: #f0f5f1 !important;
+    border: 1px solid #dce7e0 !important;
+    border-radius: 11px !important;
+    font-size: 11.75px !important;
+    line-height: 1.5 !important;
+    letter-spacing: -.005em !important;
+  }
+
+  .etos-program-editorial-body p::before {
+    content: "INTI PROGRAM";
+    display: block;
+    margin: 0 0 6px;
+    color: var(--etos-accent);
+    font-size: 7px;
+    line-height: 1.2;
+    font-weight: 880;
+    letter-spacing: .12em;
+  }
+
+  .etos-program-editorial-link {
+    margin-top: 12px !important;
+    padding-top: 0 !important;
+  }
+
   .etos-home-program-grid {
-    gap: 30px 12px !important;
+    gap: 40px 12px !important;
   }
 }
 
@@ -338,7 +438,17 @@
   }
 
   .etos-hero-copy-panel {
-    padding: 18px 16px 20px;
+    padding: 22px 16px 22px;
+  }
+
+  .etos-hero-copy-panel::before {
+    top: -58px;
+    height: 60px;
+  }
+
+  .etos-hero-copy-panel::after {
+    left: 16px;
+    right: 16px;
   }
 
   .etos-hero-copy-panel h1 {
@@ -390,13 +500,23 @@
   }
 
   .etos-program-head-v3 {
-    margin-bottom: 26px !important;
+    margin-bottom: 31px !important;
   }
 
   .etos-program-head-v3 > p {
     margin-top: 18px !important;
-    padding: 13px 14px 13px 15px !important;
-    font-size: 13px !important;
-    line-height: 1.54 !important;
+    padding: 15px 15px 15px 18px !important;
+    font-size: 12.5px !important;
+    line-height: 1.55 !important;
+  }
+
+  .etos-program-editorial-body p {
+    padding: 11px 12px !important;
+    font-size: 11.5px !important;
+    line-height: 1.48 !important;
+  }
+
+  .etos-home-program-grid {
+    gap: 38px 12px !important;
   }
 }
