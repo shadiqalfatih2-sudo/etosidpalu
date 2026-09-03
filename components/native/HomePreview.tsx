@@ -8,7 +8,7 @@ import type {
 } from '@/lib/native-public';
 import { BrandMark } from './BrandMark';
 import { HeroSlider } from './HeroSlider';
-import { HomeDirectories } from './HomeDirectories';
+import { HomeDirectories, ProgramPartner } from './HomeDirectories';
 import { HomepageMotion } from './HomepageMotion';
 import { MobileMenu } from './MobileMenu';
 import styles from './HomePreview.module.css';
@@ -168,6 +168,7 @@ export function NativeHomePreview({
       <HomepageMotion />
       <SiteHeader />
       <HeroSlider heroes={heroes} />
+      <ProgramPartner />
       <About />
       <HomeDirectories programs={programs} awardees={awardees} />
       <Publications publications={publications} />
