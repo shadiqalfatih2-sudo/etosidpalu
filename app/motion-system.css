@@ -1,0 +1,313 @@
+/* ETOS ID Palu motion layer
+   Functional motion only: reveal, stagger, and partner-section choreography.
+   It intentionally reuses the semantic tokens from design-system.css. */
+
+#tentang,
+#program,
+#awardee,
+#publikasi,
+#mitra-program {
+  scroll-margin-top: 86px;
+}
+
+.etos-motion-ready [data-etos-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 20px, 0);
+  transition:
+    opacity 620ms var(--etos-ease-soft),
+    transform 720ms var(--etos-ease-soft);
+  transition-delay: var(--etos-reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.etos-motion-ready [data-etos-reveal='soft'] {
+  transform: translate3d(0, 12px, 0);
+}
+
+.etos-motion-ready [data-etos-reveal='media'] {
+  opacity: .001;
+  transform: translate3d(0, 18px, 0) scale(.985);
+  transition-duration: 720ms, 820ms;
+}
+
+.etos-motion-ready [data-etos-reveal='line'] {
+  opacity: 1;
+  transform: scaleX(.3);
+  transform-origin: left center;
+}
+
+.etos-motion-ready [data-etos-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+.etos-motion-ready [data-etos-reveal='line'].is-revealed {
+  transform: scaleX(1);
+}
+
+/* Hero: calm first-impression choreography. */
+.etos-motion-ready .etos-hero-content [data-etos-reveal] {
+  transform: translate3d(0, 14px, 0);
+}
+
+.etos-motion-ready .etos-hero-profile-block[data-etos-reveal] {
+  transform: translate3d(0, 12px, 0);
+}
+
+/* Program partner / campus partner section. */
+.etos-partner-section {
+  padding: clamp(68px, 6.2vw, 92px) var(--etos-inline);
+  background: #fff;
+  border-bottom: 1px solid var(--etos-border);
+}
+
+.etos-partner-shell {
+  display: grid;
+  grid-template-columns: minmax(120px, 168px) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(28px, 4vw, 64px);
+  padding: clamp(28px, 3vw, 42px) 0;
+  border-top: 1px solid var(--etos-border-strong);
+  border-bottom: 1px solid var(--etos-border);
+}
+
+.etos-partner-mark {
+  min-height: 138px;
+  display: grid;
+  place-items: center;
+  border-right: 1px solid var(--etos-border);
+  padding-right: clamp(24px, 3vw, 42px);
+}
+
+.etos-partner-mark img {
+  display: block;
+  width: min(118px, 100%);
+  height: 118px;
+  object-fit: contain;
+  object-position: center;
+}
+
+.etos-partner-copy {
+  min-width: 0;
+}
+
+.etos-partner-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--etos-accent);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+
+.etos-partner-eyebrow::before {
+  content: '';
+  width: 30px;
+  height: 1px;
+  background: currentColor;
+}
+
+.etos-partner-copy h2 {
+  margin: 12px 0 10px;
+  max-width: 780px;
+  font-family: var(--etos-font-serif);
+  font-size: clamp(31px, 3vw, 46px);
+  line-height: 1.07;
+  letter-spacing: -.032em;
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+.etos-partner-copy p {
+  max-width: 690px;
+  margin: 0;
+  color: var(--etos-text-secondary);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.etos-partner-meta {
+  min-width: 196px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+  padding-left: clamp(24px, 3vw, 42px);
+  border-left: 1px solid var(--etos-border);
+}
+
+.etos-partner-meta strong {
+  font-family: var(--etos-font-serif);
+  font-size: 20px;
+  line-height: 1.15;
+  font-weight: 600;
+  color: var(--etos-text);
+}
+
+.etos-partner-meta span {
+  color: var(--etos-accent);
+  font-size: 9px;
+  line-height: 1.45;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  font-weight: 850;
+}
+
+.etos-partner-meta a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 3px;
+  color: var(--etos-primary);
+  text-decoration: none;
+  font-size: 10px;
+  font-weight: 820;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.etos-partner-meta a b {
+  font-size: 14px;
+  transition: transform var(--etos-fast) var(--etos-ease);
+}
+
+.etos-partner-meta a:hover b,
+.etos-partner-meta a:focus-visible b {
+  transform: translate3d(2px, -2px, 0);
+}
+
+/* Micro motion: keep photography and editorial rows alive without floating cards. */
+@media (hover: hover) and (pointer: fine) {
+  .etos-home-program-card,
+  .etos-home-awardee-card,
+  .etos-publication-row,
+  .etos-lead-publication {
+    transition:
+      transform 280ms var(--etos-ease-soft),
+      color var(--etos-fast) ease;
+  }
+
+  .etos-home-program-card:hover,
+  .etos-home-awardee-card:hover {
+    transform: translate3d(0, -3px, 0);
+  }
+
+  .etos-lead-publication:hover {
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+@media (max-width: 900px) {
+  .etos-partner-shell {
+    grid-template-columns: 112px minmax(0, 1fr);
+    gap: 24px;
+  }
+
+  .etos-partner-mark {
+    min-height: 118px;
+    padding-right: 22px;
+  }
+
+  .etos-partner-mark img {
+    width: 92px;
+    height: 92px;
+  }
+
+  .etos-partner-meta {
+    grid-column: 2;
+    padding: 16px 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--etos-border);
+    min-width: 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 18px;
+  }
+
+  .etos-partner-meta strong {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 620px) {
+  #tentang,
+  #program,
+  #awardee,
+  #publikasi,
+  #mitra-program {
+    scroll-margin-top: 70px;
+  }
+
+  .etos-motion-ready [data-etos-reveal] {
+    transform: translate3d(0, 13px, 0);
+    transition-duration: 480ms, 560ms;
+  }
+
+  .etos-partner-section {
+    padding: 54px var(--etos-inline);
+  }
+
+  .etos-partner-shell {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 0;
+  }
+
+  .etos-partner-mark {
+    min-height: auto;
+    justify-content: start;
+    place-items: initial;
+    padding: 0 0 22px;
+    border-right: 0;
+    border-bottom: 1px solid var(--etos-border);
+  }
+
+  .etos-partner-mark img {
+    width: 80px;
+    height: 80px;
+  }
+
+  .etos-partner-copy {
+    padding: 24px 0 20px;
+  }
+
+  .etos-partner-copy h2 {
+    font-size: clamp(28px, 9.2vw, 38px);
+    max-width: 12ch;
+  }
+
+  .etos-partner-copy p {
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .etos-partner-meta {
+    grid-column: auto;
+    padding: 18px 0 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 7px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .etos-motion-ready [data-etos-reveal],
+  .etos-motion-reduced [data-etos-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .etos-home-program-card,
+  .etos-home-awardee-card,
+  .etos-publication-row,
+  .etos-lead-publication,
+  .etos-partner-meta a b {
+    transition: none !important;
+    transform: none !important;
+  }
+}
