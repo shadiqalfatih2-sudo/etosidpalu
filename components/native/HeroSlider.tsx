@@ -39,41 +39,6 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
   }, [active, slides.length]);
 
   useEffect(() => {
-    if (slides.length < 2) return;
-
-    let cancelled = false;
-    const preloaders: HTMLImageElement[] = [];
-
-    slides.forEach((slide, index) => {
-      if (readySlides.current.has(index)) return;
-
-      const image = new Image();
-      preloaders.push(image);
-      image.decoding = 'async';
-      image.src = slide.photo;
-
-      const finish = () => {
-        if (!cancelled) markReady(index);
-      };
-
-      const decodeReady = () => {
-        if (typeof image.decode === 'function') image.decode().then(finish).catch(finish);
-        else finish();
-      };
-
-      if (image.complete && image.naturalWidth > 0) decodeReady();
-      else image.onload = decodeReady;
-    });
-
-    return () => {
-      cancelled = true;
-      preloaders.forEach((image) => {
-        image.onload = null;
-      });
-    };
-  }, [markReady, slides]);
-
-  useEffect(() => {
     if (slides.length < 2 || reducedMotion) return;
 
     let switchTimer = 0;
@@ -101,6 +66,7 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
 
   const current = slides[active] || slides[0];
   const firstSlide = slides[0];
+  const nextIndex = slides.length ? (active + 1) % slides.length : 0;
 
   return (
     <section className={`${styles.hero} etos-hero`} id="beranda">
@@ -138,19 +104,20 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
           ) : null}
 
           {slides.map((slide, index) => {
+            const shouldLoad = index === 0 || index === active || index === nextIndex || loadedSlides.has(index);
             const isVisible = index === active && loadedSlides.has(index);
             return (
               <img
                 key={slide.id}
                 className={`etos-hero-slide${index === active ? ' is-active' : ''}`}
-                src={slide.photo}
+                src={shouldLoad ? slide.photo : undefined}
                 alt=""
                 style={{
                   objectPosition: slide.photoPosition || '50% 50%',
                   opacity: isVisible ? 1 : 0,
                 }}
-                loading={index <= 1 ? 'eager' : 'lazy'}
-                fetchPriority={index === 0 ? 'high' : index === 1 ? 'auto' : 'low'}
+                loading={index === 0 || index === nextIndex ? 'eager' : 'lazy'}
+                fetchPriority={index === 0 ? 'high' : index === nextIndex ? 'auto' : 'low'}
                 decoding="async"
                 onLoad={() => markReady(index)}
               />
@@ -164,7 +131,10 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
           <p data-etos-reveal="soft">Ruang tumbuh bagi mahasiswa untuk menguatkan karakter, kepemimpinan, spiritualitas, dan kontribusi sosial yang berdampak.</p>
           <div className={`${styles.heroActions} etos-hero-actions`} data-etos-reveal="soft">
             <a href="/#program" className={`${styles.heroPrimary} etos-hero-primary`}>Jelajahi Program</a>
-            <a href="/#awardee" className={`${styles.heroGhost} etos-hero-secondary`}>Kenal Lebih Dekat Awardee</a>
+            <a href="/#awardee" className={`${styles.heroGhost} etos-hero-secondary`}>
+              <span className="etos-hero-secondary-desktop">Kenal Lebih Dekat Awardee</span>
+              <span className="etos-hero-secondary-mobile">Lihat Awardee <b>→</b></span>
+            </a>
           </div>
         </div>
       </div>
