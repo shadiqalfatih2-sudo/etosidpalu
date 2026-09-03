@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { NativeAdminDashboard } from '@/components/native/NativeAdminDashboard';
 import { AdminAuditShortcut } from '@/components/native/AdminAuditTrail';
+import { AdminSuperControls } from '@/components/native/AdminSuperControls';
 
 export const metadata: Metadata = {
   title: 'Admin | Etos ID Palu',
@@ -9,5 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function AdminPage() {
-  return <><NativeAdminDashboard /><AdminAuditShortcut /></>;
+  return <><NativeAdminDashboard /><AdminAuditShortcut /><AdminSuperControls /></>;
 }
