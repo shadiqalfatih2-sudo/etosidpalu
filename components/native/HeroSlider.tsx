@@ -125,16 +125,18 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
           })}
         </div>
         <div className={`${styles.heroOverlay} etos-hero-overlay`} />
-        <div className={`${styles.heroContent} etos-hero-content`} data-etos-stagger="hero">
-          <div className={`${styles.heroKicker} etos-hero-kicker`} data-etos-reveal="soft">ETOS ID PALU • WE ARE RESILIENT LEADER</div>
-          <h1 data-etos-reveal="soft">{current?.subtitle || leadTitle}</h1>
-          <p data-etos-reveal="soft">Ruang tumbuh bagi mahasiswa untuk menguatkan karakter, kepemimpinan, spiritualitas, dan kontribusi sosial yang berdampak.</p>
-          <div className={`${styles.heroActions} etos-hero-actions`} data-etos-reveal="soft">
-            <a href="/#program" className={`${styles.heroPrimary} etos-hero-primary`}>Jelajahi Program</a>
-            <a href="/#awardee" className={`${styles.heroGhost} etos-hero-secondary`}>
-              <span className="etos-hero-secondary-desktop">Kenal Lebih Dekat Awardee</span>
-              <span className="etos-hero-secondary-mobile">Lihat Awardee <b>→</b></span>
-            </a>
+        <div className={`${styles.heroContent} etos-hero-content`}>
+          <div className="etos-hero-copy-panel" data-etos-stagger="hero">
+            <div className={`${styles.heroKicker} etos-hero-kicker`} data-etos-reveal="soft">ETOS ID PALU • WE ARE RESILIENT LEADER</div>
+            <h1 data-etos-reveal="soft">{current?.subtitle || leadTitle}</h1>
+            <p data-etos-reveal="soft">Ruang tumbuh bagi mahasiswa untuk menguatkan karakter, kepemimpinan, spiritualitas, dan kontribusi sosial yang berdampak.</p>
+            <div className={`${styles.heroActions} etos-hero-actions`} data-etos-reveal="soft">
+              <a href="/#program" className={`${styles.heroPrimary} etos-hero-primary`}>Jelajahi Program</a>
+              <a href="/#awardee" className={`${styles.heroGhost} etos-hero-secondary`}>
+                <span className="etos-hero-secondary-desktop">Kenal Lebih Dekat Awardee</span>
+                <span className="etos-hero-secondary-mobile">Lihat Awardee <b>→</b></span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
