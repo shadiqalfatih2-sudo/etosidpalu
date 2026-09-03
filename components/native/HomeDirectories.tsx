@@ -165,6 +165,35 @@ function DetailDrawer({ state, onClose }: { state: DrawerState; onClose: () => v
   );
 }
 
+function ProgramPartner() {
+  return (
+    <section className="etos-partner-section" id="mitra-program" aria-labelledby="mitra-program-title">
+      <div className="etos-partner-shell" data-etos-reveal="soft">
+        <div className="etos-partner-mark" data-etos-reveal="media">
+          <img
+            src="https://untad.ac.id/wp-content/uploads/2024/03/Logo-Untad-Baru.jpg"
+            alt="Lambang resmi Universitas Tadulako"
+            loading="lazy"
+            decoding="async"
+            fetchPriority="low"
+            referrerPolicy="no-referrer"
+          />
+        </div>
+        <div className="etos-partner-copy" data-etos-reveal="soft" data-etos-delay="70">
+          <div className="etos-partner-eyebrow">Mitra Program</div>
+          <h2 id="mitra-program-title">Tumbuh bersama Universitas Tadulako.</h2>
+          <p>Universitas Tadulako menjadi kampus program Etos ID di Palu sejak 2021, menjadi ruang tumbuh bagi pembinaan, pendampingan, dan pengembangan penerima manfaat.</p>
+        </div>
+        <div className="etos-partner-meta" data-etos-reveal="soft" data-etos-delay="140">
+          <strong>Universitas Tadulako</strong>
+          <span>Kampus Program ETOS ID Palu • Sejak 2021</span>
+          <a href="https://untad.ac.id/" target="_blank" rel="noreferrer">Kunjungi UNTAD <b>↗</b></a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function HomeDirectories({ programs, awardees }: { programs: NativeProgram[]; awardees: NativeAwardee[] }) {
   const [showAllPrograms, setShowAllPrograms] = useState(false);
   const [showAllAwardees, setShowAllAwardees] = useState(false);
@@ -176,7 +205,7 @@ export function HomeDirectories({ programs, awardees }: { programs: NativeProgra
   return (
     <>
       <section className={`${homeStyles.programSection} etos-program-section etos-program-section-v3`} id="program">
-        <div className={`${homeStyles.sectionHeadWide} etos-program-head-v3`}>
+        <div className={`${homeStyles.sectionHeadWide} etos-program-head-v3`} data-etos-reveal="soft">
           <div>
             <div className={homeStyles.sectionLabel}><span />Program Etos ID Palu</div>
             <h2>Program yang membentuk cara berpikir, karakter, dan keberanian untuk memberi dampak.</h2>
@@ -184,13 +213,14 @@ export function HomeDirectories({ programs, awardees }: { programs: NativeProgra
           <p>Setiap program dirancang sebagai bagian dari satu perjalanan pembinaan: ringkas dalam tampilan, kuat dalam pengalaman, dan terhubung dengan kebutuhan awardee.</p>
         </div>
 
-        <div className={`${homeStyles.programGrid} etos-home-program-grid etos-program-grid-v3`}>
+        <div className={`${homeStyles.programGrid} etos-home-program-grid etos-program-grid-v3`} data-etos-stagger="program-grid">
           {visiblePrograms.map((program, index) => (
             <button
               className={`${homeStyles.programCard} ${styles.cardButton} etos-home-program-card etos-program-editorial-card`}
               type="button"
               onClick={() => setDrawer({ kind: 'program', item: program })}
               key={program.id}
+              data-etos-reveal="media"
             >
               <div className={`${homeStyles.programImage} etos-home-program-image etos-program-editorial-media`}>
                 {program.preview ? <img src={program.preview} alt={program.name} loading="lazy" decoding="async" fetchPriority="low" /> : null}
@@ -208,7 +238,7 @@ export function HomeDirectories({ programs, awardees }: { programs: NativeProgra
         </div>
 
         {programs.length > 8 ? (
-          <div className={homeStyles.sectionFootNote}>
+          <div className={homeStyles.sectionFootNote} data-etos-reveal="soft">
             <button className={styles.textAction} type="button" onClick={() => setShowAllPrograms((value) => !value)}>
               {showAllPrograms ? 'Tampilkan lebih ringkas ↑' : `Lihat seluruh ${programs.length} program aktif →`}
             </button>
@@ -216,8 +246,10 @@ export function HomeDirectories({ programs, awardees }: { programs: NativeProgra
         ) : null}
       </section>
 
+      <ProgramPartner />
+
       <section className={`${homeStyles.awardeeSection} etos-awardee-section`} id="awardee">
-        <div className={homeStyles.awardeeHead}>
+        <div className={homeStyles.awardeeHead} data-etos-reveal="soft">
           <div>
             <div className={homeStyles.sectionLabel}><span />Awardee Etos ID Palu</div>
             <h2>Orang-orang yang bertumbuh dan membawa gagasan menjadi dampak.</h2>
@@ -228,9 +260,9 @@ export function HomeDirectories({ programs, awardees }: { programs: NativeProgra
             </button>
           ) : null}
         </div>
-        <div className={`${homeStyles.awardeeGrid} etos-home-awardee-grid`}>
+        <div className={`${homeStyles.awardeeGrid} etos-home-awardee-grid`} data-etos-stagger="awardee-grid">
           {visibleAwardees.map((awardee) => (
-            <button className={`${homeStyles.awardeeCard} ${styles.cardButton} etos-home-awardee-card`} type="button" onClick={() => setDrawer({ kind: 'awardee', item: awardee })} key={awardee.id}>
+            <button className={`${homeStyles.awardeeCard} ${styles.cardButton} etos-home-awardee-card`} type="button" onClick={() => setDrawer({ kind: 'awardee', item: awardee })} key={awardee.id} data-etos-reveal="media">
               <div className={`${homeStyles.imageWrap} etos-home-awardee-image`}>
                 {awardee.photo ? <img src={awardee.photo} alt={awardee.name} style={{ objectPosition: awardee.photoPosition }} loading="lazy" decoding="async" fetchPriority="low" /> : null}
               </div>
