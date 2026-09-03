@@ -2,9 +2,29 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { NativePublicationDetailView } from '@/components/native/PublicationDetail';
 import { getNativePublicationDetail } from '@/lib/native-public';
+import { supabaseServer } from '@/lib/supabase';
 
 type PageProps = { params: Promise<{ slug: string }> };
 export const revalidate = 300;
+export const dynamicParams = true;
+
+function isActive(value: unknown) {
+  const status = String(value || 'Aktif').trim().toLowerCase();
+  return !['nonaktif', 'inactive', 'draft', 'hidden'].includes(status);
+}
+
+export async function generateStaticParams() {
+  try {
+    const db = supabaseServer();
+    const { data, error } = await db.from('news').select('slug,status').not('slug', 'is', null);
+    if (error) return [];
+    return (data || [])
+      .filter((row) => row.slug && isActive(row.status))
+      .map((row) => ({ slug: String(row.slug) }));
+  } catch {
+    return [];
+  }
+}
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
