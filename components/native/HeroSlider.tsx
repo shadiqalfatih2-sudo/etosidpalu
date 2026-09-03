@@ -5,12 +5,11 @@ import type { NativeHero } from '@/lib/native-public';
 import styles from './HomePreview.module.css';
 
 const AUTOPLAY_MS = 6200;
-const READY_RETRY_MS = 220;
+const READY_RETRY_MS = 180;
 
 export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
   const slides = useMemo(() => heroes.filter((item) => item.photo), [heroes]);
   const [active, setActive] = useState(0);
-  const [paused, setPaused] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   const readySlides = useRef<Set<number>>(new Set([0]));
   const leadTitle = slides[0]?.subtitle || 'Membentuk Nalar Kritis, Menempa Etos Peradaban.';
@@ -30,34 +29,41 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
 
   useEffect(() => {
     if (slides.length < 2) return;
-    const nextIndex = (active + 1) % slides.length;
-    if (readySlides.current.has(nextIndex)) return;
 
     let cancelled = false;
-    const image = new Image();
-    image.decoding = 'async';
-    image.src = slides[nextIndex].photo;
+    const preloaders: HTMLImageElement[] = [];
 
-    const markReady = () => {
-      if (!cancelled) readySlides.current.add(nextIndex);
-    };
+    slides.forEach((slide, index) => {
+      if (index === 0 || readySlides.current.has(index)) return;
 
-    const decodeReady = () => {
-      if (typeof image.decode === 'function') image.decode().then(markReady).catch(markReady);
-      else markReady();
-    };
+      const image = new Image();
+      preloaders.push(image);
+      image.decoding = 'async';
+      image.src = slide.photo;
 
-    if (image.complete && image.naturalWidth > 0) decodeReady();
-    else image.onload = decodeReady;
+      const markReady = () => {
+        if (!cancelled) readySlides.current.add(index);
+      };
+
+      const decodeReady = () => {
+        if (typeof image.decode === 'function') image.decode().then(markReady).catch(markReady);
+        else markReady();
+      };
+
+      if (image.complete && image.naturalWidth > 0) decodeReady();
+      else image.onload = decodeReady;
+    });
 
     return () => {
       cancelled = true;
-      image.onload = null;
+      preloaders.forEach((image) => {
+        image.onload = null;
+      });
     };
-  }, [active, slides]);
+  }, [slides]);
 
   useEffect(() => {
-    if (slides.length < 2 || paused || reducedMotion) return;
+    if (slides.length < 2 || reducedMotion) return;
 
     let switchTimer = 0;
     let readinessTimer = 0;
@@ -80,39 +86,24 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
       window.clearTimeout(switchTimer);
       window.clearTimeout(readinessTimer);
     };
-  }, [active, paused, reducedMotion, slides.length]);
-
-  const activateSlide = (index: number) => {
-    if (index === active || !slides[index]) return;
-    if (readySlides.current.has(index)) {
-      setActive(index);
-      return;
-    }
-
-    const image = new Image();
-    image.decoding = 'async';
-    image.src = slides[index].photo;
-    const show = () => {
-      readySlides.current.add(index);
-      setActive(index);
-    };
-    if (image.complete && image.naturalWidth > 0) {
-      if (typeof image.decode === 'function') image.decode().then(show).catch(show);
-      else show();
-      return;
-    }
-    image.onload = () => {
-      if (typeof image.decode === 'function') image.decode().then(show).catch(show);
-      else show();
-    };
-  };
+  }, [active, reducedMotion, slides.length]);
 
   const current = slides[active] || slides[0];
+  const firstSlide = slides[0];
 
   return (
     <section className={`${styles.hero} etos-hero`} id="beranda">
-      <div className={`${styles.heroMedia} etos-hero-media`} data-etos-reveal="media">
-        <div className="etos-hero-slides" aria-hidden="true">
+      <div className={`${styles.heroMedia} etos-hero-media`}>
+        <div
+          className="etos-hero-slides"
+          aria-hidden="true"
+          style={firstSlide ? {
+            backgroundImage: `url(${firstSlide.photo})`,
+            backgroundPosition: firstSlide.photoPosition || '50% 50%',
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+          } : undefined}
+        >
           {slides.map((slide, index) => (
             <img
               key={slide.id}
@@ -136,35 +127,6 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
             <a href="/#awardee" className={`${styles.heroGhost} etos-hero-secondary`}>Kenal Lebih Dekat Awardee</a>
           </div>
         </div>
-
-        {slides.length > 1 ? (
-          <div className="etos-hero-carousel-controls" aria-label="Kontrol foto pembuka">
-            <div className="etos-hero-dots" aria-label={`Foto ${active + 1} dari ${slides.length}`}>
-              {slides.map((slide, index) => (
-                <button
-                  key={`dot-${slide.id}`}
-                  type="button"
-                  className={index === active ? 'is-active' : ''}
-                  aria-label={`Tampilkan foto ${index + 1}`}
-                  aria-current={index === active ? 'true' : undefined}
-                  onClick={() => activateSlide(index)}
-                />
-              ))}
-            </div>
-            <span className="etos-hero-count">{String(active + 1).padStart(2, '0')} / {String(slides.length).padStart(2, '0')}</span>
-            {!reducedMotion ? (
-              <button
-                className="etos-hero-pause"
-                type="button"
-                onClick={() => setPaused((value) => !value)}
-                aria-label={paused ? 'Lanjutkan pergantian foto' : 'Jeda pergantian foto'}
-                aria-pressed={paused}
-              >
-                {paused ? '▶' : 'Ⅱ'}
-              </button>
-            ) : null}
-          </div>
-        ) : null}
       </div>
 
       <div className="etos-hero-profile-block" aria-label="Profil Program Etos ID" data-etos-reveal="soft">
