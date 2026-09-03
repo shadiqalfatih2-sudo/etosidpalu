@@ -257,30 +257,45 @@ export async function getNativeHomeData() {
   return getNativeHomeDataCached();
 }
 
-export const getNativePublicationDetail = cache(async (kindParam: string, slug: string) => {
-  const kind = String(kindParam || '').toLowerCase();
-  if (kind !== 'berita' && kind !== 'opini') return null;
+const getNativePublicationDetailCached = unstable_cache(
+  async (kindParam: string, slug: string) => {
+    const kind = String(kindParam || '').toLowerCase();
+    if (kind !== 'berita' && kind !== 'opini') return null;
 
-  const db = supabaseServer();
-  const table = kind === 'berita' ? 'news' : 'articles';
-  const { data: row, error } = await db.from(table).select('*').eq('slug', slug).maybeSingle();
-  if (error) throw error;
-  if (!row) return null;
+    const db = supabaseServer();
+    const table = kind === 'berita' ? 'news' : 'articles';
+    const detailColumns = kind === 'berita'
+      ? 'id,title,slug,content_html,thumbnail_url,thumbnail_position,published_at,created_at,status'
+      : 'id,title,slug,content_html,thumbnail_url,thumbnail_position,published_at,created_at,status,author_name,activity';
+    const relatedColumns = kind === 'berita'
+      ? 'id,title,slug,content_html,thumbnail_url,published_at,created_at,status'
+      : 'id,title,slug,content_html,thumbnail_url,published_at,created_at,status,author_name,activity';
 
-  if (kind === 'berita' && !active(row.status)) return null;
-  if (kind === 'opini' && String(row.status || '').toLowerCase() !== 'approved') return null;
+    const detailQuery = db.from(table).select(detailColumns).eq('slug', slug).maybeSingle();
+    let relatedQuery = db.from(table).select(relatedColumns).neq('slug', slug).order('published_at', { ascending: false }).limit(8);
+    if (kind === 'opini') relatedQuery = relatedQuery.eq('status', 'Approved');
 
-  const detail = (kind === 'berita' ? mapNews(row, true) : mapArticle(row, true)) as NativePublicationDetail;
+    const [detailResult, relatedResult] = await Promise.all([detailQuery, relatedQuery]);
+    if (detailResult.error) throw detailResult.error;
+    if (relatedResult.error) throw relatedResult.error;
 
-  let relatedQuery = db.from(table).select('*').neq('slug', slug).order('published_at', { ascending: false }).limit(8);
-  if (kind === 'opini') relatedQuery = relatedQuery.eq('status', 'Approved');
-  const { data: relatedRows, error: relatedError } = await relatedQuery;
-  if (relatedError) throw relatedError;
+    const row = detailResult.data as Record<string, any> | null;
+    if (!row) return null;
+    if (kind === 'berita' && !active(row.status)) return null;
+    if (kind === 'opini' && String(row.status || '').toLowerCase() !== 'approved') return null;
 
-  const related = (relatedRows || [])
-    .filter((item) => kind === 'opini' || active(item.status))
-    .slice(0, 5)
-    .map((item) => (kind === 'berita' ? mapNews(item, false) : mapArticle(item, false)) as NativePublication);
+    const detail = (kind === 'berita' ? mapNews(row, true) : mapArticle(row, true)) as NativePublicationDetail;
+    const related = ((relatedResult.data || []) as Record<string, any>[])
+      .filter((item) => kind === 'opini' || active(item.status))
+      .slice(0, 5)
+      .map((item) => (kind === 'berita' ? mapNews(item, false) : mapArticle(item, false)) as NativePublication);
 
-  return { detail, related };
-});
+    return { detail, related };
+  },
+  ['native-publication-detail-v2'],
+  { revalidate: 300, tags: ['public-publications'] },
+);
+
+export const getNativePublicationDetail = cache((kindParam: string, slug: string) =>
+  getNativePublicationDetailCached(kindParam, slug),
+);
