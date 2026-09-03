@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { NativeHero } from '@/lib/native-public';
 import styles from './HomePreview.module.css';
 
@@ -11,8 +11,19 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
   const slides = useMemo(() => heroes.filter((item) => item.photo), [heroes]);
   const [active, setActive] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(false);
-  const readySlides = useRef<Set<number>>(new Set([0]));
+  const [loadedSlides, setLoadedSlides] = useState<Set<number>>(() => new Set());
+  const readySlides = useRef<Set<number>>(new Set());
   const leadTitle = slides[0]?.subtitle || 'Membentuk Nalar Kritis, Menempa Etos Peradaban.';
+
+  const markReady = useCallback((index: number) => {
+    readySlides.current.add(index);
+    setLoadedSlides((previous) => {
+      if (previous.has(index)) return previous;
+      const next = new Set(previous);
+      next.add(index);
+      return next;
+    });
+  }, []);
 
   useEffect(() => {
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -34,20 +45,20 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
     const preloaders: HTMLImageElement[] = [];
 
     slides.forEach((slide, index) => {
-      if (index === 0 || readySlides.current.has(index)) return;
+      if (readySlides.current.has(index)) return;
 
       const image = new Image();
       preloaders.push(image);
       image.decoding = 'async';
       image.src = slide.photo;
 
-      const markReady = () => {
-        if (!cancelled) readySlides.current.add(index);
+      const finish = () => {
+        if (!cancelled) markReady(index);
       };
 
       const decodeReady = () => {
-        if (typeof image.decode === 'function') image.decode().then(markReady).catch(markReady);
-        else markReady();
+        if (typeof image.decode === 'function') image.decode().then(finish).catch(finish);
+        else finish();
       };
 
       if (image.complete && image.naturalWidth > 0) decodeReady();
@@ -60,7 +71,7 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
         image.onload = null;
       });
     };
-  }, [slides]);
+  }, [markReady, slides]);
 
   useEffect(() => {
     if (slides.length < 2 || reducedMotion) return;
@@ -104,18 +115,47 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
             backgroundRepeat: 'no-repeat',
           } : undefined}
         >
-          {slides.map((slide, index) => (
+          {firstSlide ? (
             <img
-              key={slide.id}
-              className={`etos-hero-slide${index === active ? ' is-active' : ''}`}
-              src={slide.photo}
+              className="etos-hero-poster"
+              src={firstSlide.photo}
               alt=""
-              style={{ objectPosition: slide.photoPosition }}
-              loading={index <= 1 ? 'eager' : 'lazy'}
-              fetchPriority={index === 0 ? 'high' : index === 1 ? 'auto' : 'low'}
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: firstSlide.photoPosition || '50% 50%',
+                opacity: 1,
+                pointerEvents: 'none',
+              }}
+              loading="eager"
+              fetchPriority="high"
               decoding="async"
+              onLoad={() => markReady(0)}
             />
-          ))}
+          ) : null}
+
+          {slides.map((slide, index) => {
+            const isVisible = index === active && loadedSlides.has(index);
+            return (
+              <img
+                key={slide.id}
+                className={`etos-hero-slide${index === active ? ' is-active' : ''}`}
+                src={slide.photo}
+                alt=""
+                style={{
+                  objectPosition: slide.photoPosition || '50% 50%',
+                  opacity: isVisible ? 1 : 0,
+                }}
+                loading={index <= 1 ? 'eager' : 'lazy'}
+                fetchPriority={index === 0 ? 'high' : index === 1 ? 'auto' : 'low'}
+                decoding="async"
+                onLoad={() => markReady(index)}
+              />
+            );
+          })}
         </div>
         <div className={`${styles.heroOverlay} etos-hero-overlay`} />
         <div className={`${styles.heroContent} etos-hero-content`} data-etos-stagger="hero">
