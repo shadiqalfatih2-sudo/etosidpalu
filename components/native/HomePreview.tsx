@@ -63,12 +63,21 @@ function About() {
       <div className={styles.sectionLabel} data-etos-reveal="soft"><span />Tentang Etos ID Palu</div>
       <div className={`${styles.aboutGrid} etos-about-grid-v3`}>
         <div className="etos-about-title-wrap" data-etos-reveal="soft">
-          <h2>Menumbuhkan pemimpin muda yang tangguh, berakar pada nilai, dan hadir membawa dampak.</h2>
+          <h2>
+            <span className="etos-about-title-desktop">Menumbuhkan pemimpin muda yang tangguh, berakar pada nilai, dan hadir membawa dampak.</span>
+            <span className="etos-about-title-mobile">Menumbuhkan pemimpin muda yang tangguh, berakar pada nilai, dan berdampak.</span>
+          </h2>
         </div>
         <div className={`${styles.aboutCopy} etos-about-copy-v3`} data-etos-reveal="soft" data-etos-delay="90">
-          <p>Etos ID Palu menghadirkan pembinaan yang tidak berhenti pada capaian akademik. Prosesnya dirancang sebagai ekosistem tumbuh: mengasah nalar, memperkuat spiritualitas, membangun kepemimpinan, dan menghubungkan gagasan dengan kebutuhan masyarakat.</p>
-          <p>Di sini, awardee belajar untuk tidak hanya menjadi penerima manfaat, tetapi juga menjadi pribadi yang mampu mengubah pengalaman menjadi kontribusi nyata.</p>
-          <a href="/#program">Lihat ekosistem pembinaan <span>→</span></a>
+          <div className="etos-about-copy-desktop">
+            <p>Etos ID Palu menghadirkan pembinaan yang tidak berhenti pada capaian akademik. Prosesnya dirancang sebagai ekosistem tumbuh: mengasah nalar, memperkuat spiritualitas, membangun kepemimpinan, dan menghubungkan gagasan dengan kebutuhan masyarakat.</p>
+            <p>Di sini, awardee belajar untuk tidak hanya menjadi penerima manfaat, tetapi juga menjadi pribadi yang mampu mengubah pengalaman menjadi kontribusi nyata.</p>
+            <a href="/#program">Lihat ekosistem pembinaan <span>→</span></a>
+          </div>
+          <div className="etos-about-copy-mobile">
+            <p>Etos ID Palu membangun ekosistem pembinaan yang mengasah nalar, spiritualitas, kepemimpinan, dan kontribusi sosial.</p>
+            <a href="/#program">Lihat ekosistem pembinaan <span>→</span></a>
+          </div>
         </div>
       </div>
     </section>
