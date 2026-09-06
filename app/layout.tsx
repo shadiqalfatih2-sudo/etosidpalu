@@ -22,12 +22,13 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: '/assets/etos-id.png',
+        url: '/etos-favicon.png?v=2',
         type: 'image/png',
+        sizes: '512x512',
       },
     ],
-    shortcut: '/assets/etos-id.png',
-    apple: '/assets/etos-id.png',
+    shortcut: '/etos-favicon.png?v=2',
+    apple: '/etos-favicon.png?v=2',
   },
   formatDetection: { telephone: false, email: false, address: false },
 };
