@@ -19,6 +19,16 @@ export const metadata: Metadata = {
   authors: [{ name: 'Etos ID Palu' }],
   creator: 'Etos ID Palu',
   publisher: 'Etos ID Palu',
+  icons: {
+    icon: [
+      {
+        url: '/assets/etos-id.png',
+        type: 'image/png',
+      },
+    ],
+    shortcut: '/assets/etos-id.png',
+    apple: '/assets/etos-id.png',
+  },
   formatDetection: { telephone: false, email: false, address: false },
 };
 
