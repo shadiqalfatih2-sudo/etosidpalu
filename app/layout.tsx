@@ -8,6 +8,7 @@ import './homepage-refinement.css';
 import './partner-section.css';
 import './mobile-home-portrait.css';
 import './homepage-institutional.css';
+import './desktop-card-alignment.css';
 import './mobile-portrait-final.css';
 
 export const metadata: Metadata = {
