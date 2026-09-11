@@ -1,0 +1,71 @@
+/* ETOS ID Palu — desktop card alignment pass.
+   Desktop/tablet landscape only. Keeps portrait rules untouched. */
+@media (min-width: 821px) {
+  .etos-home-program-grid,
+  .etos-home-awardee-grid {
+    align-items: stretch !important;
+    grid-auto-rows: 1fr;
+  }
+
+  .etos-home-program-card,
+  .etos-home-awardee-card {
+    display: flex !important;
+    flex-direction: column !important;
+    align-self: stretch !important;
+    height: 100% !important;
+    margin: 0 !important;
+  }
+
+  .etos-program-editorial-media {
+    width: 100% !important;
+    aspect-ratio: 4 / 3 !important;
+    flex: 0 0 auto !important;
+  }
+
+  .etos-program-editorial-body {
+    flex: 1 1 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 0 !important;
+  }
+
+  .etos-program-editorial-body h3 {
+    min-height: 2.2em;
+  }
+
+  .etos-program-editorial-body p {
+    min-height: 3.08em;
+    max-height: 3.08em;
+    -webkit-line-clamp: 2 !important;
+  }
+
+  .etos-program-editorial-link {
+    margin-top: auto !important;
+  }
+
+  .etos-home-awardee-image {
+    width: 100% !important;
+    aspect-ratio: 4 / 5 !important;
+    flex: 0 0 auto !important;
+  }
+
+  .etos-home-awardee-card [class*='cardBody'] {
+    flex: 1 1 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .etos-home-awardee-card [class*='cardBody'] small {
+    min-height: 1.2em;
+  }
+
+  .etos-home-awardee-card [class*='cardBody'] h3 {
+    min-height: 2.3em;
+  }
+
+  .etos-home-awardee-card [class*='cardBody'] p {
+    min-height: 2.96em;
+    max-height: 2.96em;
+    -webkit-line-clamp: 2 !important;
+  }
+}
