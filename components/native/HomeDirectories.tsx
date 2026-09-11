@@ -10,6 +10,8 @@ type DrawerState =
   | { kind: 'awardee'; item: NativeAwardee }
   | null;
 
+const HOMEPAGE_DIRECTORY_LIMIT = 4;
+
 function cleanText(value: string) {
   return String(value || '')
     .replace(/<script[\s\S]*?<\/script>/gi, ' ')
@@ -19,6 +21,13 @@ function cleanText(value: string) {
     .replace(/&amp;/gi, '&')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+function compactText(value: string, limit = 145) {
+  const text = cleanText(value);
+  if (text.length <= limit) return text;
+  const shortened = text.slice(0, limit + 1).replace(/\s+\S*$/, '').trim();
+  return `${shortened || text.slice(0, limit).trim()}…`;
 }
 
 function ProgramDrawer({ program, onClose }: { program: NativeProgram; onClose: () => void }) {
@@ -194,13 +203,32 @@ export function ProgramPartner() {
   );
 }
 
+function StoryBridge({ programs, awardees }: { programs: NativeProgram[]; awardees: NativeAwardee[] }) {
+  const visual = programs.find((program) => program.preview)?.preview || awardees.find((awardee) => awardee.photo)?.photo || '';
+
+  return (
+    <section className="etos-story-section" aria-labelledby="etos-story-title">
+      <div className="etos-story-media" data-etos-reveal="media">
+        {visual ? <img src={visual} alt="Dokumentasi perjalanan pembinaan Etos ID Palu" loading="lazy" decoding="async" fetchPriority="low" /> : null}
+        <span className="etos-story-stamp">Etos ID Palu • Resilient Leader</span>
+      </div>
+      <div className="etos-story-copy" data-etos-reveal="soft">
+        <div className="etos-story-kicker">Perjalanan Awardee</div>
+        <h2 id="etos-story-title">Dari penerima manfaat menjadi pemberi manfaat.</h2>
+        <p>Pembinaan Etos dirancang agar pengalaman belajar berujung pada kontribusi: dari ruang diskusi dan penguatan karakter, menuju kepemimpinan serta kerja sosial yang dekat dengan kebutuhan masyarakat.</p>
+        <a href="/#awardee">Kenal lebih dekat awardee →</a>
+      </div>
+    </section>
+  );
+}
+
 export function HomeDirectories({ programs, awardees }: { programs: NativeProgram[]; awardees: NativeAwardee[] }) {
   const [showAllPrograms, setShowAllPrograms] = useState(false);
   const [showAllAwardees, setShowAllAwardees] = useState(false);
   const [drawer, setDrawer] = useState<DrawerState>(null);
 
-  const visiblePrograms = showAllPrograms ? programs : programs.slice(0, 8);
-  const visibleAwardees = showAllAwardees ? awardees : awardees.slice(0, 8);
+  const visiblePrograms = showAllPrograms ? programs : programs.slice(0, HOMEPAGE_DIRECTORY_LIMIT);
+  const visibleAwardees = showAllAwardees ? awardees : awardees.slice(0, HOMEPAGE_DIRECTORY_LIMIT);
 
   return (
     <>
@@ -214,37 +242,43 @@ export function HomeDirectories({ programs, awardees }: { programs: NativeProgra
         </div>
 
         <div className={`${homeStyles.programGrid} etos-home-program-grid etos-program-grid-v3`} data-etos-stagger="program-grid">
-          {visiblePrograms.map((program, index) => (
-            <button
-              className={`${homeStyles.programCard} ${styles.cardButton} etos-home-program-card etos-program-editorial-card`}
-              type="button"
-              onClick={() => setDrawer({ kind: 'program', item: program })}
-              key={program.id}
-              data-etos-reveal="media"
-            >
-              <div className={`${homeStyles.programImage} etos-home-program-image etos-program-editorial-media`}>
-                {program.preview ? <img src={program.preview} alt={program.name} loading="lazy" decoding="async" fetchPriority="low" /> : null}
-                <div className="etos-program-media-wash" />
-                <div className={`${homeStyles.programIndex} etos-program-index-v3`}>{String(index + 1).padStart(2, '0')}</div>
-              </div>
-              <div className="etos-program-editorial-body">
-                <div className="etos-program-editorial-meta">{program.category || 'Program Pembinaan'}</div>
-                <h3>{program.name}</h3>
-                <p>{program.summary}</p>
-                <span className="etos-program-editorial-link">Lihat program <b>↗</b></span>
-              </div>
-            </button>
-          ))}
+          {visiblePrograms.map((program, index) => {
+            const category = cleanText(program.category || 'Program Pembinaan');
+            const summary = compactText(program.summary || program.description || '');
+            return (
+              <button
+                className={`${homeStyles.programCard} ${styles.cardButton} etos-home-program-card etos-program-editorial-card`}
+                type="button"
+                onClick={() => setDrawer({ kind: 'program', item: program })}
+                key={program.id}
+                data-etos-reveal="media"
+              >
+                <div className={`${homeStyles.programImage} etos-home-program-image etos-program-editorial-media`}>
+                  {program.preview ? <img src={program.preview} alt={program.name} loading="lazy" decoding="async" fetchPriority="low" /> : null}
+                  <div className="etos-program-media-wash" />
+                  <div className={`${homeStyles.programIndex} etos-program-index-v3`}>{String(index + 1).padStart(2, '0')}</div>
+                </div>
+                <div className="etos-program-editorial-body">
+                  <div className="etos-program-editorial-meta">{category || 'Program Pembinaan'}</div>
+                  <h3>{cleanText(program.name)}</h3>
+                  {summary ? <p>{summary}</p> : null}
+                  <span className="etos-program-editorial-link">Lihat program <b>↗</b></span>
+                </div>
+              </button>
+            );
+          })}
         </div>
 
-        {programs.length > 8 ? (
+        {programs.length > HOMEPAGE_DIRECTORY_LIMIT ? (
           <div className={homeStyles.sectionFootNote} data-etos-reveal="soft">
-            <button className={styles.textAction} type="button" onClick={() => setShowAllPrograms((value) => !value)}>
+            <button className={`${styles.textAction} etos-directory-toggle`} type="button" onClick={() => setShowAllPrograms((value) => !value)}>
               {showAllPrograms ? 'Tampilkan lebih ringkas ↑' : `Lihat seluruh ${programs.length} program aktif →`}
             </button>
           </div>
         ) : null}
       </section>
+
+      <StoryBridge programs={programs} awardees={awardees} />
 
       <section className={`${homeStyles.awardeeSection} etos-awardee-section`} id="awardee">
         <div className={homeStyles.awardeeHead} data-etos-reveal="soft">
@@ -252,25 +286,31 @@ export function HomeDirectories({ programs, awardees }: { programs: NativeProgra
             <div className={homeStyles.sectionLabel}><span />Awardee Etos ID Palu</div>
             <h2>Orang-orang yang bertumbuh dan membawa gagasan menjadi dampak.</h2>
           </div>
-          {awardees.length > 8 ? (
-            <button className={`${homeStyles.darkPill} ${styles.sectionAction}`} type="button" onClick={() => setShowAllAwardees((value) => !value)}>
+          {awardees.length > HOMEPAGE_DIRECTORY_LIMIT ? (
+            <button className={`${homeStyles.darkPill} ${styles.sectionAction} etos-directory-toggle`} type="button" onClick={() => setShowAllAwardees((value) => !value)}>
               {showAllAwardees ? 'Tampilkan Ringkas' : 'Lihat Semua Awardee'}
             </button>
           ) : null}
         </div>
         <div className={`${homeStyles.awardeeGrid} etos-home-awardee-grid`} data-etos-stagger="awardee-grid">
-          {visibleAwardees.map((awardee) => (
-            <button className={`${homeStyles.awardeeCard} ${styles.cardButton} etos-home-awardee-card`} type="button" onClick={() => setDrawer({ kind: 'awardee', item: awardee })} key={awardee.id} data-etos-reveal="media">
-              <div className={`${homeStyles.imageWrap} etos-home-awardee-image`}>
-                {awardee.photo ? <img src={awardee.photo} alt={awardee.name} style={{ objectPosition: awardee.photoPosition }} loading="lazy" decoding="async" fetchPriority="low" /> : null}
-              </div>
-              <div className={homeStyles.cardBody}>
-                <small>{awardee.cohort ? `Angkatan ${awardee.cohort}` : 'Awardee Etos ID'}</small>
-                <h3>{awardee.name}</h3>
-                {(awardee.studyProgram || awardee.university) ? <p>{[awardee.studyProgram, awardee.university].filter(Boolean).join(' • ')}</p> : null}
-              </div>
-            </button>
-          ))}
+          {visibleAwardees.map((awardee) => {
+            const detailLine = [awardee.studyProgram, awardee.university]
+              .map((value) => cleanText(value || ''))
+              .filter(Boolean)
+              .join(' • ');
+            return (
+              <button className={`${homeStyles.awardeeCard} ${styles.cardButton} etos-home-awardee-card`} type="button" onClick={() => setDrawer({ kind: 'awardee', item: awardee })} key={awardee.id} data-etos-reveal="media">
+                <div className={`${homeStyles.imageWrap} etos-home-awardee-image`}>
+                  {awardee.photo ? <img src={awardee.photo} alt={cleanText(awardee.name)} style={{ objectPosition: awardee.photoPosition }} loading="lazy" decoding="async" fetchPriority="low" /> : null}
+                </div>
+                <div className={homeStyles.cardBody}>
+                  <small>{awardee.cohort ? `Angkatan ${cleanText(awardee.cohort)}` : 'Awardee Etos ID'}</small>
+                  <h3>{cleanText(awardee.name)}</h3>
+                  {detailLine ? <p>{detailLine}</p> : null}
+                </div>
+              </button>
+            );
+          })}
         </div>
       </section>
 

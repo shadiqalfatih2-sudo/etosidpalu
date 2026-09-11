@@ -41,7 +41,6 @@ export function MobileMenu() {
         <a href="/#awardee" onClick={closeMenu}>Awardee</a>
         <a href="/#publikasi" onClick={closeMenu}>Berita &amp; Opini</a>
         <Link href="/kirim-tulisan" onClick={closeMenu}>Kirim Tulisan</Link>
-        <Link href="/admin" onClick={closeMenu}>Admin</Link>
       </nav>
     </details>
   );

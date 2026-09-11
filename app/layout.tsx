@@ -7,6 +7,7 @@ import './motion-system.css';
 import './homepage-refinement.css';
 import './partner-section.css';
 import './mobile-home-portrait.css';
+import './homepage-institutional.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.etosidpalu.com'),
