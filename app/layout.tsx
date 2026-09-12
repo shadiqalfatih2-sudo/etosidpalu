@@ -8,6 +8,7 @@ import './homepage-2026.css';
 import './homepage-final-polish.css';
 import './homepage-visual-fix.css';
 import './premium-public.css';
+import './card-system-2026.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.etosidpalu.com'),
