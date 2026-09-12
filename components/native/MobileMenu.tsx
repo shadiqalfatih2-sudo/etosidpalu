@@ -33,7 +33,10 @@ export function MobileMenu() {
 
   return (
     <details ref={detailsRef} className="etos-mobile-menu">
-      <summary>Menu</summary>
+      <summary aria-label="Buka navigasi">
+        <span className="etos-menu-icon" aria-hidden="true"><i /><i /><i /></span>
+        <span className="etos-menu-label">Menu</span>
+      </summary>
       <nav className="etos-mobile-menu-panel" aria-label="Navigasi mobile">
         <a href="/" data-etos-section-target="beranda" onClick={closeMenu}>Beranda</a>
         <a href="/" data-etos-section-target="tentang" onClick={closeMenu}>Tentang</a>
