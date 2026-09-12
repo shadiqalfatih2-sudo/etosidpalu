@@ -45,39 +45,76 @@ export function SiteHeader() {
         <a href="/#tentang">Tentang</a>
         <a href="/#program">Program</a>
         <a href="/#awardee">Awardee</a>
-        <a href="/#publikasi">Berita & Opini</a>
+        <a href="/#publikasi">Publikasi</a>
       </nav>
 
       <div className={`${styles.actions} etos-header-actions`}>
         <Link className={`${styles.primaryButton} etos-header-primary`} href="/kirim-tulisan">Kirim Tulisan</Link>
-        <Link className={`${styles.secondaryButton} etos-header-admin`} href="/admin">Admin</Link>
+        <Link className={`${styles.secondaryButton} etos-header-admin`} href="/admin" aria-label="Masuk ke halaman admin">Admin</Link>
         <MobileMenu />
       </div>
     </header>
   );
 }
 
-function About() {
+function ImpactStrip({ stats }: { stats: NativeHomeStats }) {
+  const items = [
+    { value: stats.awardees, label: 'Awardee dalam ekosistem', note: 'bertumbuh bersama Etos ID Palu' },
+    { value: stats.programs, label: 'Program pembinaan aktif', note: 'spiritual, intelektual, dan kepemimpinan' },
+    { value: stats.publications, label: 'Publikasi & cerita', note: 'gagasan dan perjalanan dampak' },
+    { value: '2021', label: 'Bersama Universitas Tadulako', note: 'kampus program ETOS ID di Palu' },
+  ];
+
   return (
-    <section className={`${styles.about} etos-about etos-about-v3`} id="tentang">
-      <div className={styles.sectionLabel} data-etos-reveal="soft"><span />Tentang Etos ID Palu</div>
-      <div className={`${styles.aboutGrid} etos-about-grid-v3`}>
-        <div className="etos-about-title-wrap" data-etos-reveal="soft">
-          <h2>
-            <span className="etos-about-title-desktop">Menumbuhkan pemimpin muda yang tangguh, berakar pada nilai, dan hadir membawa dampak.</span>
-            <span className="etos-about-title-mobile">Menumbuhkan pemimpin muda yang tangguh, berakar pada nilai, dan berdampak.</span>
-          </h2>
+    <section className="etos-impact" aria-label="Ringkasan Etos ID Palu" data-etos-reveal="soft">
+      <div className="etos-impact-grid">
+        {items.map((item) => (
+          <article className="etos-impact-card" key={`${item.value}-${item.label}`}>
+            <strong>{item.value}</strong>
+            <div>
+              <span>{item.label}</span>
+              <p>{item.note}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function About({ visual }: { visual: string }) {
+  return (
+    <section className={`${styles.about} etos-about etos-about-2026`} id="tentang">
+      <div className="etos-about-shell">
+        <div className="etos-about-visual" data-etos-reveal="media">
+          {visual ? <img src={visual} alt="Dokumentasi kegiatan Etos ID Palu" loading="lazy" decoding="async" fetchPriority="low" /> : null}
+          <div className="etos-about-visual-badge">
+            <span>ETOS ID PALU</span>
+            <strong>Ruang tumbuh untuk pemimpin muda yang tangguh dan berdampak.</strong>
+          </div>
         </div>
-        <div className={`${styles.aboutCopy} etos-about-copy-v3`} data-etos-reveal="soft" data-etos-delay="90">
-          <div className="etos-about-copy-desktop">
-            <p>Etos ID Palu menghadirkan pembinaan yang tidak berhenti pada capaian akademik. Prosesnya dirancang sebagai ekosistem tumbuh: mengasah nalar, memperkuat spiritualitas, membangun kepemimpinan, dan menghubungkan gagasan dengan kebutuhan masyarakat.</p>
-            <p>Di sini, awardee belajar untuk tidak hanya menjadi penerima manfaat, tetapi juga menjadi pribadi yang mampu mengubah pengalaman menjadi kontribusi nyata.</p>
-            <a href="/#program">Lihat ekosistem pembinaan <span>→</span></a>
+
+        <div className="etos-about-content" data-etos-reveal="soft">
+          <div className={`${styles.sectionLabel} etos-section-pill`}>Tentang Kami</div>
+          <h2>Menumbuhkan pemimpin muda yang kuat dalam nilai, tajam dalam nalar, dan nyata dalam kontribusi.</h2>
+          <p className="etos-about-lead">Etos ID Palu menghadirkan pembinaan yang tidak berhenti pada capaian akademik. Awardee dibentuk melalui pengalaman yang menguatkan spiritualitas, kepemimpinan, kolaborasi, dan keberanian menjawab kebutuhan masyarakat.</p>
+
+          <div className="etos-value-grid" aria-label="Nilai pembinaan Etos ID Palu">
+            <article className="etos-value-card">
+              <span>01</span>
+              <div><strong>Integritas</strong><p>Teguh pada nilai, etika, dan tanggung jawab dalam setiap keputusan.</p></div>
+            </article>
+            <article className="etos-value-card">
+              <span>02</span>
+              <div><strong>Profesional</strong><p>Belajar bekerja tuntas, akurat, kolaboratif, dan dapat dipercaya.</p></div>
+            </article>
+            <article className="etos-value-card">
+              <span>03</span>
+              <div><strong>Transformatif</strong><p>Mengubah pengetahuan dan pengalaman menjadi manfaat yang terasa.</p></div>
+            </article>
           </div>
-          <div className="etos-about-copy-mobile">
-            <p>Etos ID Palu membangun ekosistem pembinaan yang mengasah nalar, spiritualitas, kepemimpinan, dan kontribusi sosial.</p>
-            <a href="/#program">Lihat ekosistem pembinaan <span>→</span></a>
-          </div>
+
+          <a className="etos-inline-link" href="/#program">Jelajahi ekosistem pembinaan <span>→</span></a>
         </div>
       </div>
     </section>
@@ -85,44 +122,35 @@ function About() {
 }
 
 function Publications({ publications }: { publications: NativePublication[] }) {
-  const lead = publications[0];
-  const rest = publications.slice(1, 5);
+  const cards = publications.slice(0, 3);
+  if (!cards.length) return null;
 
   return (
     <section className={`${styles.publicationSection} etos-publication-section`} id="publikasi">
-      <div className={styles.sectionHeadSimple} data-etos-reveal="soft">
+      <div className={`${styles.sectionHeadSimple} etos-publication-head`} data-etos-reveal="soft">
         <div>
-          <div className={styles.sectionLabel}><span />Berita & Opini</div>
+          <div className={`${styles.sectionLabel} etos-section-pill`}>Berita & Opini</div>
           <h2>Catatan perjalanan, gagasan, dan dampak dari ekosistem Etos ID Palu.</h2>
         </div>
-        <a href="/#publikasi">Lihat Selengkapnya</a>
+        <span className="etos-section-caption">Pembaruan terbaru dari ekosistem Etos ID Palu</span>
       </div>
 
-      {lead ? (
-        <div className={`${styles.publicationLayout} etos-home-publication-layout`}>
-          <Link className={`${styles.leadPublication} etos-lead-publication`} href={publicationHref(lead)} data-etos-reveal="media">
-            <div className={`${styles.leadImage} etos-lead-publication-image`}>{lead.thumbnail ? <img src={lead.thumbnail} alt="" loading="lazy" decoding="async" fetchPriority="low" /> : null}</div>
-            <div className={`${styles.leadBody} etos-lead-publication-copy`}>
-              <div className={styles.meta}>{lead.kind} <span>•</span> {formatDate(lead.publishedAt)}</div>
-              <h3>{lead.title}</h3>
-              <p>{lead.excerpt}</p>
-              <span className={styles.readMore}>Baca selengkapnya →</span>
+      <div className="etos-publication-grid" data-etos-stagger="publication-grid">
+        {cards.map((item) => (
+          <Link href={publicationHref(item)} className="etos-publication-card" key={`${item.kind}-${item.id}`} data-etos-reveal="media">
+            <div className="etos-publication-image">
+              {item.thumbnail ? <img src={item.thumbnail} alt="" loading="lazy" decoding="async" fetchPriority="low" /> : <div className="etos-publication-placeholder" />}
+              <span className="etos-publication-kind">{item.kind}</span>
+            </div>
+            <div className="etos-publication-body">
+              <small>{formatDate(item.publishedAt)}</small>
+              <h3>{item.title}</h3>
+              {item.excerpt ? <p>{item.excerpt}</p> : null}
+              <span className={styles.readMore}>Baca selengkapnya <b>↗</b></span>
             </div>
           </Link>
-          <div className={styles.publicationList} data-etos-stagger="publication-list">
-            {rest.map((item, index) => (
-              <Link href={publicationHref(item)} className={`${styles.publicationRow} etos-publication-row`} key={`${item.kind}-${item.id}`} data-etos-reveal="soft">
-                <div className={styles.publicationRowNumber}>{String(index + 2).padStart(2, '0')}</div>
-                <div className={styles.publicationRowText}>
-                  <small>{item.kind} • {formatDate(item.publishedAt)}</small>
-                  <h3>{item.title}</h3>
-                </div>
-                <div className={`${styles.publicationRowImage} etos-publication-row-image`}>{item.thumbnail ? <img src={item.thumbnail} alt="" loading="lazy" decoding="async" fetchPriority="low" /> : null}</div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      ) : null}
+        ))}
+      </div>
     </section>
   );
 }
@@ -130,7 +158,11 @@ function Publications({ publications }: { publications: NativePublication[] }) {
 function ClosingCta() {
   return (
     <section className={`${styles.ctaSection} etos-cta-section`} data-etos-reveal="soft">
-      <div><span>SUARA DARI EKOSISTEM ETOS</span><h2>Punya cerita, gagasan, atau pengalaman yang layak dibagikan?</h2></div>
+      <div className="etos-cta-copy">
+        <span>SUARA DARI EKOSISTEM ETOS</span>
+        <h2>Punya cerita, gagasan, atau pengalaman yang layak dibagikan?</h2>
+        <p>Kirim tulisanmu dan ikut merawat ruang belajar yang tumbuh dari pengalaman nyata awardee.</p>
+      </div>
       <div className={styles.ctaActions}>
         <Link href="/kirim-tulisan" className={styles.ctaPrimary}>Kirim Tulisan</Link>
         <a href="https://www.instagram.com/etosidpalu/" target="_blank" rel="noreferrer" className={styles.ctaSecondary}>Instagram Etos ID Palu</a>
@@ -141,19 +173,33 @@ function ClosingCta() {
 
 function Footer() {
   return (
-    <footer className={`${styles.footer} etos-footer etos-footer-v3`} data-etos-reveal="soft">
+    <footer className={`${styles.footer} etos-footer etos-footer-2026`} data-etos-reveal="soft">
       <div className={`${styles.footerBrand} etos-footer-brand-v3`}>
         <BrandMark />
-        <p>We Are Resilient Leader</p>
+        <p>Ekosistem pembinaan mahasiswa untuk menumbuhkan resilient leader yang berintegritas, profesional, dan transformatif.</p>
         <span className="etos-footer-location-copy">Palu, Sulawesi Tengah</span>
       </div>
-      <div className={styles.footerLinks}>
-        <a href="/#tentang">Tentang</a>
-        <a href="/#program">Program</a>
-        <a href="/#awardee">Awardee</a>
-        <a href="/#publikasi">Berita & Opini</a>
+
+      <div className="etos-footer-group">
+        <strong>Navigasi</strong>
+        <div className={styles.footerLinks}>
+          <a href="/#tentang">Tentang</a>
+          <a href="/#program">Program</a>
+          <a href="/#awardee">Awardee</a>
+          <a href="/#publikasi">Publikasi</a>
+        </div>
       </div>
-      <div className={styles.footerMeta}>© {new Date().getFullYear()} Etos ID Palu.</div>
+
+      <div className="etos-footer-group">
+        <strong>Terhubung</strong>
+        <div className={styles.footerLinks}>
+          <Link href="/kirim-tulisan">Kirim Tulisan</Link>
+          <a href="https://www.instagram.com/etosidpalu/" target="_blank" rel="noreferrer">Instagram</a>
+          <Link href="/admin">Admin</Link>
+        </div>
+      </div>
+
+      <div className={styles.footerMeta}>© {new Date().getFullYear()} Etos ID Palu. We Are Resilient Leader.</div>
     </footer>
   );
 }
@@ -171,14 +217,16 @@ export function NativeHomePreview({
   publications: NativePublication[];
   stats: NativeHomeStats;
 }) {
-  void stats;
+  const aboutVisual = heroes[1]?.photo || heroes[0]?.photo || programs.find((item) => item.preview)?.preview || awardees.find((item) => item.photo)?.photo || '';
+
   return (
-    <main className={`${styles.page} native-home`} id="beranda">
+    <main className={`${styles.page} native-home native-home-2026`} id="beranda">
       <HomepageMotion />
       <SiteHeader />
       <HeroSlider heroes={heroes} />
+      <ImpactStrip stats={stats} />
+      <About visual={aboutVisual} />
       <ProgramPartner />
-      <About />
       <HomeDirectories programs={programs} awardees={awardees} />
       <Publications publications={publications} />
       <ClosingCta />

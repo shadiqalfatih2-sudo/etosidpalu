@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { NativeHero } from '@/lib/native-public';
 import styles from './HomePreview.module.css';
 
-const AUTOPLAY_MS = 6200;
+const AUTOPLAY_MS = 6400;
 const READY_RETRY_MS = 180;
 
 export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
@@ -69,7 +69,7 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
   const nextIndex = slides.length ? (active + 1) % slides.length : 0;
 
   return (
-    <section className={`${styles.hero} etos-hero`} id="beranda">
+    <section className={`${styles.hero} etos-hero etos-hero-2026`} id="beranda">
       <div className={`${styles.heroMedia} etos-hero-media`}>
         <div
           className="etos-hero-slides"
@@ -124,51 +124,51 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
             );
           })}
         </div>
+
         <div className={`${styles.heroOverlay} etos-hero-overlay`} />
+
         <div className={`${styles.heroContent} etos-hero-content`}>
           <div className="etos-hero-copy-panel" data-etos-stagger="hero">
             <div className={`${styles.heroKicker} etos-hero-kicker`} data-etos-reveal="soft">ETOS ID PALU • WE ARE RESILIENT LEADER</div>
             <h1 data-etos-reveal="soft">{current?.subtitle || leadTitle}</h1>
             <p data-etos-reveal="soft">Ruang tumbuh bagi mahasiswa untuk menguatkan karakter, kepemimpinan, spiritualitas, dan kontribusi sosial yang berdampak.</p>
+
+            <div className="etos-hero-chips" data-etos-reveal="soft">
+              <span>Pembinaan karakter</span>
+              <span>Kepemimpinan</span>
+              <span>Kontribusi sosial</span>
+            </div>
+
             <div className={`${styles.heroActions} etos-hero-actions`} data-etos-reveal="soft">
               <a href="/#program" className={`${styles.heroPrimary} etos-hero-primary`}>Jelajahi Program</a>
-              <a href="/#awardee" className={`${styles.heroGhost} etos-hero-secondary`}>
-                <span className="etos-hero-secondary-desktop">Kenal Lebih Dekat Awardee</span>
-                <span className="etos-hero-secondary-mobile">Lihat Awardee <b>→</b></span>
-              </a>
+              <a href="/#awardee" className={`${styles.heroGhost} etos-hero-secondary`}>Kenal Awardee <b>→</b></a>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="etos-hero-profile-block" aria-label="Profil Program Etos ID" data-etos-reveal="soft">
-        <div className="etos-hero-profile-heading">
-          <span>Profil Program Etos ID</span>
-          <p>Tiga nilai yang menjadi fondasi karakter dan pembinaan awardee.</p>
-        </div>
-        <div className="etos-hero-profile-strip" data-etos-stagger="values">
-          <article className="etos-hero-profile-item" data-etos-reveal="soft">
-            <span className="etos-hero-profile-index">01</span>
-            <div>
-              <strong>Integritas</strong>
-              <p>Berpikir, berkata, dan bertindak benar; teguh pada kode etik dan prinsip moral.</p>
+        <aside className="etos-hero-floating-card" aria-label="Mitra kampus Etos ID Palu" data-etos-reveal="soft">
+          <span>Mitra kampus</span>
+          <strong>Universitas Tadulako</strong>
+          <p>Kampus program ETOS ID di Palu sejak 2021.</p>
+        </aside>
+
+        {slides.length > 1 ? (
+          <div className="etos-hero-controls" aria-label="Pilih slide hero">
+            <span className="etos-hero-count">{String(active + 1).padStart(2, '0')} / {String(slides.length).padStart(2, '0')}</span>
+            <div className="etos-hero-dots">
+              {slides.map((slide, index) => (
+                <button
+                  type="button"
+                  className={index === active ? 'is-active' : ''}
+                  key={slide.id}
+                  onClick={() => setActive(index)}
+                  aria-label={`Tampilkan slide ${index + 1}`}
+                  aria-current={index === active ? 'true' : undefined}
+                />
+              ))}
             </div>
-          </article>
-          <article className="etos-hero-profile-item" data-etos-reveal="soft">
-            <span className="etos-hero-profile-index">02</span>
-            <div>
-              <strong>Profesional</strong>
-              <p>Bekerja tuntas dan akurat dengan kompetensi terbaik, tanggung jawab, dan komitmen tinggi.</p>
-            </div>
-          </article>
-          <article className="etos-hero-profile-item" data-etos-reveal="soft">
-            <span className="etos-hero-profile-index">03</span>
-            <div>
-              <strong>Transformatif</strong>
-              <p>Memberi kontribusi melalui beragam kanal secara adil dan bertanggung jawab.</p>
-            </div>
-          </article>
-        </div>
+          </div>
+        ) : null}
       </div>
     </section>
   );
