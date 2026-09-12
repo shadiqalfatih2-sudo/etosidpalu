@@ -128,3 +128,5 @@ div[class*="drawerBackdrop"] > aside[role="dialog"] > * {
     transition: none !important;
   }
 }
+
+/* Build retry marker: visual behavior intentionally unchanged. */
