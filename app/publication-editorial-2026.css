@@ -1,0 +1,112 @@
+/* ETOS ID Palu — Publication Detail Editorial 2026
+   Loaded last. Article reads as one continuous editorial surface;
+   cards are reserved for related stories in the sidebar. */
+
+.native-publication {
+  background: #f8f9f7 !important;
+}
+
+.native-publication-shell {
+  width: min(1340px, calc(100% - 48px)) !important;
+  padding-top: 34px !important;
+}
+
+.native-publication-grid {
+  margin-top: 0 !important;
+  grid-template-columns: minmax(0, 1fr) minmax(285px, 320px) !important;
+  gap: clamp(42px, 4.7vw, 68px) !important;
+  align-items: start !important;
+}
+
+/* The story header belongs to the article, never to a card. */
+.native-publication-article > header {
+  padding: 0 !important;
+  margin: 0 0 30px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.native-publication-article > header h1 {
+  max-width: 900px !important;
+  color: #173025 !important;
+}
+
+.native-publication-hero {
+  border: 1px solid #e0e7e2 !important;
+  border-radius: 24px !important;
+  box-shadow: 0 10px 32px rgba(20, 58, 43, .055) !important;
+}
+
+/* Sidebar itself stays open; each related story is its own compact card. */
+.native-publication-sidebar {
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.native-related-item {
+  border: 1px solid var(--card-border, #dde5df) !important;
+  border-radius: 16px !important;
+  background: #fff !important;
+  box-shadow: 0 1px 2px rgba(18, 49, 37, .025), 0 8px 24px rgba(18, 49, 37, .04) !important;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease !important;
+}
+
+.native-related-item:hover {
+  transform: translateY(-2px) !important;
+  border-color: var(--card-border-hover, #cbd8d0) !important;
+  background: #fff !important;
+  box-shadow: 0 2px 4px rgba(18, 49, 37, .035), 0 14px 32px rgba(18, 49, 37, .07) !important;
+}
+
+.native-related-item img {
+  border-radius: 11px !important;
+}
+
+@media (max-width: 1100px) {
+  .native-publication-grid {
+    grid-template-columns: minmax(0, 1fr) 280px !important;
+    gap: 36px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .native-publication-shell {
+    width: min(900px, calc(100% - 32px)) !important;
+  }
+
+  .native-publication-grid {
+    grid-template-columns: 1fr !important;
+    gap: 34px !important;
+  }
+
+  .native-publication-sidebar {
+    margin-top: 10px !important;
+    padding-top: 24px !important;
+    border-top: 1px solid #dde5df !important;
+  }
+}
+
+@media (max-width: 620px) {
+  .native-publication-shell {
+    width: calc(100% - 28px) !important;
+    padding-top: 22px !important;
+  }
+
+  .native-publication-article > header {
+    margin-bottom: 22px !important;
+  }
+
+  .native-publication-hero {
+    border-radius: 16px !important;
+    box-shadow: 0 7px 22px rgba(20, 58, 43, .045) !important;
+  }
+
+  .native-related-item {
+    border-radius: 14px !important;
+  }
+}
