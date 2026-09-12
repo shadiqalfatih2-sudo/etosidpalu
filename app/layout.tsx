@@ -15,6 +15,8 @@ import './portrait-about-story-2026.css';
 import './ux-final-2026.css';
 // Final public visual layer: typography consistency + restrained green accents.
 import './final-accent-typography-2026.css';
+// Final edge alignment + compact portrait footer.
+import './final-edge-polish-2026.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.etosidpalu.com'),
