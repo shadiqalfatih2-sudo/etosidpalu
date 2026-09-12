@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { NativeHero } from '@/lib/native-public';
 import styles from './HomePreview.module.css';
 
-const AUTOPLAY_MS = 6400;
+const AUTOPLAY_MS = 3000;
 const READY_RETRY_MS = 180;
 
 export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
@@ -39,7 +39,7 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
   }, [active, slides.length]);
 
   useEffect(() => {
-    if (slides.length < 2 || reducedMotion) return;
+    if (slides.length < 2) return;
 
     let switchTimer = 0;
     let readinessTimer = 0;
@@ -62,7 +62,7 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
       window.clearTimeout(switchTimer);
       window.clearTimeout(readinessTimer);
     };
-  }, [active, reducedMotion, slides.length]);
+  }, [active, slides.length]);
 
   const current = slides[active] || slides[0];
   const firstSlide = slides[0];
@@ -115,6 +115,14 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
                 style={{
                   objectPosition: slide.photoPosition || '50% 50%',
                   opacity: isVisible ? 1 : 0,
+                  transition: reducedMotion
+                    ? 'opacity 180ms linear'
+                    : 'opacity 900ms ease, transform 3000ms ease-out',
+                  transform: reducedMotion
+                    ? 'scale(1)'
+                    : index === active
+                      ? 'scale(1)'
+                      : 'scale(1.015)',
                 }}
                 loading={index === 0 || index === nextIndex ? 'eager' : 'lazy'}
                 fetchPriority={index === 0 ? 'high' : index === nextIndex ? 'auto' : 'low'}
