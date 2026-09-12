@@ -12,6 +12,7 @@ import './card-system-2026.css';
 import './publication-editorial-2026.css';
 import './portrait-premium-2026.css';
 import './portrait-about-story-2026.css';
+import './ux-final-2026.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.etosidpalu.com'),

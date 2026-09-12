@@ -35,11 +35,11 @@ export function MobileMenu() {
     <details ref={detailsRef} className="etos-mobile-menu">
       <summary>Menu</summary>
       <nav className="etos-mobile-menu-panel" aria-label="Navigasi mobile">
-        <a href="/#beranda" onClick={closeMenu}>Beranda</a>
-        <a href="/#tentang" onClick={closeMenu}>Tentang</a>
-        <a href="/#program" onClick={closeMenu}>Program</a>
-        <a href="/#awardee" onClick={closeMenu}>Awardee</a>
-        <a href="/#publikasi" onClick={closeMenu}>Berita &amp; Opini</a>
+        <a href="/" data-etos-section-target="beranda" onClick={closeMenu}>Beranda</a>
+        <a href="/" data-etos-section-target="tentang" onClick={closeMenu}>Tentang</a>
+        <a href="/" data-etos-section-target="program" onClick={closeMenu}>Program</a>
+        <a href="/" data-etos-section-target="awardee" onClick={closeMenu}>Awardee</a>
+        <a href="/" data-etos-section-target="publikasi" onClick={closeMenu}>Berita &amp; Opini</a>
         <Link href="/kirim-tulisan" onClick={closeMenu}>Kirim Tulisan</Link>
       </nav>
     </details>

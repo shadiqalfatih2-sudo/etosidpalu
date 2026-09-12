@@ -34,18 +34,18 @@ function formatDate(value: string) {
 export function SiteHeader() {
   return (
     <header className={`${styles.header} etos-site-header`}>
-      <a className={`${styles.brandRow} etos-brand-row`} href="/#beranda" aria-label="Etos ID Palu">
+      <a className={`${styles.brandRow} etos-brand-row`} href="/" data-etos-section-target="beranda" aria-label="Etos ID Palu">
         <BrandMark />
         <div className={`${styles.brandDivider} etos-brand-divider`} />
         <div className={`${styles.tagline} etos-tagline`}>We Are Resilient Leader</div>
       </a>
 
       <nav className={`${styles.nav} etos-desktop-nav`} aria-label="Navigasi utama">
-        <a href="/#beranda">Beranda</a>
-        <a href="/#tentang">Tentang</a>
-        <a href="/#program">Program</a>
-        <a href="/#awardee">Awardee</a>
-        <a href="/#publikasi">Publikasi</a>
+        <a href="/" data-etos-section-target="beranda">Beranda</a>
+        <a href="/" data-etos-section-target="tentang">Tentang</a>
+        <a href="/" data-etos-section-target="program">Program</a>
+        <a href="/" data-etos-section-target="awardee">Awardee</a>
+        <a href="/" data-etos-section-target="publikasi">Publikasi</a>
       </nav>
 
       <div className={`${styles.actions} etos-header-actions`}>
@@ -67,9 +67,9 @@ function ImpactStrip({ stats }: { stats: NativeHomeStats }) {
 
   return (
     <section className="etos-impact" aria-label="Ringkasan Etos ID Palu" data-etos-reveal="soft">
-      <div className="etos-impact-grid">
+      <div className="etos-impact-grid" data-etos-stagger="impact-grid">
         {items.map((item) => (
-          <article className="etos-impact-card" key={`${item.value}-${item.label}`}>
+          <article className="etos-impact-card" key={`${item.value}-${item.label}`} data-etos-reveal="soft">
             <strong>{item.value}</strong>
             <div>
               <span>{item.label}</span>
@@ -114,7 +114,7 @@ function About({ visual }: { visual: string }) {
             </article>
           </div>
 
-          <a className="etos-inline-link" href="/#program">Jelajahi ekosistem pembinaan <span>→</span></a>
+          <a className="etos-inline-link" href="/" data-etos-section-target="program">Jelajahi ekosistem pembinaan <span>→</span></a>
         </div>
       </div>
     </section>
@@ -137,7 +137,7 @@ function Publications({ publications }: { publications: NativePublication[] }) {
 
       <div className="etos-publication-grid" data-etos-stagger="publication-grid">
         {cards.map((item) => (
-          <Link href={publicationHref(item)} className="etos-publication-card" key={`${item.kind}-${item.id}`} data-etos-reveal="media">
+          <Link href={publicationHref(item)} className="etos-publication-card" key={`${item.kind}-${item.id}`} data-etos-reveal="media" prefetch>
             <div className="etos-publication-image">
               {item.thumbnail ? <img src={item.thumbnail} alt="" loading="lazy" decoding="async" fetchPriority="low" /> : <div className="etos-publication-placeholder" />}
               <span className="etos-publication-kind">{item.kind}</span>
@@ -150,6 +150,12 @@ function Publications({ publications }: { publications: NativePublication[] }) {
             </div>
           </Link>
         ))}
+      </div>
+
+      <div className="etos-publication-actions" data-etos-reveal="soft">
+        <Link href="/berita" className="etos-publication-all-link" prefetch>
+          Lihat semua berita <span>→</span>
+        </Link>
       </div>
     </section>
   );
@@ -171,7 +177,7 @@ function ClosingCta() {
   );
 }
 
-function Footer() {
+export function Footer() {
   return (
     <footer className={`${styles.footer} etos-footer etos-footer-2026`} data-etos-reveal="soft">
       <div className={`${styles.footerBrand} etos-footer-brand-v3`}>
@@ -183,10 +189,10 @@ function Footer() {
       <div className="etos-footer-group">
         <strong>Navigasi</strong>
         <div className={styles.footerLinks}>
-          <a href="/#tentang">Tentang</a>
-          <a href="/#program">Program</a>
-          <a href="/#awardee">Awardee</a>
-          <a href="/#publikasi">Publikasi</a>
+          <a href="/" data-etos-section-target="tentang">Tentang</a>
+          <a href="/" data-etos-section-target="program">Program</a>
+          <a href="/" data-etos-section-target="awardee">Awardee</a>
+          <a href="/" data-etos-section-target="publikasi">Publikasi</a>
         </div>
       </div>
 

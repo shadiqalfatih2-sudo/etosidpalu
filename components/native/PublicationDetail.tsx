@@ -45,7 +45,14 @@ export function NativePublicationDetailView({ detail, related }: { detail: Nativ
     <main className={`${styles.page} native-publication`}>
       <SiteHeader />
       <div className={`${styles.shell} native-publication-shell`}>
-        <Link href="/#publikasi" className={styles.back}>← Kembali ke Berita & Opini</Link>
+        <Link
+          href="/"
+          className={styles.back}
+          data-etos-smart-back="publication"
+          data-etos-fallback-target="publikasi"
+        >
+          ← Kembali ke Berita &amp; Opini
+        </Link>
 
         <div className={`${styles.contentGrid} native-publication-grid`}>
           <article className={`${styles.article} native-publication-article`}>
@@ -84,7 +91,7 @@ export function NativePublicationDetailView({ detail, related }: { detail: Nativ
             <div className={styles.sidebarLabel}>Tulisan Lainnya</div>
             <div className={styles.relatedList}>
               {related.map((item) => (
-                <Link href={href(item)} className={`${styles.relatedItem} native-related-item`} key={`${item.kind}-${item.id}`}>
+                <Link href={href(item)} className={`${styles.relatedItem} native-related-item`} key={`${item.kind}-${item.id}`} prefetch>
                   <div className={styles.relatedImage}>
                     {item.thumbnail ? <img src={item.thumbnail} alt="" loading="lazy" decoding="async" fetchPriority="low" /> : null}
                   </div>
@@ -96,7 +103,11 @@ export function NativePublicationDetailView({ detail, related }: { detail: Nativ
                 </Link>
               ))}
             </div>
-            <Link href="/#publikasi" className={styles.more}>Lihat semua publikasi →</Link>
+            {detail.kind === 'Berita' ? (
+              <Link href="/berita" className={styles.more} prefetch>Lihat semua berita →</Link>
+            ) : (
+              <Link href="/" data-etos-section-target="publikasi" className={styles.more}>Lihat semua publikasi →</Link>
+            )}
           </aside>
         </div>
       </div>

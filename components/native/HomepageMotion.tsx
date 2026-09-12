@@ -16,7 +16,7 @@ export function HomepageMotion() {
         const children = Array.from(group.querySelectorAll<HTMLElement>(':scope > [data-etos-reveal]'));
         children.forEach((child, index) => {
           const base = Number(child.dataset.etosDelay || 0);
-          child.style.setProperty('--etos-reveal-delay', `${base + index * 72}ms`);
+          child.style.setProperty('--etos-reveal-delay', `${base + index * 55}ms`);
         });
       });
     };
@@ -57,8 +57,8 @@ export function HomepageMotion() {
       },
       {
         root: null,
-        rootMargin: '0px 0px -10% 0px',
-        threshold: 0.12,
+        rootMargin: '0px 0px -6% 0px',
+        threshold: 0.08,
       },
     );
 
@@ -72,7 +72,7 @@ export function HomepageMotion() {
     const firstFrame = window.requestAnimationFrame(() => {
       initialItems.forEach((item) => {
         const rect = item.getBoundingClientRect();
-        if (rect.top < window.innerHeight * 0.96 && rect.bottom > 0) {
+        if (rect.top < window.innerHeight * 0.98 && rect.bottom > 0) {
           item.classList.add('is-revealed');
           observer.unobserve(item);
         }
