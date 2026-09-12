@@ -1,0 +1,191 @@
+/* ETOS ID Palu — final edge alignment + portrait footer polish
+   Loaded last. Visual-only; no data/auth/API behavior changes. */
+
+/* --------------------------------------------------------------------------
+   Story card: keep decorative geometry physically attached to the card edge.
+   The accent previously lived inside the padded copy column, which made it
+   appear to float away from the outer rounded edge on wide screens.
+   -------------------------------------------------------------------------- */
+.native-home-2026 .etos-story-section {
+  position: relative !important;
+  isolation: isolate !important;
+  overflow: hidden !important;
+}
+
+.native-home-2026 .etos-story-copy {
+  position: relative !important;
+  z-index: 2 !important;
+  overflow: visible !important;
+}
+
+.native-home-2026 .etos-story-media {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.native-home-2026 .etos-story-copy::before,
+.native-home-2026 .etos-story-copy::after {
+  content: none !important;
+  display: none !important;
+}
+
+.native-home-2026 .etos-story-section::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  width: clamp(270px, 25vw, 390px);
+  aspect-ratio: 1;
+  right: clamp(-188px, -10vw, -132px);
+  top: clamp(-184px, -9vw, -120px);
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.085);
+  background: transparent;
+  box-shadow:
+    0 0 0 38px rgba(255,255,255,.018),
+    0 0 0 84px rgba(255,255,255,.012);
+  pointer-events: none;
+}
+
+.native-home-2026 .etos-story-section::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  width: clamp(180px, 17vw, 250px);
+  aspect-ratio: 1;
+  right: 18%;
+  bottom: clamp(-190px, -12vw, -132px);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(203,236,218,.095), transparent 69%);
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Portrait footer: compact, balanced two-column navigation with a clean
+   institutional finish instead of a loose/empty stack.
+   -------------------------------------------------------------------------- */
+@media (max-width: 680px) and (orientation: portrait) {
+  .native-home-2026 .etos-footer-2026 {
+    position: relative !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    column-gap: 22px !important;
+    row-gap: 0 !important;
+    margin-top: 46px !important;
+    padding: 30px 20px 24px !important;
+    border-top: 1px solid rgba(28,79,59,.10) !important;
+    background:
+      radial-gradient(circle at 100% 0%, rgba(79,137,109,.055), transparent 32%),
+      linear-gradient(180deg, #f8faf8 0%, #f3f6f3 100%) !important;
+  }
+
+  .native-home-2026 .etos-footer-brand-v3 {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    padding-bottom: 24px !important;
+    margin-bottom: 22px !important;
+    border-bottom: 1px solid rgba(28,79,59,.09) !important;
+  }
+
+  .native-home-2026 .etos-footer-brand-v3 .etos-brand-lockup {
+    margin-bottom: 14px !important;
+  }
+
+  .native-home-2026 .etos-footer-brand-v3 p {
+    max-width: 31ch !important;
+    margin: 0 !important;
+    color: #5f7168 !important;
+    font-size: 13px !important;
+    line-height: 1.66 !important;
+  }
+
+  .native-home-2026 .etos-footer-location-copy {
+    display: inline-flex !important;
+    margin-top: 12px !important;
+    color: #819087 !important;
+    font-size: 9.5px !important;
+    font-weight: 760 !important;
+    letter-spacing: .09em !important;
+    text-transform: uppercase !important;
+  }
+
+  .native-home-2026 .etos-footer-group {
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    align-items: flex-start !important;
+  }
+
+  .native-home-2026 .etos-footer-group > strong {
+    margin: 0 0 13px !important;
+    color: #274b3c !important;
+    font-size: 9.5px !important;
+    font-weight: 850 !important;
+    line-height: 1.2 !important;
+    letter-spacing: .14em !important;
+    text-transform: uppercase !important;
+  }
+
+  .native-home-2026 .etos-footer-group > div {
+    width: 100% !important;
+    display: grid !important;
+    gap: 9px !important;
+    justify-items: start !important;
+  }
+
+  .native-home-2026 .etos-footer-group a {
+    display: inline-flex !important;
+    width: auto !important;
+    min-height: 25px !important;
+    align-items: center !important;
+    color: #334f43 !important;
+    font-size: 12.5px !important;
+    font-weight: 650 !important;
+    line-height: 1.35 !important;
+    text-decoration: none !important;
+  }
+
+  .native-home-2026 .etos-footer-2026 > div:last-child {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    margin-top: 24px !important;
+    padding-top: 18px !important;
+    border-top: 1px solid rgba(28,79,59,.09) !important;
+    color: #849189 !important;
+    font-size: 10px !important;
+    line-height: 1.5 !important;
+    text-align: left !important;
+  }
+
+  /* Story decoration uses the exact outer card edge on portrait too. */
+  .native-home-2026 .etos-story-section::before {
+    width: 220px;
+    right: -142px;
+    top: -118px;
+    box-shadow:
+      0 0 0 28px rgba(255,255,255,.016),
+      0 0 0 60px rgba(255,255,255,.010);
+  }
+
+  .native-home-2026 .etos-story-section::after {
+    width: 155px;
+    right: 10%;
+    bottom: -116px;
+  }
+}
+
+@media (max-width: 360px) and (orientation: portrait) {
+  .native-home-2026 .etos-footer-2026 {
+    column-gap: 16px !important;
+    padding-inline: 16px !important;
+  }
+
+  .native-home-2026 .etos-footer-group a {
+    font-size: 12px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .native-home-2026 .etos-story-section::before,
+  .native-home-2026 .etos-story-section::after {
+    transition: none !important;
+  }
+}
