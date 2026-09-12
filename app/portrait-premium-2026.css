@@ -4,17 +4,13 @@
 @media (max-width: 680px) and (orientation: portrait) {
   .native-home-2026 {
     --m-green: #1f6b50;
-    --m-green-dark: #143c2d;
     --m-ink: #14281f;
     --m-muted: #68776f;
     --m-border: rgba(26, 76, 56, .10);
-    --m-surface: #ffffff;
-    --m-soft: #f3f7f4;
-    --m-shadow: 0 12px 34px rgba(18, 54, 40, .07);
     background: #f5f7f4 !important;
   }
 
-  /* Header — tighter, balanced and intentional */
+  /* Header */
   .native-home-2026 .etos-site-header {
     min-height: 88px !important;
     padding: 12px 18px !important;
@@ -23,14 +19,8 @@
     border-bottom: 1px solid rgba(30,78,59,.08) !important;
     box-shadow: 0 6px 22px rgba(19,49,38,.035) !important;
   }
-  .native-home-2026 .etos-brand-row {
-    min-width: 0 !important;
-    gap: 11px !important;
-  }
-  .native-home-2026 .etos-brand-divider {
-    height: 42px !important;
-    opacity: .8 !important;
-  }
+  .native-home-2026 .etos-brand-row { min-width: 0 !important; gap: 11px !important; }
+  .native-home-2026 .etos-brand-divider { height: 42px !important; opacity: .8 !important; }
   .native-home-2026 .etos-tagline {
     max-width: 94px !important;
     padding: 0 !important;
@@ -52,16 +42,9 @@
     box-shadow: 0 6px 18px rgba(20,58,43,.045) !important;
   }
 
-  /* Hero — photo as a clean media card + floating editorial content card */
-  .native-home-2026 .etos-hero-2026 {
-    padding: 14px 14px 0 !important;
-    background: #f5f7f4 !important;
-  }
-  .native-home-2026 .etos-hero-media {
-    overflow: visible !important;
-    padding-bottom: 30px !important;
-    background: transparent !important;
-  }
+  /* Hero — media card + floating editorial card */
+  .native-home-2026 .etos-hero-2026 { padding: 14px 14px 0 !important; background: #f5f7f4 !important; }
+  .native-home-2026 .etos-hero-media { overflow: visible !important; padding-bottom: 30px !important; background: transparent !important; }
   .native-home-2026 .etos-hero-slides {
     height: clamp(310px, 46vh, 385px) !important;
     border-radius: 26px !important;
@@ -69,9 +52,7 @@
     box-shadow: 0 16px 38px rgba(18,49,37,.11) !important;
   }
   .native-home-2026 .etos-hero-poster,
-  .native-home-2026 .etos-hero-slide {
-    border-radius: 26px !important;
-  }
+  .native-home-2026 .etos-hero-slide { border-radius: 26px !important; }
   .native-home-2026 .etos-hero-overlay {
     inset: 0 0 auto !important;
     height: clamp(310px, 46vh, 385px) !important;
@@ -146,27 +127,21 @@
     font-size: 9px !important;
     box-shadow: none !important;
   }
-  .native-home-2026 .etos-hero-primary {
-    color: #fff !important;
-    background: var(--m-green) !important;
-  }
+  .native-home-2026 .etos-hero-primary { color: #fff !important; background: var(--m-green) !important; }
   .native-home-2026 .etos-hero-secondary {
     color: #244c3b !important;
     background: #f8faf8 !important;
     border: 1px solid rgba(31,107,80,.14) !important;
   }
 
-  /* Impact — compact 2x2 dashboard instead of tall plain stack */
+  /* Stats — compact 2x2 dashboard */
   .native-home-2026 .etos-impact {
     width: calc(100% - 28px) !important;
     margin: 8px auto 0 !important;
     padding: 0 !important;
     background: transparent !important;
   }
-  .native-home-2026 .etos-impact-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 12px !important;
-  }
+  .native-home-2026 .etos-impact-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 12px !important; }
   .native-home-2026 .etos-impact-card {
     position: relative !important;
     min-height: 154px !important;
@@ -198,9 +173,7 @@
     letter-spacing: -.055em !important;
     color: var(--m-green) !important;
   }
-  .native-home-2026 .etos-impact-card > div {
-    margin-top: auto !important;
-  }
+  .native-home-2026 .etos-impact-card > div { margin-top: auto !important; }
   .native-home-2026 .etos-impact-card span {
     display: block !important;
     color: var(--m-ink) !important;
@@ -215,17 +188,10 @@
     line-height: 1.4 !important;
   }
 
-  /* About — editorial surface with depth and clearer hierarchy */
-  .native-home-2026 .etos-about {
-    margin-top: 34px !important;
-    padding: 0 14px !important;
-  }
-  .native-home-2026 .etos-about-shell {
-    display: block !important;
-  }
-  .native-home-2026 .etos-about-visual {
-    display: none !important;
-  }
+  /* About — editorial, layered, compact */
+  .native-home-2026 .etos-about { margin-top: 34px !important; padding: 0 14px !important; }
+  .native-home-2026 .etos-about-shell { display: block !important; }
+  .native-home-2026 .etos-about-visual { display: none !important; }
   .native-home-2026 .etos-about-content {
     position: relative !important;
     overflow: hidden !important;
@@ -256,7 +222,6 @@
     text-wrap: balance !important;
   }
   .native-home-2026 .etos-about-lead {
-    position: relative !important;
     margin-top: 19px !important;
     padding: 18px 17px 18px 19px !important;
     border: 1px solid rgba(31,107,80,.08) !important;
@@ -268,13 +233,10 @@
     line-height: 1.72 !important;
     box-shadow: none !important;
   }
-  .native-home-2026 .etos-value-grid {
-    margin-top: 16px !important;
-    gap: 11px !important;
-  }
+  .native-home-2026 .etos-value-grid { margin-top: 16px !important; gap: 11px !important; }
   .native-home-2026 .etos-value-card {
     min-height: 0 !important;
-    padding: 15px 15px !important;
+    padding: 15px !important;
     grid-template-columns: 54px 1fr !important;
     gap: 13px !important;
     border: 1px solid rgba(31,107,80,.08) !important;
@@ -293,10 +255,7 @@
     font-size: 10px !important;
     font-weight: 900 !important;
   }
-  .native-home-2026 .etos-value-card strong {
-    color: #173629 !important;
-    font-size: 15.5px !important;
-  }
+  .native-home-2026 .etos-value-card strong { color: #173629 !important; font-size: 15.5px !important; }
   .native-home-2026 .etos-value-card p {
     margin-top: 5px !important;
     color: #718078 !important;
@@ -311,16 +270,13 @@
     font-size: 11px !important;
   }
 
-  /* Partner — compact institutional feature card */
-  .native-home-2026 .etos-partner-section {
-    margin-top: 34px !important;
-    padding: 0 14px !important;
-  }
+  /* Partner — logo/eyebrow row, then full-width story */
+  .native-home-2026 .etos-partner-section { margin-top: 34px !important; padding: 0 14px !important; }
   .native-home-2026 .etos-partner-shell {
     position: relative !important;
     display: grid !important;
-    grid-template-columns: 74px minmax(0, 1fr) !important;
-    gap: 0 15px !important;
+    grid-template-columns: 72px minmax(0, 1fr) !important;
+    gap: 0 14px !important;
     padding: 22px 20px 20px !important;
     border: 1px solid var(--m-border) !important;
     border-radius: 28px !important;
@@ -331,43 +287,45 @@
     overflow: hidden !important;
   }
   .native-home-2026 .etos-partner-mark {
-    width: 74px !important;
-    height: 74px !important;
-    align-self: start !important;
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    width: 72px !important;
+    height: 72px !important;
     border-radius: 18px !important;
     border: 1px solid rgba(31,107,80,.09) !important;
     background: #fff !important;
     box-shadow: 0 7px 18px rgba(18,49,37,.045) !important;
   }
   .native-home-2026 .etos-partner-mark img {
-    width: 58px !important;
-    height: 58px !important;
+    width: 56px !important;
+    height: 56px !important;
     object-fit: contain !important;
   }
-  .native-home-2026 .etos-partner-copy {
-    min-width: 0 !important;
-    padding-top: 2px !important;
-  }
+  .native-home-2026 .etos-partner-copy { display: contents !important; }
   .native-home-2026 .etos-partner-eyebrow {
-    margin-bottom: 10px !important;
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    align-self: center !important;
+    margin: 0 !important;
     color: #2d7153 !important;
-    font-size: 8.5px !important;
-    letter-spacing: .13em !important;
+    font-size: 9px !important;
+    letter-spacing: .14em !important;
   }
   .native-home-2026 .etos-partner-copy h2 {
-    margin: 0 !important;
+    grid-column: 1 / -1 !important;
+    margin: 20px 0 0 !important;
     color: var(--m-ink) !important;
-    font-size: clamp(29px, 8vw, 37px) !important;
-    line-height: 1.01 !important;
-    letter-spacing: -.045em !important;
+    font-size: clamp(32px, 8.9vw, 41px) !important;
+    line-height: .99 !important;
+    letter-spacing: -.047em !important;
     text-wrap: balance !important;
   }
   .native-home-2026 .etos-partner-copy p {
     grid-column: 1 / -1 !important;
     margin: 15px 0 0 !important;
     color: #65756c !important;
-    font-size: 13.5px !important;
-    line-height: 1.67 !important;
+    font-size: 13.8px !important;
+    line-height: 1.68 !important;
   }
   .native-home-2026 .etos-partner-meta {
     grid-column: 1 / -1 !important;
@@ -379,9 +337,7 @@
     align-items: end !important;
     border-top: 1px solid rgba(31,107,80,.09) !important;
   }
-  .native-home-2026 .etos-partner-meta strong {
-    display: none !important;
-  }
+  .native-home-2026 .etos-partner-meta strong { display: none !important; }
   .native-home-2026 .etos-partner-meta span {
     color: #718078 !important;
     font-size: 9px !important;
@@ -396,21 +352,18 @@
     white-space: nowrap !important;
   }
 
-  /* Section rhythm — reduce empty vertical runs */
+  /* Better rhythm further down without changing desktop language */
   .native-home-2026 .etos-program-section,
   .native-home-2026 .etos-awardee-section,
-  .native-home-2026 .etos-publication-section {
-    margin-top: 38px !important;
-  }
+  .native-home-2026 .etos-publication-section { margin-top: 38px !important; }
 }
 
 @media (max-width: 380px) and (orientation: portrait) {
-  .native-home-2026 .etos-impact-grid { grid-template-columns: 1fr 1fr !important; }
   .native-home-2026 .etos-impact-card { min-height: 148px !important; padding: 16px 14px !important; }
   .native-home-2026 .etos-impact-card span { font-size: 12px !important; }
   .native-home-2026 .etos-partner-shell { grid-template-columns: 64px minmax(0,1fr) !important; gap: 0 12px !important; }
   .native-home-2026 .etos-partner-mark { width: 64px !important; height: 64px !important; }
   .native-home-2026 .etos-partner-mark img { width: 50px !important; height: 50px !important; }
-  .native-home-2026 .etos-partner-copy h2 { font-size: 28px !important; }
+  .native-home-2026 .etos-partner-copy h2 { font-size: 30px !important; }
   .native-home-2026 .etos-hero-actions { grid-template-columns: 1fr !important; }
 }
