@@ -17,6 +17,8 @@ import './ux-final-2026.css';
 import './final-accent-typography-2026.css';
 // Final edge alignment + compact portrait footer.
 import './final-edge-polish-2026.css';
+// Final directory drawer visibility + compact desktop partner feature.
+import './final-drawer-partner-fix-2026.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.etosidpalu.com'),
