@@ -1,0 +1,289 @@
+/* ETOS ID Palu — final green-card accents + publication typography
+   Loaded last. Public-facing only; admin/data logic untouched. */
+
+:root {
+  --etos-green-card-1: #123f30;
+  --etos-green-card-2: #174f3b;
+  --etos-green-card-3: #1b5b43;
+  --etos-green-card-line: rgba(255,255,255,.10);
+  --etos-green-card-glow: rgba(197, 232, 213, .10);
+}
+
+/* --------------------------------------------------------------------------
+   1) Green solid cards — quiet premium accents, no loud decoration
+   -------------------------------------------------------------------------- */
+.native-home-2026 .etos-story-section {
+  position: relative !important;
+  isolation: isolate;
+  border: 1px solid var(--etos-green-card-line) !important;
+  background:
+    radial-gradient(circle at 91% 10%, rgba(223, 245, 234, .10) 0, rgba(223, 245, 234, .045) 16%, transparent 38%),
+    radial-gradient(circle at 64% 112%, rgba(149, 202, 174, .12) 0, rgba(149, 202, 174, .04) 26%, transparent 47%),
+    linear-gradient(135deg, var(--etos-green-card-1) 0%, var(--etos-green-card-2) 56%, #113b2d 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    0 24px 64px rgba(13, 48, 35, .14) !important;
+}
+
+.native-home-2026 .etos-story-copy {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.native-home-2026 .etos-story-copy::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  width: clamp(210px, 22vw, 330px);
+  aspect-ratio: 1;
+  right: clamp(-150px, -9vw, -90px);
+  top: clamp(-150px, -8vw, -92px);
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 0 0 34px rgba(255,255,255,.018), 0 0 0 76px rgba(255,255,255,.012);
+  pointer-events: none;
+}
+
+.native-home-2026 .etos-story-copy::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  width: 190px;
+  height: 190px;
+  left: -92px;
+  bottom: -122px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(209, 239, 223, .105), transparent 68%);
+  pointer-events: none;
+}
+
+.native-home-2026 .etos-story-kicker,
+.native-home-2026 .etos-cta-copy > span {
+  color: #c9e4d6 !important;
+}
+
+.native-home-2026 .etos-cta-section {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid var(--etos-green-card-line) !important;
+  background:
+    radial-gradient(circle at 92% 6%, rgba(230, 248, 239, .105) 0, rgba(230, 248, 239, .045) 18%, transparent 38%),
+    radial-gradient(circle at 7% 104%, rgba(139, 198, 166, .11) 0, rgba(139, 198, 166, .035) 28%, transparent 48%),
+    linear-gradient(135deg, #103b2d 0%, #174f3b 52%, #123f30 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.04),
+    0 26px 70px rgba(13, 48, 35, .15) !important;
+}
+
+.native-home-2026 .etos-cta-section::before {
+  width: clamp(250px, 25vw, 390px) !important;
+  height: auto !important;
+  aspect-ratio: 1;
+  right: clamp(-165px, -9vw, -100px) !important;
+  top: clamp(-170px, -9vw, -105px) !important;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.085);
+  background: transparent !important;
+  box-shadow: 0 0 0 38px rgba(255,255,255,.018), 0 0 0 84px rgba(255,255,255,.012);
+}
+
+.native-home-2026 .etos-cta-section::after {
+  width: 220px !important;
+  height: 220px !important;
+  right: 24% !important;
+  bottom: -164px !important;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(203, 236, 218, .095), transparent 69%) !important;
+}
+
+.native-home-2026 .etos-story-copy h2,
+.native-home-2026 .etos-cta-copy h2 {
+  text-shadow: 0 2px 18px rgba(5, 28, 20, .12);
+}
+
+.native-home-2026 .etos-story-copy p,
+.native-home-2026 .etos-cta-copy p {
+  color: rgba(229, 240, 234, .88) !important;
+}
+
+/* --------------------------------------------------------------------------
+   2) News index — same sans-serif family and bold language as the main site
+   -------------------------------------------------------------------------- */
+.native-news-index,
+.native-publication {
+  font-family: var(--etos-font-sans) !important;
+}
+
+.etos-news-index-head h1,
+.etos-news-lead-copy h2,
+.etos-news-row-copy h2 {
+  font-family: var(--etos-font-sans) !important;
+  color: #173025;
+  font-weight: 760 !important;
+  text-wrap: balance;
+}
+
+.etos-news-index-head h1 {
+  letter-spacing: -.055em !important;
+  line-height: .98 !important;
+}
+
+.etos-news-lead-copy h2 {
+  letter-spacing: -.045em !important;
+  line-height: 1.02 !important;
+}
+
+.etos-news-row-copy h2 {
+  letter-spacing: -.034em !important;
+  line-height: 1.07 !important;
+}
+
+.etos-news-index-head p,
+.etos-news-lead-copy p,
+.etos-news-row-copy p {
+  font-family: var(--etos-font-sans) !important;
+}
+
+/* --------------------------------------------------------------------------
+   3) Article detail — headline/body/sidebar share the website typography
+   -------------------------------------------------------------------------- */
+.native-publication-article > header h1 {
+  max-width: 900px !important;
+  font-family: var(--etos-font-sans) !important;
+  font-size: clamp(48px, 4.8vw, 72px) !important;
+  line-height: .985 !important;
+  letter-spacing: -.056em !important;
+  font-weight: 760 !important;
+  color: #173025 !important;
+  text-wrap: balance;
+}
+
+.native-publication-body {
+  width: min(790px, 100%) !important;
+  font-family: var(--etos-font-sans) !important;
+  font-size: 17px !important;
+  line-height: 1.82 !important;
+  letter-spacing: -.006em;
+  color: #304039 !important;
+}
+
+.native-publication-body p,
+.native-publication-body li,
+.native-publication-body blockquote,
+.native-publication-body figcaption {
+  font-family: var(--etos-font-sans) !important;
+}
+
+.native-publication-body strong,
+.native-publication-body b {
+  color: #1c3027;
+  font-weight: 760 !important;
+}
+
+.native-publication-body h2,
+.native-publication-body h3,
+.native-publication-body h4 {
+  font-family: var(--etos-font-sans) !important;
+  color: #172a21 !important;
+  font-weight: 760 !important;
+  letter-spacing: -.035em !important;
+}
+
+.native-related-item h3 {
+  font-family: var(--etos-font-sans) !important;
+  font-weight: 760 !important;
+  letter-spacing: -.025em !important;
+  line-height: 1.18 !important;
+}
+
+.native-publication-sidebar,
+.native-publication-sidebar small,
+.native-publication-sidebar a,
+.native-publication-article > header {
+  font-family: var(--etos-font-sans) !important;
+}
+
+/* --------------------------------------------------------------------------
+   4) Portrait tuning — same accents, smaller geometry, no visual crowding
+   -------------------------------------------------------------------------- */
+@media (max-width: 680px) and (orientation: portrait) {
+  .native-home-2026 .etos-story-section {
+    background:
+      radial-gradient(circle at 98% 2%, rgba(225, 246, 235, .105), transparent 35%),
+      radial-gradient(circle at 0% 108%, rgba(151, 206, 177, .105), transparent 43%),
+      linear-gradient(145deg, #103b2d 0%, #174f3b 58%, #123f30 100%) !important;
+    box-shadow: 0 16px 42px rgba(13, 48, 35, .12) !important;
+  }
+
+  .native-home-2026 .etos-story-copy::before {
+    width: 210px;
+    right: -132px;
+    top: -110px;
+    box-shadow: 0 0 0 26px rgba(255,255,255,.016), 0 0 0 58px rgba(255,255,255,.01);
+  }
+
+  .native-home-2026 .etos-story-copy::after {
+    width: 150px;
+    height: 150px;
+    left: -82px;
+    bottom: -104px;
+  }
+
+  .native-home-2026 .etos-cta-section {
+    background:
+      radial-gradient(circle at 102% 0%, rgba(231, 248, 239, .11), transparent 36%),
+      radial-gradient(circle at -3% 108%, rgba(151, 205, 176, .10), transparent 44%),
+      linear-gradient(145deg, #103b2d 0%, #174f3b 56%, #123f30 100%) !important;
+    box-shadow: 0 16px 42px rgba(13, 48, 35, .12) !important;
+  }
+
+  .native-home-2026 .etos-cta-section::before {
+    width: 210px !important;
+    right: -126px !important;
+    top: -118px !important;
+    box-shadow: 0 0 0 28px rgba(255,255,255,.016), 0 0 0 60px rgba(255,255,255,.01);
+  }
+
+  .native-home-2026 .etos-cta-section::after {
+    width: 150px !important;
+    height: 150px !important;
+    right: 15% !important;
+    bottom: -112px !important;
+  }
+
+  .native-publication-article > header h1 {
+    font-size: clamp(34px, 9.2vw, 43px) !important;
+    line-height: 1.01 !important;
+    letter-spacing: -.048em !important;
+  }
+
+  .native-publication-body {
+    font-size: 16.2px !important;
+    line-height: 1.76 !important;
+    letter-spacing: 0;
+  }
+
+  .etos-news-index-head h1 {
+    font-size: clamp(36px, 9.4vw, 48px) !important;
+    line-height: 1 !important;
+  }
+
+  .etos-news-lead-copy h2 {
+    font-size: clamp(29px, 7.6vw, 39px) !important;
+  }
+
+  .etos-news-row-copy h2 {
+    font-size: 19px !important;
+    line-height: 1.1 !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .native-home-2026 .etos-story-copy::before,
+  .native-home-2026 .etos-story-copy::after,
+  .native-home-2026 .etos-cta-section::before,
+  .native-home-2026 .etos-cta-section::after {
+    transition: none !important;
+  }
+}
