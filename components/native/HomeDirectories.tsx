@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { NativeAwardee, NativeProgram, NativeProgramPhoto } from '@/lib/native-public';
 import homeStyles from './HomePreview.module.css';
 import styles from './HomeDirectories.module.css';
@@ -131,46 +131,67 @@ function AwardeeDrawer({ awardee, onClose }: { awardee: NativeAwardee; onClose: 
 }
 
 function DetailDrawer({ state, onClose }: { state: DrawerState; onClose: () => void }) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const [closing, setClosing] = useState(false);
 
   const closeWithMotion = useCallback(() => {
     if (closing) return;
     setClosing(true);
     window.setTimeout(() => {
+      const dialog = dialogRef.current;
+      if (dialog?.open) dialog.close();
       setClosing(false);
       onClose();
-    }, 200);
+    }, 180);
   }, [closing, onClose]);
 
   useEffect(() => {
     if (!state) return;
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
     setClosing(false);
-    const previousOverflow = document.body.style.overflow;
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousRootOverflow = document.documentElement.style.overflow;
     document.body.style.overflow = 'hidden';
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') closeWithMotion();
-    };
-    window.addEventListener('keydown', onKey);
+    document.documentElement.style.overflow = 'hidden';
+
+    if (!dialog.open) {
+      try {
+        dialog.showModal();
+      } catch {
+        dialog.setAttribute('open', '');
+      }
+    }
+
     return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousRootOverflow;
+      if (dialog.open) dialog.close();
     };
-  }, [state, closeWithMotion]);
+  }, [state]);
 
   if (!state) return null;
 
   return (
-    <div
-      className={`${styles.drawerBackdrop}${closing ? ` ${styles.closing}` : ''}`}
-      role="presentation"
-      onMouseDown={(event) => { if (event.currentTarget === event.target) closeWithMotion(); }}
+    <dialog
+      ref={dialogRef}
+      className={`etos-directory-dialog${closing ? ' is-closing' : ''}`}
+      aria-label={state.kind === 'program' ? `Detail program ${state.item.name}` : `Profil awardee ${state.item.name}`}
+      onCancel={(event) => {
+        event.preventDefault();
+        closeWithMotion();
+      }}
+      onMouseDown={(event) => {
+        if (event.currentTarget === event.target) closeWithMotion();
+      }}
     >
-      <aside className={styles.drawer} role="dialog" aria-modal="true" aria-label={state.kind === 'program' ? `Detail program ${state.item.name}` : `Profil awardee ${state.item.name}`}>
+      <aside className={`${styles.drawer} etos-directory-dialog-panel`} role="document">
         {state.kind === 'program'
           ? <ProgramDrawer program={state.item} onClose={closeWithMotion} />
           : <AwardeeDrawer awardee={state.item} onClose={closeWithMotion} />}
       </aside>
-    </div>
+    </dialog>
   );
 }
 
