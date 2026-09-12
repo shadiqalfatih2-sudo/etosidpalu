@@ -146,8 +146,8 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
             </p>
 
             <div className={`${styles.heroActions} etos-hero-actions`} data-etos-reveal="soft">
-              <a href="/#program" className={`${styles.heroPrimary} etos-hero-primary`}>Jelajahi Program</a>
-              <a href="/#awardee" className={`${styles.heroGhost} etos-hero-secondary`}>Kenal Awardee <b>→</b></a>
+              <a href="/" data-etos-section-target="program" className={`${styles.heroPrimary} etos-hero-primary`}>Jelajahi Program</a>
+              <a href="/" data-etos-section-target="awardee" className={`${styles.heroGhost} etos-hero-secondary`}>Kenal Awardee <b>→</b></a>
             </div>
           </div>
         </div>
