@@ -1,0 +1,62 @@
+/* ETOS ID Palu — portrait about story card
+   Mobile portrait only. Landscape and desktop remain untouched. */
+
+@media (max-width: 680px) and (orientation: portrait) {
+  .native-home-2026 .etos-about-lead {
+    position: relative !important;
+    overflow: hidden !important;
+    margin-top: 19px !important;
+    padding: 20px 18px 21px !important;
+    border: 1px solid rgba(255,255,255,.10) !important;
+    border-left: 0 !important;
+    border-radius: 22px !important;
+    background:
+      radial-gradient(circle at 100% 0%, rgba(255,255,255,.09), transparent 31%),
+      radial-gradient(circle at 0% 100%, rgba(115,180,146,.12), transparent 35%),
+      linear-gradient(135deg, #164d3a 0%, #145a40 52%, #0f4935 100%) !important;
+    color: rgba(255,255,255,.93) !important;
+    font-size: 14.5px !important;
+    line-height: 1.72 !important;
+    letter-spacing: -.01em !important;
+    box-shadow: 0 15px 32px rgba(16,55,40,.14) !important;
+  }
+
+  .native-home-2026 .etos-about-lead::before {
+    content: 'PEMBINAAN ETOS';
+    position: relative;
+    z-index: 1;
+    display: flex;
+    width: max-content;
+    min-height: 28px;
+    align-items: center;
+    margin: 0 0 14px;
+    padding: 0 11px;
+    border: 1px solid rgba(255,255,255,.13);
+    border-radius: 999px;
+    background: rgba(255,255,255,.08);
+    color: rgba(255,255,255,.88);
+    font-size: 8.5px;
+    line-height: 1;
+    font-weight: 850;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+  }
+
+  .native-home-2026 .etos-about-lead::after {
+    content: '';
+    position: absolute;
+    right: -42px;
+    bottom: -58px;
+    width: 130px;
+    height: 130px;
+    border: 1px solid rgba(255,255,255,.07);
+    border-radius: 999px;
+    pointer-events: none;
+  }
+
+  .native-home-2026 .etos-about-content {
+    background:
+      radial-gradient(circle at 100% 0%, rgba(94,151,121,.10), transparent 29%),
+      linear-gradient(180deg, #ffffff 0%, #f9fbf9 100%) !important;
+  }
+}
