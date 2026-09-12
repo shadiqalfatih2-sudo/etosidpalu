@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { DrawerLayerSafety } from '@/components/native/DrawerLayerSafety';
 import { NavigationFeedback } from '@/components/native/NavigationFeedback';
 import './design-system.css';
 import './navigation-performance.css';
@@ -50,6 +51,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="id">
       <body>
         <NavigationFeedback />
+        <DrawerLayerSafety />
         {children}
       </body>
     </html>
