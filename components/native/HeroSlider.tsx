@@ -1,29 +1,16 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { NativeHero } from '@/lib/native-public';
 import styles from './HomePreview.module.css';
 
-const AUTOPLAY_MS = 3000;
-const READY_RETRY_MS = 180;
+const AUTOPLAY_MS = 4800;
 
 export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
   const slides = useMemo(() => heroes.filter((item) => item.photo), [heroes]);
   const [active, setActive] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(false);
-  const [loadedSlides, setLoadedSlides] = useState<Set<number>>(() => new Set());
-  const readySlides = useRef<Set<number>>(new Set());
   const leadTitle = slides[0]?.subtitle || 'Membentuk Nalar Kritis, Menempa Etos Peradaban.';
-
-  const markReady = useCallback((index: number) => {
-    readySlides.current.add(index);
-    setLoadedSlides((previous) => {
-      if (previous.has(index)) return previous;
-      const next = new Set(previous);
-      next.add(index);
-      return next;
-    });
-  }, []);
 
   useEffect(() => {
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -35,38 +22,48 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
 
   useEffect(() => {
     if (!slides.length) return;
-    if (active >= slides.length) setActive(0);
-  }, [active, slides.length]);
+    setActive((current) => (current < slides.length ? current : 0));
+
+    const preloaders = slides.slice(1).map((slide) => {
+      const image = new Image();
+      image.decoding = 'async';
+      image.src = slide.photo;
+      return image;
+    });
+
+    return () => {
+      preloaders.forEach((image) => {
+        image.onload = null;
+        image.onerror = null;
+      });
+    };
+  }, [slides]);
 
   useEffect(() => {
     if (slides.length < 2) return;
 
-    let switchTimer = 0;
-    let readinessTimer = 0;
-    let cancelled = false;
+    let timer = window.setInterval(() => {
+      setActive((current) => (current + 1) % slides.length);
+    }, AUTOPLAY_MS);
 
-    const advanceWhenReady = () => {
-      if (cancelled) return;
-      const nextIndex = (active + 1) % slides.length;
-      if (readySlides.current.has(nextIndex)) {
-        setActive(nextIndex);
-        return;
+    const onVisibility = () => {
+      window.clearInterval(timer);
+      if (!document.hidden) {
+        timer = window.setInterval(() => {
+          setActive((current) => (current + 1) % slides.length);
+        }, AUTOPLAY_MS);
       }
-      readinessTimer = window.setTimeout(advanceWhenReady, READY_RETRY_MS);
     };
 
-    switchTimer = window.setTimeout(advanceWhenReady, AUTOPLAY_MS);
-
+    document.addEventListener('visibilitychange', onVisibility);
     return () => {
-      cancelled = true;
-      window.clearTimeout(switchTimer);
-      window.clearTimeout(readinessTimer);
+      window.clearInterval(timer);
+      document.removeEventListener('visibilitychange', onVisibility);
     };
-  }, [active, slides.length]);
+  }, [slides.length]);
 
   const current = slides[active] || slides[0];
   const firstSlide = slides[0];
-  const nextIndex = slides.length ? (active + 1) % slides.length : 0;
 
   return (
     <section className={`${styles.hero} etos-hero etos-hero-2026`} id="beranda" aria-label="Sorotan Etos ID Palu">
@@ -81,53 +78,30 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
             backgroundRepeat: 'no-repeat',
           } : undefined}
         >
-          {firstSlide ? (
-            <img
-              className="etos-hero-poster"
-              src={firstSlide.photo}
-              alt=""
-              style={{
-                position: 'absolute',
-                inset: 0,
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: firstSlide.photoPosition || '50% 50%',
-                opacity: 1,
-                pointerEvents: 'none',
-              }}
-              loading="eager"
-              fetchPriority="high"
-              decoding="async"
-              onLoad={() => markReady(0)}
-            />
-          ) : null}
-
           {slides.map((slide, index) => {
-            const shouldLoad = index === 0 || index === active || index === nextIndex || loadedSlides.has(index);
-            const isVisible = index === active && loadedSlides.has(index);
+            const isVisible = index === active;
             return (
               <img
                 key={slide.id}
-                className={`etos-hero-slide${index === active ? ' is-active' : ''}`}
-                src={shouldLoad ? slide.photo : undefined}
+                className={`etos-hero-slide${isVisible ? ' is-active' : ''}`}
+                src={slide.photo}
                 alt=""
                 style={{
                   objectPosition: slide.photoPosition || '50% 50%',
                   opacity: isVisible ? 1 : 0,
+                  zIndex: isVisible ? 2 : 1,
                   transition: reducedMotion
-                    ? 'opacity 180ms linear'
-                    : 'opacity 900ms ease, transform 3000ms ease-out',
+                    ? 'opacity 220ms linear'
+                    : 'opacity 850ms cubic-bezier(.22,.61,.36,1), transform 4800ms ease-out',
                   transform: reducedMotion
                     ? 'scale(1)'
-                    : index === active
+                    : isVisible
                       ? 'scale(1)'
-                      : 'scale(1.015)',
+                      : 'scale(1.018)',
                 }}
-                loading={index === 0 || index === nextIndex ? 'eager' : 'lazy'}
-                fetchPriority={index === 0 ? 'high' : index === nextIndex ? 'auto' : 'low'}
+                loading={index < 2 ? 'eager' : 'lazy'}
+                fetchPriority={index === 0 ? 'high' : 'auto'}
                 decoding="async"
-                onLoad={() => markReady(index)}
               />
             );
           })}
