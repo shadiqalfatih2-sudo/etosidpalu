@@ -1,10 +1,50 @@
-/* ETOS ID Palu — final edge alignment + portrait footer polish
+/* ETOS ID Palu — final spacing, footer, and premium edge polish
    Loaded last. Visual-only; no data/auth/API behavior changes. */
 
 /* --------------------------------------------------------------------------
-   Story card: keep decorative geometry physically attached to the card edge.
-   The accent previously lived inside the padded copy column, which made it
-   appear to float away from the outer rounded edge on wide screens.
+   1) Consistent homepage vertical rhythm
+   The previous composition stacked a large section bottom-padding with another
+   large top-margin, especially between Program and Perjalanan Awardee.
+   -------------------------------------------------------------------------- */
+.native-home-2026 .etos-about-2026 {
+  padding-top: clamp(68px, 5.5vw, 88px) !important;
+  padding-bottom: clamp(68px, 5.5vw, 88px) !important;
+}
+
+.native-home-2026 .etos-partner-section {
+  padding-bottom: clamp(56px, 4.6vw, 72px) !important;
+}
+
+.native-home-2026 .etos-program-section {
+  padding-top: clamp(60px, 4.8vw, 76px) !important;
+  padding-bottom: clamp(46px, 3.8vw, 60px) !important;
+}
+
+.native-home-2026 .etos-story-section {
+  margin-top: clamp(40px, 3.2vw, 52px) !important;
+}
+
+.native-home-2026 .etos-awardee-section {
+  padding-top: clamp(68px, 5.5vw, 88px) !important;
+  padding-bottom: clamp(70px, 5.8vw, 92px) !important;
+}
+
+.native-home-2026 .etos-publication-section {
+  padding-top: clamp(68px, 5.5vw, 88px) !important;
+  padding-bottom: clamp(70px, 5.8vw, 92px) !important;
+}
+
+.native-home-2026 .etos-cta-section {
+  margin-top: clamp(52px, 4.2vw, 68px) !important;
+  margin-bottom: 24px !important;
+}
+
+.native-news-index .etos-news-index-shell {
+  padding-bottom: 58px !important;
+}
+
+/* --------------------------------------------------------------------------
+   2) Perjalanan Awardee: premium geometry anchored to the actual card edge
    -------------------------------------------------------------------------- */
 .native-home-2026 .etos-story-section {
   position: relative !important;
@@ -12,17 +52,17 @@
   overflow: hidden !important;
 }
 
-.native-home-2026 .etos-story-copy {
-  position: relative !important;
-  z-index: 2 !important;
-  overflow: visible !important;
-}
-
+.native-home-2026 .etos-story-copy,
 .native-home-2026 .etos-story-media {
   position: relative !important;
   z-index: 2 !important;
 }
 
+.native-home-2026 .etos-story-copy {
+  overflow: visible !important;
+}
+
+/* Desktop/tablet uses the outer card edge as the geometry anchor. */
 .native-home-2026 .etos-story-copy::before,
 .native-home-2026 .etos-story-copy::after {
   content: none !important;
@@ -33,16 +73,16 @@
   content: '';
   position: absolute;
   z-index: 1;
-  width: clamp(270px, 25vw, 390px);
+  width: clamp(286px, 25vw, 398px);
   aspect-ratio: 1;
-  right: clamp(-188px, -10vw, -132px);
-  top: clamp(-184px, -9vw, -120px);
+  right: clamp(-184px, -9vw, -124px);
+  top: clamp(-172px, -8vw, -108px);
   border-radius: 50%;
-  border: 1px solid rgba(255,255,255,.085);
+  border: 1px solid rgba(255,255,255,.115);
   background: transparent;
   box-shadow:
-    0 0 0 38px rgba(255,255,255,.018),
-    0 0 0 84px rgba(255,255,255,.012);
+    0 0 0 36px rgba(255,255,255,.024),
+    0 0 0 78px rgba(255,255,255,.014);
   pointer-events: none;
 }
 
@@ -50,142 +90,432 @@
   content: '';
   position: absolute;
   z-index: 1;
-  width: clamp(180px, 17vw, 250px);
+  width: clamp(190px, 17vw, 250px);
   aspect-ratio: 1;
-  right: 18%;
-  bottom: clamp(-190px, -12vw, -132px);
+  right: 16%;
+  bottom: clamp(-176px, -11vw, -124px);
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(203,236,218,.095), transparent 69%);
+  border: 1px solid rgba(219,243,231,.05);
+  background: radial-gradient(circle, rgba(203,236,218,.13), rgba(203,236,218,.025) 42%, transparent 70%);
   pointer-events: none;
 }
 
 /* --------------------------------------------------------------------------
-   Portrait footer: compact, balanced two-column navigation with a clean
-   institutional finish instead of a loose/empty stack.
+   3) Closing CTA: same accent language so both green cards feel related
+   -------------------------------------------------------------------------- */
+.native-home-2026 .etos-cta-section {
+  isolation: isolate !important;
+  overflow: hidden !important;
+}
+
+.native-home-2026 .etos-cta-section::before {
+  content: '' !important;
+  width: clamp(270px, 25vw, 390px) !important;
+  height: auto !important;
+  aspect-ratio: 1;
+  right: clamp(-160px, -8vw, -104px) !important;
+  top: clamp(-158px, -8vw, -104px) !important;
+  left: auto !important;
+  bottom: auto !important;
+  border-radius: 50% !important;
+  border: 1px solid rgba(255,255,255,.115) !important;
+  background: transparent !important;
+  box-shadow:
+    0 0 0 36px rgba(255,255,255,.024),
+    0 0 0 78px rgba(255,255,255,.014) !important;
+  opacity: 1 !important;
+}
+
+.native-home-2026 .etos-cta-section::after {
+  content: '' !important;
+  width: clamp(180px, 16vw, 238px) !important;
+  height: auto !important;
+  aspect-ratio: 1;
+  right: 22% !important;
+  left: auto !important;
+  bottom: clamp(-170px, -11vw, -118px) !important;
+  top: auto !important;
+  border-radius: 50% !important;
+  border: 1px solid rgba(219,243,231,.05) !important;
+  background: radial-gradient(circle, rgba(203,236,218,.13), rgba(203,236,218,.025) 42%, transparent 70%) !important;
+  opacity: 1 !important;
+}
+
+.native-home-2026 .etos-cta-copy,
+.native-home-2026 .etos-cta-section > div:last-child {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* --------------------------------------------------------------------------
+   4) Shared footer — one clean structure on homepage, /berita and detail pages
+   -------------------------------------------------------------------------- */
+.etos-footer-2026 {
+  width: min(1240px, calc(100% - 48px)) !important;
+  margin: 0 auto !important;
+  padding: 40px 0 28px !important;
+  display: grid !important;
+  grid-template-columns: minmax(360px, 1.45fr) minmax(150px, .42fr) minmax(160px, .42fr) !important;
+  column-gap: clamp(42px, 6vw, 92px) !important;
+  row-gap: 26px !important;
+  align-items: start !important;
+  border-top: 1px solid rgba(35,79,61,.11) !important;
+  background: transparent !important;
+}
+
+.etos-footer-2026 .etos-footer-brand-v3 {
+  min-width: 0 !important;
+  justify-self: start !important;
+}
+
+.etos-footer-2026 .etos-footer-brand-v3 .etos-brand-lockup {
+  display: inline-flex !important;
+  margin: 0 0 12px !important;
+}
+
+.etos-footer-2026 .etos-footer-brand-v3 p {
+  max-width: 48ch !important;
+  margin: 0 !important;
+  color: #586c62 !important;
+  font-size: 11.5px !important;
+  font-weight: 650 !important;
+  line-height: 1.6 !important;
+}
+
+.etos-footer-2026 .etos-footer-location-copy {
+  display: inline-flex !important;
+  margin-top: 9px !important;
+  color: #839087 !important;
+  font-size: 9px !important;
+  font-weight: 760 !important;
+  line-height: 1.35 !important;
+  letter-spacing: .07em !important;
+  text-transform: uppercase !important;
+}
+
+.etos-footer-2026 .etos-footer-group {
+  width: 100% !important;
+  min-width: 0 !important;
+  justify-self: start !important;
+  align-self: start !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  text-align: left !important;
+}
+
+.etos-footer-2026 .etos-footer-group > strong {
+  display: block !important;
+  margin: 1px 0 14px !important;
+  color: #234738 !important;
+  font-size: 9.5px !important;
+  font-weight: 850 !important;
+  line-height: 1.2 !important;
+  letter-spacing: .12em !important;
+  text-transform: uppercase !important;
+  text-align: left !important;
+}
+
+.etos-footer-2026 .etos-footer-group > div {
+  width: 100% !important;
+  display: grid !important;
+  grid-auto-flow: row !important;
+  justify-content: start !important;
+  justify-items: start !important;
+  align-items: start !important;
+  gap: 8px !important;
+  margin: 0 !important;
+}
+
+.etos-footer-2026 .etos-footer-group a {
+  display: inline-flex !important;
+  width: auto !important;
+  min-height: 24px !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: #4f665b !important;
+  font-size: 11.5px !important;
+  font-weight: 680 !important;
+  line-height: 1.4 !important;
+  letter-spacing: .01em !important;
+  text-transform: none !important;
+  text-align: left !important;
+  text-decoration: none !important;
+}
+
+.etos-footer-2026 .etos-footer-group a:hover {
+  color: #1f6b50 !important;
+}
+
+.etos-footer-2026 > div:last-child {
+  grid-column: 1 / -1 !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding-top: 18px !important;
+  border-top: 1px solid rgba(35,79,61,.075) !important;
+  color: #89958e !important;
+  font-size: 9.5px !important;
+  line-height: 1.5 !important;
+  text-align: left !important;
+}
+
+/* News index footer gets the same content width as the news shell. */
+.native-news-index .etos-footer-2026 {
+  width: min(1240px, calc(100% - 48px)) !important;
+}
+
+/* --------------------------------------------------------------------------
+   5) Tablet / compact landscape
+   -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+  .etos-footer-2026 {
+    width: calc(100% - 32px) !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    column-gap: 28px !important;
+    row-gap: 0 !important;
+    padding: 32px 0 26px !important;
+  }
+
+  .etos-footer-2026 .etos-footer-brand-v3 {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    padding-bottom: 20px !important;
+    margin-bottom: 20px !important;
+    border-bottom: 1px solid rgba(35,79,61,.08) !important;
+  }
+
+  .etos-footer-2026 > div:last-child {
+    margin-top: 20px !important;
+    padding-top: 16px !important;
+  }
+}
+
+@media (max-width: 980px) and (orientation: landscape) and (max-height: 620px) {
+  .native-home-2026 .etos-about-2026 {
+    padding-top: 54px !important;
+    padding-bottom: 54px !important;
+  }
+
+  .native-home-2026 .etos-partner-section {
+    padding-bottom: 46px !important;
+  }
+
+  .native-home-2026 .etos-program-section {
+    padding-top: 48px !important;
+    padding-bottom: 38px !important;
+  }
+
+  .native-home-2026 .etos-story-section {
+    margin-top: 30px !important;
+  }
+
+  .native-home-2026 .etos-awardee-section,
+  .native-home-2026 .etos-publication-section {
+    padding-top: 52px !important;
+    padding-bottom: 54px !important;
+  }
+
+  .native-home-2026 .etos-cta-section {
+    margin-top: 40px !important;
+  }
+
+  .etos-footer-2026 {
+    width: calc(100% - 36px) !important;
+    padding-top: 28px !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   6) Portrait: visible accents + tighter, balanced spacing + clean footer
    -------------------------------------------------------------------------- */
 @media (max-width: 680px) and (orientation: portrait) {
-  .native-home-2026 .etos-footer-2026 {
-    position: relative !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    column-gap: 22px !important;
-    row-gap: 0 !important;
-    margin-top: 46px !important;
-    padding: 30px 20px 24px !important;
-    border-top: 1px solid rgba(28,79,59,.10) !important;
-    background:
-      radial-gradient(circle at 100% 0%, rgba(79,137,109,.055), transparent 32%),
-      linear-gradient(180deg, #f8faf8 0%, #f3f6f3 100%) !important;
+  .native-home-2026 .etos-about-2026 {
+    padding: 54px 14px 58px !important;
   }
 
-  .native-home-2026 .etos-footer-brand-v3 {
-    grid-column: 1 / -1 !important;
-    width: 100% !important;
-    padding-bottom: 24px !important;
+  .native-home-2026 .etos-partner-section {
+    padding-bottom: 48px !important;
+  }
+
+  .native-home-2026 .etos-program-section {
+    padding: 52px 14px 44px !important;
+  }
+
+  .native-home-2026 .etos-story-section {
+    margin-top: 34px !important;
+  }
+
+  .native-home-2026 .etos-awardee-section,
+  .native-home-2026 .etos-publication-section {
+    padding-top: 56px !important;
+    padding-bottom: 58px !important;
+  }
+
+  .native-home-2026 .etos-cta-section {
+    margin-top: 42px !important;
     margin-bottom: 22px !important;
-    border-bottom: 1px solid rgba(28,79,59,.09) !important;
   }
 
-  .native-home-2026 .etos-footer-brand-v3 .etos-brand-lockup {
-    margin-bottom: 14px !important;
+  .native-news-index .etos-news-index-shell {
+    padding-bottom: 44px !important;
   }
 
-  .native-home-2026 .etos-footer-brand-v3 p {
-    max-width: 31ch !important;
-    margin: 0 !important;
-    color: #5f7168 !important;
-    font-size: 13px !important;
-    line-height: 1.66 !important;
+  /* On portrait the story is stacked: put accents inside the green copy panel,
+     not over the photo, so the premium geometry remains clearly visible. */
+  .native-home-2026 .etos-story-section::before,
+  .native-home-2026 .etos-story-section::after {
+    content: none !important;
+    display: none !important;
   }
 
-  .native-home-2026 .etos-footer-location-copy {
-    display: inline-flex !important;
-    margin-top: 12px !important;
-    color: #819087 !important;
-    font-size: 9.5px !important;
-    font-weight: 760 !important;
-    letter-spacing: .09em !important;
-    text-transform: uppercase !important;
+  .native-home-2026 .etos-story-copy {
+    position: relative !important;
+    z-index: 2 !important;
+    isolation: isolate !important;
+    overflow: hidden !important;
   }
 
-  .native-home-2026 .etos-footer-group {
-    width: 100% !important;
-    min-width: 0 !important;
-    padding: 0 !important;
-    align-items: flex-start !important;
+  .native-home-2026 .etos-story-copy > * {
+    position: relative;
+    z-index: 2;
   }
 
-  .native-home-2026 .etos-footer-group > strong {
-    margin: 0 0 13px !important;
-    color: #274b3c !important;
-    font-size: 9.5px !important;
-    font-weight: 850 !important;
-    line-height: 1.2 !important;
-    letter-spacing: .14em !important;
-    text-transform: uppercase !important;
+  .native-home-2026 .etos-story-copy::before {
+    content: '' !important;
+    display: block !important;
+    position: absolute;
+    z-index: 1;
+    width: 190px;
+    aspect-ratio: 1;
+    right: -96px;
+    top: -92px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.14);
+    background: transparent;
+    box-shadow:
+      0 0 0 28px rgba(255,255,255,.026),
+      0 0 0 58px rgba(255,255,255,.015);
+    pointer-events: none;
   }
 
-  .native-home-2026 .etos-footer-group > div {
-    width: 100% !important;
-    display: grid !important;
-    gap: 9px !important;
-    justify-items: start !important;
+  .native-home-2026 .etos-story-copy::after {
+    content: '' !important;
+    display: block !important;
+    position: absolute;
+    z-index: 1;
+    width: 142px;
+    aspect-ratio: 1;
+    left: -78px;
+    bottom: -86px;
+    border-radius: 50%;
+    border: 1px solid rgba(223,245,234,.07);
+    background: radial-gradient(circle, rgba(210,239,224,.14), rgba(210,239,224,.03) 44%, transparent 70%);
+    pointer-events: none;
   }
 
-  .native-home-2026 .etos-footer-group a {
-    display: inline-flex !important;
-    width: auto !important;
-    min-height: 25px !important;
-    align-items: center !important;
-    color: #334f43 !important;
-    font-size: 12.5px !important;
-    font-weight: 650 !important;
-    line-height: 1.35 !important;
-    text-decoration: none !important;
+  /* CTA keeps the same ring language, clearly visible on portrait. */
+  .native-home-2026 .etos-cta-section::before {
+    width: 194px !important;
+    right: -94px !important;
+    top: -88px !important;
+    left: auto !important;
+    bottom: auto !important;
+    border: 1px solid rgba(255,255,255,.14) !important;
+    box-shadow:
+      0 0 0 28px rgba(255,255,255,.026),
+      0 0 0 58px rgba(255,255,255,.015) !important;
   }
 
-  .native-home-2026 .etos-footer-2026 > div:last-child {
+  .native-home-2026 .etos-cta-section::after {
+    width: 146px !important;
+    left: -76px !important;
+    right: auto !important;
+    bottom: -88px !important;
+    top: auto !important;
+    border: 1px solid rgba(223,245,234,.07) !important;
+    background: radial-gradient(circle, rgba(210,239,224,.14), rgba(210,239,224,.03) 44%, transparent 70%) !important;
+  }
+
+  .etos-footer-2026 {
+    width: calc(100% - 32px) !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    column-gap: 24px !important;
+    row-gap: 0 !important;
+    margin: 0 auto !important;
+    padding: 28px 0 24px !important;
+    border-top: 1px solid rgba(35,79,61,.10) !important;
+  }
+
+  .etos-footer-2026 .etos-footer-brand-v3 {
     grid-column: 1 / -1 !important;
     width: 100% !important;
-    margin-top: 24px !important;
-    padding-top: 18px !important;
-    border-top: 1px solid rgba(28,79,59,.09) !important;
-    color: #849189 !important;
-    font-size: 10px !important;
-    line-height: 1.5 !important;
-    text-align: left !important;
+    padding: 0 0 20px !important;
+    margin: 0 0 20px !important;
+    border-bottom: 1px solid rgba(35,79,61,.085) !important;
   }
 
-  /* Story decoration uses the exact outer card edge on portrait too. */
-  .native-home-2026 .etos-story-section::before {
-    width: 220px;
-    right: -142px;
-    top: -118px;
-    box-shadow:
-      0 0 0 28px rgba(255,255,255,.016),
-      0 0 0 60px rgba(255,255,255,.010);
+  .etos-footer-2026 .etos-footer-brand-v3 .etos-brand-lockup {
+    margin-bottom: 12px !important;
   }
 
-  .native-home-2026 .etos-story-section::after {
-    width: 155px;
-    right: 10%;
-    bottom: -116px;
+  .etos-footer-2026 .etos-footer-brand-v3 .etos-brand-lockup img {
+    width: 100px !important;
+    height: auto !important;
+  }
+
+  .etos-footer-2026 .etos-footer-brand-v3 p {
+    max-width: 34ch !important;
+    font-size: 12.5px !important;
+    line-height: 1.58 !important;
+  }
+
+  .etos-footer-2026 .etos-footer-location-copy {
+    margin-top: 10px !important;
+    font-size: 8.8px !important;
+  }
+
+  .etos-footer-2026 .etos-footer-group > strong {
+    margin-bottom: 11px !important;
+    font-size: 9px !important;
+  }
+
+  .etos-footer-2026 .etos-footer-group > div {
+    gap: 7px !important;
+  }
+
+  .etos-footer-2026 .etos-footer-group a {
+    min-height: 22px !important;
+    font-size: 12px !important;
+    line-height: 1.35 !important;
+  }
+
+  .etos-footer-2026 > div:last-child {
+    grid-column: 1 / -1 !important;
+    margin-top: 20px !important;
+    padding-top: 16px !important;
+    font-size: 9.5px !important;
   }
 }
 
 @media (max-width: 360px) and (orientation: portrait) {
-  .native-home-2026 .etos-footer-2026 {
-    column-gap: 16px !important;
-    padding-inline: 16px !important;
+  .etos-footer-2026 {
+    width: calc(100% - 28px) !important;
+    column-gap: 18px !important;
   }
 
-  .native-home-2026 .etos-footer-group a {
-    font-size: 12px !important;
+  .etos-footer-2026 .etos-footer-group a {
+    font-size: 11.5px !important;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .native-home-2026 .etos-story-section::before,
-  .native-home-2026 .etos-story-section::after {
+  .native-home-2026 .etos-story-section::after,
+  .native-home-2026 .etos-story-copy::before,
+  .native-home-2026 .etos-story-copy::after,
+  .native-home-2026 .etos-cta-section::before,
+  .native-home-2026 .etos-cta-section::after {
     transition: none !important;
   }
 }
