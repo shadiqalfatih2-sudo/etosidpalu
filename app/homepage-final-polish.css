@@ -1,0 +1,398 @@
+/* Final polish — full-bleed editorial hero, precise mobile header and footer alignment.
+   Loaded after homepage-2026.css so these are the final homepage decisions. */
+
+/* ---------- Full-bleed hero ---------- */
+.native-home-2026 .etos-hero-2026 {
+  padding: 0 !important;
+}
+
+.native-home-2026 .etos-hero-media {
+  width: 100% !important;
+  min-height: calc(100svh - 78px) !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: #123f30 !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+}
+
+.native-home-2026 .etos-hero-slides,
+.native-home-2026 .etos-hero-poster,
+.native-home-2026 .etos-hero-slide {
+  border-radius: 0 !important;
+}
+
+.native-home-2026 .etos-hero-slide {
+  transform: scale(1.012);
+  transition: opacity 1.05s ease, transform 6.4s ease-out !important;
+}
+
+.native-home-2026 .etos-hero-slide.is-active {
+  transform: scale(1);
+}
+
+.native-home-2026 .etos-hero-overlay {
+  inset: 0 !important;
+  background:
+    linear-gradient(180deg, rgba(5, 28, 20, .02) 0%, rgba(5, 28, 20, .04) 42%, rgba(5, 28, 20, .42) 100%),
+    linear-gradient(90deg, rgba(5, 31, 22, .62) 0%, rgba(5, 31, 22, .42) 31%, rgba(5, 31, 22, .16) 55%, rgba(5, 31, 22, 0) 76%) !important;
+}
+
+.native-home-2026 .etos-hero-content {
+  min-height: calc(100svh - 78px) !important;
+  max-width: none !important;
+  padding:
+    clamp(52px, 7vh, 88px)
+    max(32px, calc((100vw - var(--home-max)) / 2 + 40px)) !important;
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: flex-start !important;
+  color: #fff !important;
+}
+
+.native-home-2026 .etos-hero-copy-panel {
+  width: min(620px, 48vw) !important;
+  max-width: 620px;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.native-home-2026 .etos-hero-kicker {
+  margin: 0 0 14px !important;
+  color: #d8eee2 !important;
+  font-size: 10px !important;
+  font-weight: 850 !important;
+  letter-spacing: .13em !important;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, .2);
+}
+
+.native-home-2026 .etos-hero-content h1 {
+  max-width: 11.5ch !important;
+  margin: 0 !important;
+  color: #fff !important;
+  font-family: var(--etos-font-sans) !important;
+  font-size: clamp(48px, 5vw, 70px) !important;
+  line-height: .99 !important;
+  letter-spacing: -.055em !important;
+  font-weight: 780 !important;
+  text-shadow: 0 3px 24px rgba(0, 0, 0, .25);
+}
+
+.native-home-2026 .etos-hero-content p {
+  max-width: 52ch !important;
+  margin: 18px 0 0 !important;
+  color: rgba(255, 255, 255, .92) !important;
+  font-size: 15px !important;
+  line-height: 1.62 !important;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, .24);
+}
+
+.native-home-2026 .etos-hero-actions {
+  margin-top: 24px !important;
+  gap: 10px !important;
+}
+
+.native-home-2026 .etos-hero-primary,
+.native-home-2026 .etos-hero-secondary {
+  min-height: 44px !important;
+  padding: 0 17px !important;
+  border-radius: 11px !important;
+  font-size: 10px !important;
+  font-weight: 820 !important;
+  letter-spacing: .025em !important;
+  text-transform: none !important;
+}
+
+.native-home-2026 .etos-hero-primary {
+  color: #174b38 !important;
+  background: #fff !important;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, .13) !important;
+}
+
+.native-home-2026 .etos-hero-primary:hover {
+  background: #f4faf6 !important;
+}
+
+.native-home-2026 .etos-hero-secondary {
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, .68) !important;
+  background: rgba(8, 43, 30, .18) !important;
+  backdrop-filter: blur(6px);
+}
+
+.native-home-2026 .etos-hero-secondary:hover {
+  border-color: #fff !important;
+  background: rgba(8, 43, 30, .3) !important;
+}
+
+.native-home-2026 .etos-hero-secondary b {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* Old hero UI is intentionally retired. */
+.native-home-2026 .etos-hero-chips,
+.native-home-2026 .etos-hero-floating-card,
+.native-home-2026 .etos-hero-controls,
+.native-home-2026 .etos-hero-count,
+.native-home-2026 .etos-hero-dots {
+  display: none !important;
+}
+
+/* Keep the section following the full-bleed hero visually calm. */
+.native-home-2026 .etos-impact {
+  padding-top: 24px !important;
+}
+
+/* ---------- Footer grid precision ---------- */
+.native-home-2026 .etos-footer-2026 {
+  grid-template-columns: minmax(0, 1.6fr) minmax(150px, .55fr) minmax(150px, .55fr) !important;
+  column-gap: clamp(46px, 6vw, 84px) !important;
+  row-gap: 34px !important;
+  align-items: start !important;
+}
+
+.native-home-2026 .etos-footer-brand-v3,
+.native-home-2026 .etos-footer-group {
+  justify-self: stretch !important;
+  align-self: start !important;
+  text-align: left !important;
+}
+
+.native-home-2026 .etos-footer-group {
+  display: flex !important;
+  flex-direction: column;
+  align-items: flex-start !important;
+}
+
+.native-home-2026 .etos-footer-group > strong {
+  width: 100%;
+  margin: 0 0 14px !important;
+  text-align: left !important;
+}
+
+.native-home-2026 .etos-footer-2026 .etos-footer-group > div {
+  width: 100%;
+  display: grid !important;
+  justify-items: start !important;
+  align-items: start !important;
+  gap: 9px !important;
+  text-align: left !important;
+}
+
+.native-home-2026 .etos-footer-2026 .etos-footer-group a {
+  width: auto;
+  text-align: left !important;
+}
+
+/* ---------- Portrait header: logo left, Menu at far right ---------- */
+@media (max-width: 680px) {
+  .etos-site-header {
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    column-gap: 12px !important;
+  }
+
+  .etos-site-header .etos-brand-row {
+    grid-column: 1 !important;
+    min-width: 0;
+    justify-self: start !important;
+  }
+
+  .etos-site-header .etos-header-actions {
+    grid-column: 2 !important;
+    min-width: max-content;
+    margin-left: auto !important;
+    justify-self: end !important;
+    justify-content: flex-end !important;
+  }
+
+  .etos-site-header .etos-brand-divider,
+  .etos-site-header .etos-tagline,
+  .etos-site-header .etos-header-primary,
+  .etos-site-header .etos-header-admin {
+    display: none !important;
+  }
+
+  .etos-site-header .etos-mobile-menu {
+    margin-left: auto !important;
+    justify-self: end !important;
+  }
+
+  .etos-site-header .etos-mobile-menu > summary {
+    min-width: 54px;
+    text-align: right;
+  }
+
+  /* Full image remains the hero on portrait; text blends into the lower safe zone. */
+  .native-home-2026 .etos-hero-2026 {
+    padding: 0 !important;
+  }
+
+  .native-home-2026 .etos-hero-media {
+    position: relative;
+    min-height: calc(100svh - 64px) !important;
+    border-radius: 0 !important;
+    background: #123f30 !important;
+    box-shadow: none !important;
+  }
+
+  .native-home-2026 .etos-hero-slides {
+    position: absolute !important;
+    inset: 0 !important;
+    height: 100% !important;
+    border-radius: 0 !important;
+  }
+
+  .native-home-2026 .etos-hero-poster,
+  .native-home-2026 .etos-hero-slide {
+    border-radius: 0 !important;
+  }
+
+  .native-home-2026 .etos-hero-overlay {
+    inset: 0 !important;
+    height: auto !important;
+    background:
+      linear-gradient(180deg, rgba(5, 30, 21, .02) 0%, rgba(5, 30, 21, .06) 42%, rgba(5, 30, 21, .7) 100%),
+      linear-gradient(90deg, rgba(5, 30, 21, .22) 0%, rgba(5, 30, 21, .06) 65%, rgba(5, 30, 21, 0) 100%) !important;
+  }
+
+  .native-home-2026 .etos-hero-content {
+    min-height: calc(100svh - 64px) !important;
+    padding: 28px 18px 34px !important;
+    display: flex !important;
+    align-items: flex-end !important;
+    justify-content: flex-start !important;
+    background: transparent !important;
+  }
+
+  .native-home-2026 .etos-hero-copy-panel {
+    width: min(94%, 520px) !important;
+    max-width: 520px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .native-home-2026 .etos-hero-kicker {
+    margin-bottom: 10px !important;
+    color: #d8eee2 !important;
+    font-size: 8px !important;
+    letter-spacing: .105em !important;
+  }
+
+  .native-home-2026 .etos-hero-content h1 {
+    max-width: 12ch !important;
+    color: #fff !important;
+    font-size: clamp(35px, 10.2vw, 46px) !important;
+    line-height: 1 !important;
+  }
+
+  .native-home-2026 .etos-hero-content p {
+    max-width: 42ch !important;
+    margin-top: 13px !important;
+    color: rgba(255, 255, 255, .9) !important;
+    font-size: 12.5px !important;
+    line-height: 1.55 !important;
+  }
+
+  .native-home-2026 .etos-hero-actions {
+    margin-top: 18px !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  .native-home-2026 .etos-hero-primary,
+  .native-home-2026 .etos-hero-secondary {
+    min-height: 41px !important;
+    padding: 0 12px !important;
+    font-size: 8.5px !important;
+  }
+
+  .native-home-2026 .etos-impact {
+    padding-top: 14px !important;
+  }
+
+  .native-home-2026 .etos-footer-2026 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    column-gap: 20px !important;
+    row-gap: 28px !important;
+    align-items: start !important;
+  }
+
+  .native-home-2026 .etos-footer-brand-v3 {
+    grid-column: 1 / -1 !important;
+    justify-self: stretch !important;
+  }
+
+  .native-home-2026 .etos-footer-group {
+    width: 100%;
+    justify-self: stretch !important;
+    align-items: flex-start !important;
+  }
+
+  .native-home-2026 .etos-footer-group > strong,
+  .native-home-2026 .etos-footer-group > div {
+    width: 100% !important;
+    text-align: left !important;
+    justify-items: start !important;
+  }
+
+  .native-home-2026 .etos-footer-2026 > div:last-child {
+    grid-column: 1 / -1 !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .native-home-2026 .etos-footer-2026 {
+    grid-template-columns: 1fr !important;
+  }
+
+  .native-home-2026 .etos-footer-brand-v3,
+  .native-home-2026 .etos-footer-2026 > div:last-child {
+    grid-column: 1 !important;
+  }
+}
+
+/* Phone landscape keeps the same no-card treatment but uses a shorter viewport. */
+@media (max-width: 980px) and (orientation: landscape) and (max-height: 560px) {
+  .native-home-2026 .etos-hero-media,
+  .native-home-2026 .etos-hero-content {
+    min-height: calc(100svh - 62px) !important;
+  }
+
+  .native-home-2026 .etos-hero-content {
+    padding:
+      24px
+      max(24px, calc((100vw - var(--home-max)) / 2 + 30px)) !important;
+  }
+
+  .native-home-2026 .etos-hero-copy-panel {
+    width: min(500px, 57vw) !important;
+    max-width: 500px !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+  }
+
+  .native-home-2026 .etos-hero-content h1 {
+    max-width: 12ch !important;
+    font-size: clamp(30px, 4.6vw, 42px) !important;
+  }
+
+  .native-home-2026 .etos-hero-content p {
+    margin-top: 10px !important;
+    font-size: 11.5px !important;
+    line-height: 1.48 !important;
+  }
+
+  .native-home-2026 .etos-hero-actions {
+    margin-top: 14px !important;
+  }
+}

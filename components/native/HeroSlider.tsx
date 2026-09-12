@@ -69,7 +69,7 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
   const nextIndex = slides.length ? (active + 1) % slides.length : 0;
 
   return (
-    <section className={`${styles.hero} etos-hero etos-hero-2026`} id="beranda">
+    <section className={`${styles.hero} etos-hero etos-hero-2026`} id="beranda" aria-label="Sorotan Etos ID Palu">
       <div className={`${styles.heroMedia} etos-hero-media`}>
         <div
           className="etos-hero-slides"
@@ -129,15 +129,13 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
 
         <div className={`${styles.heroContent} etos-hero-content`}>
           <div className="etos-hero-copy-panel" data-etos-stagger="hero">
-            <div className={`${styles.heroKicker} etos-hero-kicker`} data-etos-reveal="soft">ETOS ID PALU • WE ARE RESILIENT LEADER</div>
-            <h1 data-etos-reveal="soft">{current?.subtitle || leadTitle}</h1>
-            <p data-etos-reveal="soft">Ruang tumbuh bagi mahasiswa untuk menguatkan karakter, kepemimpinan, spiritualitas, dan kontribusi sosial yang berdampak.</p>
-
-            <div className="etos-hero-chips" data-etos-reveal="soft">
-              <span>Pembinaan karakter</span>
-              <span>Kepemimpinan</span>
-              <span>Kontribusi sosial</span>
+            <div className={`${styles.heroKicker} etos-hero-kicker`} data-etos-reveal="soft">
+              ETOS ID PALU • WE ARE RESILIENT LEADER
             </div>
+            <h1 data-etos-reveal="soft">{current?.subtitle || leadTitle}</h1>
+            <p data-etos-reveal="soft">
+              Ruang tumbuh bagi mahasiswa untuk memperkuat nilai, nalar, spiritualitas, dan keberanian memberi dampak.
+            </p>
 
             <div className={`${styles.heroActions} etos-hero-actions`} data-etos-reveal="soft">
               <a href="/#program" className={`${styles.heroPrimary} etos-hero-primary`}>Jelajahi Program</a>
@@ -145,30 +143,6 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
             </div>
           </div>
         </div>
-
-        <aside className="etos-hero-floating-card" aria-label="Mitra kampus Etos ID Palu" data-etos-reveal="soft">
-          <span>Mitra kampus</span>
-          <strong>Universitas Tadulako</strong>
-          <p>Kampus program ETOS ID di Palu sejak 2021.</p>
-        </aside>
-
-        {slides.length > 1 ? (
-          <div className="etos-hero-controls" aria-label="Pilih slide hero">
-            <span className="etos-hero-count">{String(active + 1).padStart(2, '0')} / {String(slides.length).padStart(2, '0')}</span>
-            <div className="etos-hero-dots">
-              {slides.map((slide, index) => (
-                <button
-                  type="button"
-                  className={index === active ? 'is-active' : ''}
-                  key={slide.id}
-                  onClick={() => setActive(index)}
-                  aria-label={`Tampilkan slide ${index + 1}`}
-                  aria-current={index === active ? 'true' : undefined}
-                />
-              ))}
-            </div>
-          </div>
-        ) : null}
       </div>
     </section>
   );

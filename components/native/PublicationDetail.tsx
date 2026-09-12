@@ -34,26 +34,51 @@ function cleanArticleHtml(value: string) {
 
 export function NativePublicationDetailView({ detail, related }: { detail: NativePublicationDetail; related: NativePublication[] }) {
   const safeHtml = cleanArticleHtml(detail.contentHtml);
+  const displayAuthor = detail.kind === 'Berita'
+    ? 'Fasilitator Etos ID Palu'
+    : (detail.author || 'Kontributor Etos ID Palu');
+  const displayRole = detail.kind === 'Berita'
+    ? 'Etos ID Palu'
+    : (detail.activity || 'Kontributor Etos ID Palu');
+
   return (
     <main className={`${styles.page} native-publication`}>
       <SiteHeader />
       <div className={`${styles.shell} native-publication-shell`}>
         <Link href="/#publikasi" className={styles.back}>← Kembali ke Berita & Opini</Link>
-        <div className={`${styles.headGrid} native-publication-grid`}>
-          <article className={`${styles.article} native-publication-article`}>
-            <div className={styles.meta}>{detail.kind} <span>•</span> {formatDate(detail.publishedAt)}</div>
-            <h1>{detail.title}</h1>
-            <div className={styles.authorRow}>
-              <div className={styles.avatar}>{detail.author.slice(0, 1).toUpperCase()}</div>
-              <div><strong>{detail.author}</strong><span>{detail.activity || (detail.kind === 'Berita' ? 'Etos ID Palu' : 'Kontributor Etos ID Palu')}</span></div>
+
+        <header className={styles.articleHeader}>
+          <div className={styles.meta}>{detail.kind} <span>•</span> {formatDate(detail.publishedAt)}</div>
+          <h1>{detail.title}</h1>
+          <div className={styles.authorRow}>
+            <div className={styles.avatar}>{displayAuthor.slice(0, 1).toUpperCase()}</div>
+            <div>
+              <strong>{displayAuthor}</strong>
+              <span>{displayRole}</span>
             </div>
+          </div>
+        </header>
+
+        <div className={`${styles.contentGrid} native-publication-grid`}>
+          <article className={`${styles.article} native-publication-article`}>
             {detail.thumbnail ? (
               <div className={`${styles.heroImage} native-publication-hero`}>
-                <img src={detail.thumbnail} alt="" style={{ objectPosition: detail.thumbnailPosition }} loading="eager" decoding="async" fetchPriority="high" />
+                <img
+                  src={detail.thumbnail}
+                  alt=""
+                  style={{ objectPosition: detail.thumbnailPosition }}
+                  loading="eager"
+                  decoding="async"
+                  fetchPriority="high"
+                />
               </div>
             ) : null}
-            <div className={`${styles.articleBody} native-publication-body`} dangerouslySetInnerHTML={{ __html: safeHtml }} />
+            <div
+              className={`${styles.articleBody} native-publication-body`}
+              dangerouslySetInnerHTML={{ __html: safeHtml }}
+            />
           </article>
+
           <aside className={`${styles.sidebar} native-publication-sidebar`}>
             <div className={styles.sidebarLabel}>Tulisan Lainnya</div>
             <div className={styles.relatedList}>
@@ -62,7 +87,10 @@ export function NativePublicationDetailView({ detail, related }: { detail: Nativ
                   <div className={styles.relatedImage}>
                     {item.thumbnail ? <img src={item.thumbnail} alt="" loading="lazy" decoding="async" fetchPriority="low" /> : null}
                   </div>
-                  <div><small>{item.kind} • {formatDate(item.publishedAt)}</small><h3>{item.title}</h3></div>
+                  <div className={styles.relatedCopy}>
+                    <small>{item.kind} • {formatDate(item.publishedAt)}</small>
+                    <h3>{item.title}</h3>
+                  </div>
                 </Link>
               ))}
             </div>
