@@ -65,18 +65,23 @@ function ImpactStrip({ stats }: { stats: NativeHomeStats }) {
     { value: '2021', label: 'Bersama Universitas Tadulako', note: 'kampus program ETOS ID di Palu' },
   ];
 
+  const renderItems = (copy: 'primary' | 'duplicate') => items.map((item) => (
+    <article className="etos-impact-card" key={`${copy}-${item.value}-${item.label}`}>
+      <strong>{item.value}</strong>
+      <div>
+        <span>{item.label}</span>
+        <p>{item.note}</p>
+      </div>
+    </article>
+  ));
+
   return (
     <section className="etos-impact" aria-label="Ringkasan Etos ID Palu" data-etos-reveal="soft">
-      <div className="etos-impact-grid" data-etos-stagger="impact-grid">
-        {items.map((item) => (
-          <article className="etos-impact-card" key={`${item.value}-${item.label}`} data-etos-reveal="soft">
-            <strong>{item.value}</strong>
-            <div>
-              <span>{item.label}</span>
-              <p>{item.note}</p>
-            </div>
-          </article>
-        ))}
+      <div className="etos-impact-viewport">
+        <div className="etos-impact-track">
+          <div className="etos-impact-group">{renderItems('primary')}</div>
+          <div className="etos-impact-group" aria-hidden="true">{renderItems('duplicate')}</div>
+        </div>
       </div>
     </section>
   );
@@ -99,16 +104,16 @@ function About({ visual }: { visual: string }) {
           <h2>Menumbuhkan pemimpin muda yang kuat dalam nilai, tajam dalam nalar, dan nyata dalam kontribusi.</h2>
           <p className="etos-about-lead">Etos ID Palu menghadirkan pembinaan yang tidak berhenti pada capaian akademik. Awardee dibentuk melalui pengalaman yang menguatkan spiritualitas, kepemimpinan, kolaborasi, dan keberanian menjawab kebutuhan masyarakat.</p>
 
-          <div className="etos-value-grid" aria-label="Nilai pembinaan Etos ID Palu">
-            <article className="etos-value-card">
+          <div className="etos-value-grid" aria-label="Nilai pembinaan Etos ID Palu" data-etos-stagger="values">
+            <article className="etos-value-card" data-etos-reveal="soft">
               <span>01</span>
               <div><strong>Integritas</strong><p>Teguh pada nilai, etika, dan tanggung jawab dalam setiap keputusan.</p></div>
             </article>
-            <article className="etos-value-card">
+            <article className="etos-value-card" data-etos-reveal="soft">
               <span>02</span>
               <div><strong>Profesional</strong><p>Belajar bekerja tuntas, akurat, kolaboratif, dan dapat dipercaya.</p></div>
             </article>
-            <article className="etos-value-card">
+            <article className="etos-value-card" data-etos-reveal="soft">
               <span>03</span>
               <div><strong>Transformatif</strong><p>Mengubah pengetahuan dan pengalaman menjadi manfaat yang terasa.</p></div>
             </article>
