@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import { DrawerLayerSafety } from '@/components/native/DrawerLayerSafety';
 import { NavigationFeedback } from '@/components/native/NavigationFeedback';
 import './design-system.css';
 import './navigation-performance.css';
@@ -18,8 +17,10 @@ import './ux-final-2026.css';
 import './final-accent-typography-2026.css';
 // Final edge alignment + compact portrait footer.
 import './final-edge-polish-2026.css';
-// Final directory drawer visibility + compact desktop partner feature.
+// Compact desktop UNTAD feature; legacy drawer selectors are superseded below.
 import './final-drawer-partner-fix-2026.css';
+// Final interaction architecture: native dialogs, reliable slider, portrait header, reveal motion.
+import './final-interaction-rebuild-2026.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.etosidpalu.com'),
@@ -51,7 +52,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="id">
       <body>
         <NavigationFeedback />
-        <DrawerLayerSafety />
         {children}
       </body>
     </html>
