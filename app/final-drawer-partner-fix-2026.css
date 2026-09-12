@@ -1,0 +1,130 @@
+/* ETOS ID Palu — final drawer + partner precision fix
+   Loaded last. Fixes the directory detail panel visibility and keeps the UNTAD
+   partner feature compact on desktop without changing portrait composition. */
+
+/* --------------------------------------------------------------------------
+   1) Program / Awardee detail drawer
+   Force the actual dialog panel into the viewport layer above its backdrop.
+   This intentionally avoids depending on an ancestor stacking context.
+   -------------------------------------------------------------------------- */
+
+div[class*="drawerBackdrop"] {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483600 !important;
+  display: flex !important;
+  align-items: stretch !important;
+  justify-content: flex-end !important;
+  overflow: hidden !important;
+  pointer-events: auto !important;
+}
+
+div[class*="drawerBackdrop"] > aside[role="dialog"] {
+  position: fixed !important;
+  z-index: 2147483646 !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: auto !important;
+  left: auto !important;
+  display: block !important;
+  width: min(690px, 95vw) !important;
+  height: 100dvh !important;
+  min-height: 100dvh !important;
+  max-height: 100dvh !important;
+  margin: 0 !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  transform: none !important;
+  translate: none !important;
+  scale: 1 !important;
+  filter: none !important;
+  animation: none !important;
+  background: #fff !important;
+  color: #17382b !important;
+  border-left: 1px solid rgba(215, 226, 219, .96) !important;
+  box-shadow: -28px 0 72px rgba(9, 37, 27, .22) !important;
+  isolation: isolate !important;
+  pointer-events: auto !important;
+}
+
+div[class*="drawerBackdrop"] > aside[role="dialog"] > * {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+@media (max-width: 720px) {
+  div[class*="drawerBackdrop"] > aside[role="dialog"] {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    border-left: 0 !important;
+  }
+}
+
+@media (max-width: 980px) and (orientation: landscape) {
+  div[class*="drawerBackdrop"] > aside[role="dialog"] {
+    width: min(640px, 86vw) !important;
+    max-width: 86vw !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2) UNTAD partner feature — one-line title + tighter desktop rhythm
+   -------------------------------------------------------------------------- */
+@media (min-width: 901px) {
+  .native-home-2026 .etos-partner-section {
+    padding-top: clamp(46px, 3.7vw, 58px) !important;
+    padding-bottom: clamp(46px, 3.7vw, 58px) !important;
+  }
+
+  .native-home-2026 .etos-partner-shell {
+    grid-template-columns: 112px minmax(0, 1fr) auto !important;
+    gap: clamp(24px, 2.6vw, 40px) !important;
+    padding: 24px clamp(26px, 2.8vw, 42px) !important;
+    align-items: center !important;
+  }
+
+  .native-home-2026 .etos-partner-mark {
+    min-height: 88px !important;
+    padding-right: 22px !important;
+  }
+
+  .native-home-2026 .etos-partner-mark img {
+    width: 76px !important;
+    height: 76px !important;
+  }
+
+  .native-home-2026 .etos-partner-copy h2 {
+    max-width: none !important;
+    margin: 8px 0 8px !important;
+    font-size: clamp(30px, 2.6vw, 39px) !important;
+    line-height: 1 !important;
+    letter-spacing: -.042em !important;
+    white-space: nowrap !important;
+    text-wrap: nowrap !important;
+  }
+
+  .native-home-2026 .etos-partner-copy p {
+    max-width: 780px !important;
+    font-size: 12.5px !important;
+    line-height: 1.55 !important;
+  }
+
+  .native-home-2026 .etos-partner-meta {
+    min-width: 194px !important;
+    gap: 6px !important;
+    padding-left: 26px !important;
+  }
+
+  .native-home-2026 .etos-partner-meta strong {
+    display: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  div[class*="drawerBackdrop"] > aside[role="dialog"] {
+    animation: none !important;
+    transition: none !important;
+  }
+}
