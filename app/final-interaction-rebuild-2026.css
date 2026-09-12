@@ -1,0 +1,320 @@
+/* ETOS ID Palu — interaction rebuild 2026
+   Final layer for native top-layer directory dialogs, reliable hero stacking,
+   compact portrait navigation, and comfortable professional reveal motion. */
+
+/* --------------------------------------------------------------------------
+   1) Program / Awardee native dialog — real browser top layer
+   -------------------------------------------------------------------------- */
+.etos-directory-dialog {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100dvh !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  outline: 0 !important;
+  overflow: hidden !important;
+  background: transparent !important;
+  color: #17382b !important;
+}
+
+.etos-directory-dialog::backdrop {
+  background: rgba(8, 27, 19, .46) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.etos-directory-dialog .etos-directory-dialog-panel {
+  position: absolute !important;
+  inset: 0 0 0 auto !important;
+  display: block !important;
+  width: min(690px, 95vw) !important;
+  height: 100dvh !important;
+  max-width: 95vw !important;
+  max-height: 100dvh !important;
+  margin: 0 !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  transform: translate3d(0, 0, 0) !important;
+  filter: none !important;
+  background: #fff !important;
+  border: 0 !important;
+  border-left: 1px solid rgba(216, 227, 220, .94) !important;
+  box-shadow: -26px 0 72px rgba(8, 34, 24, .20) !important;
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch;
+  animation: etos-native-dialog-in 360ms cubic-bezier(.16,.78,.24,1) both !important;
+}
+
+.etos-directory-dialog.is-closing .etos-directory-dialog-panel {
+  animation: etos-native-dialog-out 180ms cubic-bezier(.4,0,.8,.2) both !important;
+}
+
+@keyframes etos-native-dialog-in {
+  from { transform: translate3d(36px,0,0); opacity: .72; }
+  to { transform: translate3d(0,0,0); opacity: 1; }
+}
+
+@keyframes etos-native-dialog-out {
+  from { transform: translate3d(0,0,0); opacity: 1; }
+  to { transform: translate3d(28px,0,0); opacity: .82; }
+}
+
+@media (max-width: 720px) {
+  .etos-directory-dialog .etos-directory-dialog-panel {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    border-left: 0 !important;
+    box-shadow: none !important;
+  }
+}
+
+@media (max-width: 980px) and (orientation: landscape) {
+  .etos-directory-dialog .etos-directory-dialog-panel {
+    width: min(640px, 86vw) !important;
+    max-width: 86vw !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2) Hero — every slide occupies exactly the same stage
+   -------------------------------------------------------------------------- */
+.native-home-2026 .etos-hero-slides {
+  position: absolute !important;
+  inset: 0 !important;
+}
+
+.native-home-2026 .etos-hero-slide {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  object-fit: cover !important;
+  pointer-events: none !important;
+  will-change: opacity, transform;
+}
+
+/* --------------------------------------------------------------------------
+   3) Modern reveal — no blur. Calm lift + opacity + subtle scale.
+   -------------------------------------------------------------------------- */
+.etos-motion-ready .native-home-2026 [data-etos-reveal] {
+  opacity: 0 !important;
+  filter: none !important;
+  transform: translate3d(0, 20px, 0) scale(.992) !important;
+  transform-origin: center bottom;
+  transition:
+    opacity 620ms cubic-bezier(.22,.7,.22,1),
+    transform 760ms cubic-bezier(.16,.76,.24,1) !important;
+  transition-delay: var(--etos-reveal-delay, 0ms) !important;
+  will-change: opacity, transform;
+}
+
+.etos-motion-ready .native-home-2026 [data-etos-reveal='soft'] {
+  transform: translate3d(0, 14px, 0) scale(.996) !important;
+}
+
+.etos-motion-ready .native-home-2026 [data-etos-reveal='media'] {
+  transform: translate3d(0, 22px, 0) scale(.982) !important;
+  transition-duration: 680ms, 860ms !important;
+}
+
+.etos-motion-ready .native-home-2026 [data-etos-reveal].is-revealed {
+  opacity: 1 !important;
+  filter: none !important;
+  transform: translate3d(0,0,0) scale(1) !important;
+  will-change: auto;
+}
+
+/* --------------------------------------------------------------------------
+   4) Portrait header — compact identity + deliberate menu control
+   -------------------------------------------------------------------------- */
+@media (max-width: 680px) and (orientation: portrait) {
+  .native-home-2026 .etos-site-header {
+    min-height: 72px !important;
+    height: 72px !important;
+    padding: 0 14px !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    column-gap: 10px !important;
+    background: rgba(255,255,255,.975) !important;
+    border-bottom: 1px solid rgba(31,74,57,.09) !important;
+    box-shadow: 0 8px 24px rgba(19,49,38,.035) !important;
+    backdrop-filter: blur(14px) saturate(112%) !important;
+    -webkit-backdrop-filter: blur(14px) saturate(112%) !important;
+  }
+
+  .native-home-2026 .etos-site-header .etos-brand-row {
+    min-width: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 9px !important;
+  }
+
+  .native-home-2026 .etos-site-header .etos-brand-lockup img {
+    width: 90px !important;
+    height: auto !important;
+  }
+
+  .native-home-2026 .etos-site-header .etos-brand-location {
+    font-size: 7px !important;
+    letter-spacing: .18em !important;
+  }
+
+  .native-home-2026 .etos-site-header .etos-brand-divider {
+    display: block !important;
+    width: 1px !important;
+    height: 30px !important;
+    margin: 0 1px !important;
+    flex: 0 0 1px !important;
+    background: #d9e3dd !important;
+  }
+
+  .native-home-2026 .etos-site-header .etos-tagline {
+    display: block !important;
+    max-width: 84px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    color: #43584e !important;
+    font-size: 9px !important;
+    line-height: 1.23 !important;
+    font-weight: 760 !important;
+    letter-spacing: -.005em !important;
+    white-space: normal !important;
+  }
+
+  .native-home-2026 .etos-site-header .etos-header-primary,
+  .native-home-2026 .etos-site-header .etos-header-admin {
+    display: none !important;
+  }
+
+  .native-home-2026 .etos-mobile-menu {
+    position: relative !important;
+    margin-left: auto !important;
+    justify-self: end !important;
+  }
+
+  .native-home-2026 .etos-mobile-menu > summary {
+    min-width: 70px !important;
+    width: auto !important;
+    min-height: 40px !important;
+    height: 40px !important;
+    padding: 0 11px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 7px !important;
+    list-style: none !important;
+    border: 1px solid rgba(31,107,80,.15) !important;
+    border-radius: 12px !important;
+    background: #f9fbfa !important;
+    color: #214f3d !important;
+    box-shadow: none !important;
+    font-size: 10.5px !important;
+    font-weight: 800 !important;
+    letter-spacing: .015em !important;
+    text-transform: none !important;
+    cursor: pointer;
+  }
+
+  .native-home-2026 .etos-mobile-menu > summary::-webkit-details-marker {
+    display: none !important;
+  }
+
+  .native-home-2026 .etos-menu-icon {
+    width: 14px;
+    height: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 0 0 14px;
+  }
+
+  .native-home-2026 .etos-menu-icon i {
+    display: block;
+    width: 100%;
+    height: 1.5px;
+    border-radius: 999px;
+    background: currentColor;
+    transition: transform 220ms ease, opacity 180ms ease;
+  }
+
+  .native-home-2026 .etos-mobile-menu[open] .etos-menu-icon i:nth-child(1) {
+    transform: translateY(5.2px) rotate(45deg);
+  }
+  .native-home-2026 .etos-mobile-menu[open] .etos-menu-icon i:nth-child(2) { opacity: 0; }
+  .native-home-2026 .etos-mobile-menu[open] .etos-menu-icon i:nth-child(3) {
+    transform: translateY(-5.2px) rotate(-45deg);
+  }
+
+  .native-home-2026 .etos-mobile-menu:not([open]) .etos-mobile-menu-panel {
+    display: none !important;
+  }
+
+  .native-home-2026 .etos-mobile-menu[open] .etos-mobile-menu-panel {
+    position: fixed !important;
+    z-index: 1200 !important;
+    top: 80px !important;
+    left: 14px !important;
+    right: 14px !important;
+    width: auto !important;
+    margin: 0 !important;
+    padding: 9px !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0,1fr)) !important;
+    gap: 6px !important;
+    border: 1px solid rgba(31,81,61,.11) !important;
+    border-radius: 18px !important;
+    background: rgba(255,255,255,.985) !important;
+    box-shadow: 0 22px 54px rgba(15,47,35,.13) !important;
+    backdrop-filter: blur(18px) saturate(112%) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(112%) !important;
+    animation: etos-mobile-menu-in 220ms cubic-bezier(.22,.7,.22,1) both !important;
+  }
+
+  .native-home-2026 .etos-mobile-menu-panel a {
+    min-height: 43px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    padding: 0 13px !important;
+    border: 0 !important;
+    border-radius: 11px !important;
+    background: #f7f9f7 !important;
+    color: #28493b !important;
+    text-decoration: none !important;
+    font-size: 11px !important;
+    font-weight: 720 !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+  }
+
+  .native-home-2026 .etos-mobile-menu-panel a:last-child {
+    grid-column: 1 / -1 !important;
+    justify-content: center !important;
+    background: #1f6b50 !important;
+    color: #fff !important;
+    font-weight: 800 !important;
+  }
+
+  @keyframes etos-mobile-menu-in {
+    from { opacity: 0; transform: translate3d(0,-7px,0) scale(.99); }
+    to { opacity: 1; transform: none; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .etos-directory-dialog .etos-directory-dialog-panel,
+  .etos-motion-ready .native-home-2026 [data-etos-reveal],
+  .native-home-2026 .etos-mobile-menu-panel {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
