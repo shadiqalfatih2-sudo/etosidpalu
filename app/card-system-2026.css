@@ -1,0 +1,431 @@
+/* ETOS ID Palu — Card System 2026
+   Clean, restrained, professional. Loaded last.
+   Goal: one visual family without making every component identical. */
+
+:root {
+  --card-surface: #ffffff;
+  --card-surface-soft: #f7f9f7;
+  --card-border: #dde5df;
+  --card-border-hover: #cbd8d0;
+  --card-ink: #172920;
+  --card-muted: #64736b;
+  --card-green: #1f6b50;
+  --card-radius: 20px;
+  --card-radius-sm: 16px;
+  --card-shadow: 0 1px 2px rgba(18, 49, 37, .025), 0 10px 28px rgba(18, 49, 37, .045);
+  --card-shadow-hover: 0 2px 4px rgba(18, 49, 37, .035), 0 16px 38px rgba(18, 49, 37, .07);
+}
+
+/* No decorative gradients inside content cards. */
+.native-home-2026 .etos-impact-card,
+.native-home-2026 .etos-about-content,
+.native-home-2026 .etos-about-lead,
+.native-home-2026 .etos-value-card,
+.native-home-2026 .etos-partner-shell,
+.native-home-2026 .etos-program-editorial-card,
+.native-home-2026 .etos-home-awardee-card,
+.native-home-2026 .etos-publication-card,
+.native-directory-hero,
+.native-program-directory-card,
+.native-profile-content,
+.native-profile-facts,
+.native-program-detail-head,
+.native-publication-shell > header,
+.native-publication-sidebar,
+[class*="NativeForms-module"][class*="__form"] {
+  background: var(--card-surface) !important;
+  border-color: var(--card-border) !important;
+  box-shadow: var(--card-shadow) !important;
+}
+
+/* ----- Homepage impact cards ----- */
+.native-home-2026 .etos-impact-grid {
+  gap: 12px !important;
+  background: transparent !important;
+  border: 0 !important;
+  overflow: visible !important;
+}
+.native-home-2026 .etos-impact-card {
+  min-height: 108px !important;
+  padding: 20px !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: var(--card-radius) !important;
+}
+.native-home-2026 .etos-impact-card + .etos-impact-card { border-left: 1px solid var(--card-border) !important; }
+.native-home-2026 .etos-impact-card > strong { color: var(--card-green) !important; }
+.native-home-2026 .etos-impact-card p { color: #7b8881 !important; }
+
+/* ----- About: one calm editorial card ----- */
+.native-home-2026 .etos-about-content {
+  padding: clamp(30px, 3.2vw, 44px) !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: var(--card-radius) !important;
+  background: var(--card-surface) !important;
+}
+.native-home-2026 .etos-about-lead {
+  margin-top: 20px !important;
+  padding: 18px 20px !important;
+  border: 1px solid #e5ebe7 !important;
+  border-radius: var(--card-radius-sm) !important;
+  background: var(--card-surface-soft) !important;
+  color: var(--card-muted) !important;
+}
+.native-home-2026 .etos-value-grid { gap: 10px !important; }
+.native-home-2026 .etos-value-card {
+  padding: 15px 16px !important;
+  border: 1px solid #e2e9e4 !important;
+  border-radius: var(--card-radius-sm) !important;
+  background: #fff !important;
+  box-shadow: none !important;
+}
+.native-home-2026 .etos-value-card:hover {
+  transform: translateY(-1px) !important;
+  border-color: var(--card-border-hover) !important;
+  background: #fbfcfb !important;
+}
+
+/* ----- Partner card: simple institutional layout ----- */
+.native-home-2026 .etos-partner-shell {
+  padding: 30px 32px !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: var(--card-radius) !important;
+  background: var(--card-surface) !important;
+}
+.native-home-2026 .etos-partner-mark {
+  border: 1px solid #e2e8e4 !important;
+  border-radius: var(--card-radius-sm) !important;
+  background: #fafbfa !important;
+  box-shadow: none !important;
+}
+.native-home-2026 .etos-partner-meta {
+  border-color: #e1e7e3 !important;
+}
+
+/* ----- Program cards: image-led, compact, restrained ----- */
+.native-home-2026 .etos-program-section { background: #f6f7f4 !important; }
+.native-home-2026 .etos-home-program-grid { gap: 16px !important; }
+.native-home-2026 .etos-program-editorial-card {
+  border: 1px solid var(--card-border) !important;
+  border-radius: var(--card-radius) !important;
+  background: #fff !important;
+  box-shadow: var(--card-shadow) !important;
+  overflow: hidden !important;
+  transform: none !important;
+}
+.native-home-2026 .etos-program-editorial-card:hover {
+  transform: translateY(-2px) !important;
+  border-color: var(--card-border-hover) !important;
+  box-shadow: var(--card-shadow-hover) !important;
+}
+.native-home-2026 .etos-program-editorial-media {
+  aspect-ratio: 16 / 10 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.native-home-2026 .etos-program-editorial-body {
+  min-height: 198px !important;
+  padding: 18px 18px 19px !important;
+}
+.native-home-2026 .etos-program-editorial-meta {
+  margin-bottom: 8px !important;
+  color: #5f806f !important;
+  font-size: 8px !important;
+  letter-spacing: .075em !important;
+  text-transform: uppercase !important;
+}
+.native-home-2026 .etos-program-editorial-body h3 {
+  color: var(--card-ink) !important;
+  font-size: 19px !important;
+  line-height: 1.2 !important;
+  letter-spacing: -.022em !important;
+}
+.native-home-2026 .etos-program-editorial-body p {
+  color: #6d7973 !important;
+  font-size: 11px !important;
+  line-height: 1.55 !important;
+}
+.native-home-2026 .etos-program-editorial-link {
+  margin-top: auto !important;
+  padding-top: 14px !important;
+  color: var(--card-green) !important;
+  font-size: 8.5px !important;
+  letter-spacing: .03em !important;
+}
+
+/* ----- Awardee cards: portrait is the hero, container stays quiet ----- */
+.native-home-2026 .etos-home-awardee-grid { gap: 22px 16px !important; }
+.native-home-2026 .etos-home-awardee-card {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+  transform: none !important;
+}
+.native-home-2026 .etos-home-awardee-card:hover { transform: none !important; box-shadow: none !important; }
+.native-home-2026 .etos-home-awardee-image {
+  aspect-ratio: 4 / 5 !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: var(--card-radius) !important;
+  box-shadow: var(--card-shadow) !important;
+  overflow: hidden !important;
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease !important;
+}
+.native-home-2026 .etos-home-awardee-card:hover .etos-home-awardee-image {
+  transform: translateY(-2px) !important;
+  border-color: var(--card-border-hover) !important;
+  box-shadow: var(--card-shadow-hover) !important;
+}
+.native-home-2026 .etos-home-awardee-card > div:last-child {
+  padding: 14px 2px 0 !important;
+  background: transparent !important;
+}
+.native-home-2026 .etos-home-awardee-card small {
+  color: #6b8074 !important;
+  font-size: 8px !important;
+  letter-spacing: .07em !important;
+  text-transform: uppercase !important;
+}
+.native-home-2026 .etos-home-awardee-card h3 {
+  margin: 6px 0 4px !important;
+  color: var(--card-ink) !important;
+  font-size: 18px !important;
+  line-height: 1.2 !important;
+}
+.native-home-2026 .etos-home-awardee-card p {
+  color: #77837c !important;
+  font-size: 10.5px !important;
+  line-height: 1.45 !important;
+}
+
+/* ----- Publication cards: editorial, not promotional ----- */
+.native-home-2026 .etos-publication-section { background: #f8f9f7 !important; }
+.native-home-2026 .etos-publication-grid { gap: 16px !important; }
+.native-home-2026 .etos-publication-card {
+  border: 1px solid var(--card-border) !important;
+  border-radius: var(--card-radius) !important;
+  background: #fff !important;
+  box-shadow: var(--card-shadow) !important;
+  overflow: hidden !important;
+}
+.native-home-2026 .etos-publication-card:hover {
+  transform: translateY(-2px) !important;
+  border-color: var(--card-border-hover) !important;
+  box-shadow: var(--card-shadow-hover) !important;
+}
+.native-home-2026 .etos-publication-image {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  aspect-ratio: 16 / 10 !important;
+}
+.native-home-2026 .etos-publication-body { padding: 18px 18px 20px !important; }
+.native-home-2026 .etos-publication-kind {
+  min-height: 26px !important;
+  padding: 0 9px !important;
+  border-radius: 999px !important;
+  background: rgba(20, 70, 51, .84) !important;
+  font-size: 7.5px !important;
+}
+
+/* ----- Directory cards ----- */
+.native-directory-hero {
+  border-radius: 22px !important;
+  background: #fff !important;
+  box-shadow: var(--card-shadow) !important;
+}
+.native-program-directory-card {
+  border: 1px solid var(--card-border) !important;
+  border-radius: var(--card-radius) !important;
+  background: #fff !important;
+  box-shadow: var(--card-shadow) !important;
+}
+.native-program-directory-card:hover {
+  transform: translateY(-2px) !important;
+  border-color: var(--card-border-hover) !important;
+  box-shadow: var(--card-shadow-hover) !important;
+}
+.native-awardee-directory-card {
+  padding-bottom: 4px !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.native-awardee-directory-image {
+  border: 1px solid var(--card-border) !important;
+  border-radius: var(--card-radius) !important;
+  box-shadow: var(--card-shadow) !important;
+}
+.native-awardee-directory-card:hover { transform: none !important; }
+.native-awardee-directory-card:hover .native-awardee-directory-image {
+  border-color: var(--card-border-hover) !important;
+  box-shadow: var(--card-shadow-hover) !important;
+}
+
+/* ----- Detail surfaces ----- */
+.native-profile-content,
+.native-program-detail-head,
+.native-publication-shell > header,
+.native-publication-sidebar,
+[class*="NativeForms-module"][class*="__form"] {
+  border: 1px solid var(--card-border) !important;
+  border-radius: var(--card-radius) !important;
+  background: #fff !important;
+  box-shadow: var(--card-shadow) !important;
+}
+.native-profile-facts {
+  border: 1px solid #e2e8e4 !important;
+  border-radius: var(--card-radius-sm) !important;
+  background: #f9faf9 !important;
+  box-shadow: none !important;
+}
+.native-publication-sidebar { padding: 18px !important; }
+.native-related-item {
+  border-radius: 12px !important;
+  transition: background 160ms ease !important;
+}
+.native-related-item:hover { background: #f6f8f6 !important; }
+.native-related-item img { border-radius: 10px !important; }
+
+/* ----- Submit form: professional utilitarian card ----- */
+[class*="NativeForms-module"][class*="__form"] {
+  padding: clamp(24px, 3vw, 34px) !important;
+}
+[class*="NativeForms-module"][class*="__form"] input,
+[class*="NativeForms-module"][class*="__form"] textarea {
+  border-radius: 12px !important;
+  background: #fbfcfb !important;
+  border-color: #d9e2dc !important;
+  box-shadow: none !important;
+}
+
+/* ----- Portrait hero: editorial card, solid and calm ----- */
+@media (max-width: 680px) {
+  .native-home-2026 .etos-hero-2026 { background: #f5f7f5 !important; }
+  .native-home-2026 .etos-hero-media {
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding-bottom: 26px !important;
+    background: #f5f7f5 !important;
+  }
+  .native-home-2026 .etos-hero-slides {
+    position: relative !important;
+    inset: auto !important;
+    height: clamp(335px, 49vh, 405px) !important;
+    border-radius: 0 0 22px 22px !important;
+    overflow: hidden !important;
+  }
+  .native-home-2026 .etos-hero-poster,
+  .native-home-2026 .etos-hero-slide {
+    border-radius: 0 0 22px 22px !important;
+  }
+  .native-home-2026 .etos-hero-overlay {
+    inset: 0 0 auto !important;
+    height: clamp(335px, 49vh, 405px) !important;
+    border-radius: 0 0 22px 22px !important;
+    background: linear-gradient(180deg, rgba(7, 28, 20, .01), rgba(7, 28, 20, .04) 68%, rgba(7, 28, 20, .18)) !important;
+  }
+  .native-home-2026 .etos-hero-content {
+    min-height: 0 !important;
+    max-height: none !important;
+    margin-top: -52px !important;
+    padding: 0 14px 6px !important;
+    display: block !important;
+    background: transparent !important;
+    color: var(--card-ink) !important;
+  }
+  .native-home-2026 .etos-hero-copy-panel {
+    width: 100% !important;
+    max-width: none !important;
+    padding: 21px 19px 19px !important;
+    border: 1px solid var(--card-border) !important;
+    border-radius: var(--card-radius) !important;
+    background: #fff !important;
+    box-shadow: 0 10px 30px rgba(18, 49, 37, .075) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .native-home-2026 .etos-hero-kicker {
+    color: #5f806f !important;
+    margin-bottom: 9px !important;
+    font-size: 7.5px !important;
+    letter-spacing: .075em !important;
+    text-shadow: none !important;
+  }
+  .native-home-2026 .etos-hero-content h1 {
+    max-width: none !important;
+    color: var(--card-ink) !important;
+    font-size: clamp(33px, 8.9vw, 41px) !important;
+    line-height: 1 !important;
+    letter-spacing: -.047em !important;
+    text-shadow: none !important;
+  }
+  .native-home-2026 .etos-hero-content p {
+    max-width: none !important;
+    margin-top: 12px !important;
+    color: var(--card-muted) !important;
+    font-size: 13px !important;
+    line-height: 1.58 !important;
+    text-shadow: none !important;
+  }
+  .native-home-2026 .etos-hero-actions {
+    position: static !important;
+    margin-top: 16px !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0,1fr)) !important;
+    gap: 8px !important;
+  }
+  .native-home-2026 .etos-hero-primary,
+  .native-home-2026 .etos-hero-secondary {
+    min-height: 44px !important;
+    width: 100% !important;
+    padding: 0 10px !important;
+    border-radius: 12px !important;
+    font-size: 8.5px !important;
+    box-shadow: none !important;
+  }
+  .native-home-2026 .etos-hero-primary { color: #fff !important; background: var(--card-green) !important; }
+  .native-home-2026 .etos-hero-secondary {
+    color: #274a3c !important;
+    background: #fff !important;
+    border: 1px solid #cfdbd4 !important;
+    backdrop-filter: none !important;
+  }
+
+  .native-home-2026 .etos-impact-grid { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
+  .native-home-2026 .etos-impact-card { min-height: 100px !important; border-radius: 16px !important; }
+
+  .native-home-2026 .etos-program-editorial-card {
+    display: grid !important;
+    grid-template-columns: 40% 60% !important;
+    border-radius: 18px !important;
+  }
+  .native-home-2026 .etos-program-editorial-media {
+    height: 100% !important;
+    min-height: 178px !important;
+    aspect-ratio: auto !important;
+  }
+  .native-home-2026 .etos-program-editorial-body {
+    min-height: 178px !important;
+    padding: 14px !important;
+  }
+  .native-home-2026 .etos-program-editorial-body h3 { font-size: 16.5px !important; }
+  .native-home-2026 .etos-program-editorial-body p { font-size: 10.25px !important; }
+
+  .native-home-2026 .etos-home-awardee-grid { gap: 24px 12px !important; }
+  .native-home-2026 .etos-home-awardee-card > div:last-child { padding-top: 11px !important; }
+  .native-home-2026 .etos-home-awardee-card h3 { font-size: 16.5px !important; }
+
+  .native-home-2026 .etos-about-content,
+  .native-home-2026 .etos-partner-shell,
+  .native-publication-shell > header,
+  .native-publication-sidebar,
+  [class*="NativeForms-module"][class*="__form"] {
+    border-radius: 18px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .native-home-2026 .etos-hero-actions { grid-template-columns: 1fr !important; }
+  .native-home-2026 .etos-impact-grid { grid-template-columns: 1fr !important; }
+}
