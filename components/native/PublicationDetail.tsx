@@ -47,20 +47,20 @@ export function NativePublicationDetailView({ detail, related }: { detail: Nativ
       <div className={`${styles.shell} native-publication-shell`}>
         <Link href="/#publikasi" className={styles.back}>← Kembali ke Berita & Opini</Link>
 
-        <header className={styles.articleHeader}>
-          <div className={styles.meta}>{detail.kind} <span>•</span> {formatDate(detail.publishedAt)}</div>
-          <h1>{detail.title}</h1>
-          <div className={styles.authorRow}>
-            <div className={styles.avatar}>{displayAuthor.slice(0, 1).toUpperCase()}</div>
-            <div>
-              <strong>{displayAuthor}</strong>
-              <span>{displayRole}</span>
-            </div>
-          </div>
-        </header>
-
         <div className={`${styles.contentGrid} native-publication-grid`}>
           <article className={`${styles.article} native-publication-article`}>
+            <header className={styles.articleHeader}>
+              <div className={styles.meta}>{detail.kind} <span>•</span> {formatDate(detail.publishedAt)}</div>
+              <h1>{detail.title}</h1>
+              <div className={styles.authorRow}>
+                <div className={styles.avatar}>{displayAuthor.slice(0, 1).toUpperCase()}</div>
+                <div>
+                  <strong>{displayAuthor}</strong>
+                  <span>{displayRole}</span>
+                </div>
+              </div>
+            </header>
+
             {detail.thumbnail ? (
               <div className={`${styles.heroImage} native-publication-hero`}>
                 <img
@@ -73,6 +73,7 @@ export function NativePublicationDetailView({ detail, related }: { detail: Nativ
                 />
               </div>
             ) : null}
+
             <div
               className={`${styles.articleBody} native-publication-body`}
               dangerouslySetInnerHTML={{ __html: safeHtml }}
@@ -90,6 +91,7 @@ export function NativePublicationDetailView({ detail, related }: { detail: Nativ
                   <div className={styles.relatedCopy}>
                     <small>{item.kind} • {formatDate(item.publishedAt)}</small>
                     <h3>{item.title}</h3>
+                    <span className={styles.relatedArrow}>Baca →</span>
                   </div>
                 </Link>
               ))}
