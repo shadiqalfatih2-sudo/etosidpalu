@@ -106,18 +106,18 @@ function About({ visual }: { visual: string }) {
         <div className="etos-about-content" data-etos-reveal="soft">
           <div className={`${styles.sectionLabel} etos-section-pill`}>Tentang Kami</div>
           <h2>Menumbuhkan pemimpin muda yang kuat dalam nilai, tajam dalam nalar, dan nyata dalam kontribusi.</h2>
-          <p className="etos-about-lead">Etos ID Palu menghadirkan pembinaan yang tidak berhenti pada capaian akademik. Awardee dibentuk melalui pengalaman yang menguatkan spiritualitas, kepemimpinan, kolaborasi, dan keberanian menjawab kebutuhan masyarakat.</p>
+          <p className="etos-about-lead etos-living-about-lead">Etos ID Palu menghadirkan pembinaan yang tidak berhenti pada capaian akademik. Awardee dibentuk melalui pengalaman yang menguatkan spiritualitas, kepemimpinan, kolaborasi, dan keberanian menjawab kebutuhan masyarakat.</p>
 
           <div className="etos-value-grid" aria-label="Nilai pembinaan Etos ID Palu" data-etos-stagger="values">
-            <article className="etos-value-card" data-etos-reveal="soft">
+            <article className="etos-value-card etos-living-value-card" data-etos-reveal="soft">
               <span>01</span>
               <div><strong>Integritas</strong><p>Teguh pada nilai, etika, dan tanggung jawab dalam setiap keputusan.</p></div>
             </article>
-            <article className="etos-value-card" data-etos-reveal="soft">
+            <article className="etos-value-card etos-living-value-card" data-etos-reveal="soft">
               <span>02</span>
               <div><strong>Profesional</strong><p>Belajar bekerja tuntas, akurat, kolaboratif, dan dapat dipercaya.</p></div>
             </article>
-            <article className="etos-value-card" data-etos-reveal="soft">
+            <article className="etos-value-card etos-living-value-card" data-etos-reveal="soft">
               <span>03</span>
               <div><strong>Transformatif</strong><p>Mengubah pengetahuan dan pengalaman menjadi manfaat yang terasa.</p></div>
             </article>
