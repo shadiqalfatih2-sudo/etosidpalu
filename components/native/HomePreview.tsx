@@ -198,6 +198,7 @@ export function Footer() {
           <a href="/" data-etos-section-target="program">Program</a>
           <a href="/" data-etos-section-target="awardee">Awardee</a>
           <a href="/" data-etos-section-target="publikasi">Publikasi</a>
+          <Link href="/cerita-dampak">Cerita Dampak</Link>
         </div>
       </div>
 
@@ -205,6 +206,7 @@ export function Footer() {
         <strong>Terhubung</strong>
         <div className={styles.footerLinks}>
           <Link href="/kirim-tulisan">Kirim Tulisan</Link>
+          <Link href="/cerita-dampak">Cerita Dampak</Link>
           <a href="https://www.instagram.com/etosidpalu/" target="_blank" rel="noreferrer">Instagram</a>
           <Link href="/admin">Admin</Link>
         </div>
