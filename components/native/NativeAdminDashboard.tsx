@@ -327,7 +327,7 @@ export function NativeAdminDashboard() {
       setFeedback({ type: 'success', message: result.message || 'Perubahan berhasil disimpan.' });
       setFile(null);
       await loadAll(token, true);
-      if (!selected.id) setSelected(newRow(tab));
+      setSelected(selected.id ? normalizeRow(tab, { ...payload, id: result.id || selected.id }) : newRow(tab));
     } catch (error) {
       setFeedback({ type: 'error', message: error instanceof Error ? error.message : 'Perubahan gagal disimpan.' });
     } finally {
@@ -472,7 +472,7 @@ export function NativeAdminDashboard() {
                   </div>
                   <div>
                     {tab === 'Hero' ? <div style={{marginBottom:16,padding:'14px 18px',border:'1px solid #d7e2da',borderRadius:14,background:'#f7faf7',color:'#284b3d',fontSize:13,lineHeight:1.6}}>
-                      Slider yang tampil di beranda tetap menggunakan foto-foto yang sekarang. Pilih slide untuk mengganti gambar, judul, urutan, atau status. Tekan Tambah Baru untuk membuat slide. Slide nonaktif tidak ditampilkan, tetapi tetap tersimpan.
+                      {role.toLowerCase() !== 'superadmin' ? 'Pengelolaan slide hanya tersedia untuk akun SuperAdmin. Akun Editor tetap dapat melihat daftar tanpa mengubahnya.' : 'Kelola foto, teks, tautan, urutan, dan status setiap slide. Foto-foto lama tetap tersimpan sampai Anda mengubah atau menghapusnya. Slide nonaktif tetap tersimpan, tetapi tidak muncul di beranda.'}
                       {selected.id && role.toLowerCase() === 'superadmin' ? <div style={{marginTop:10}}><button type="button" onClick={() => void deleteHero()} disabled={loading} style={{border:'1px solid #b86464',borderRadius:8,background:'white',color:'#9b2929',padding:'9px 14px',cursor:'pointer'}}>Hapus slide terpilih</button></div> : null}
                     </div> : null}
                     <Editor tab={tab} value={selected} setValue={setSelected} programs={data.ProgramFoto?.programs || []} setFile={setFile} save={save} loading={loading || (tab === 'Hero' && role.toLowerCase() !== 'superadmin')} />
