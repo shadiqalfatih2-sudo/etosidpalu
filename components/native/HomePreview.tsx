@@ -234,7 +234,7 @@ export function NativeHomePreview({
   publications: NativePublication[];
   stats: NativeHomeStats;
 }) {
-  const aboutVisual = heroes[1]?.photo || heroes[0]?.photo || programs.find((item) => item.preview)?.preview || awardees.find((item) => item.photo)?.photo || '';
+  const aboutVisual = heroes[0]?.photo || programs.find((item) => item.preview)?.preview || awardees.find((item) => item.photo)?.photo || '';
 
   return (
     <main className={`${styles.page} native-home native-home-2026`} id="beranda">
