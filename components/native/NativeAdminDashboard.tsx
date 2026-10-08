@@ -170,7 +170,8 @@ export function NativeAdminDashboard() {
     if (!silent) setLoading(true);
     if (!silent) setFeedback(null);
     try {
-      const [berita, artikel, awardee, program, hero, programMedia, media] = await Promise.all([
+      const [context, berita, artikel, awardee, program, hero, programMedia, media] = await Promise.all([
+        rpc('getAdminData', ['Context'], sessionToken),
         rpc('getAdminData', ['Berita'], sessionToken),
         rpc('getAdminData', ['Artikel'], sessionToken),
         rpc('getAdminData', ['Awardee'], sessionToken),
@@ -179,6 +180,7 @@ export function NativeAdminDashboard() {
         rpc('getAdminProgramPhotos', [], sessionToken),
         rpc('getAdminData', ['Media'], sessionToken),
       ]);
+      setRole(String(context?.role || 'Admin'));
       setData({
         Berita: berita || [], Artikel: artikel || [], Awardee: awardee || [], Program: program || [], Hero: hero || [],
         ProgramFoto: programMedia || { programs: [], photos: [] }, Media: media || [],
@@ -295,10 +297,15 @@ export function NativeAdminDashboard() {
 
   async function save() {
     if (!token || tab === 'Overview' || tab === 'Media') return;
+    if (tab === 'Hero' && role.toLowerCase() !== 'superadmin') {
+      setFeedback({ type: 'error', message: 'Untuk mengelola hero slider, gunakan akun SuperAdmin.' });
+      return;
+    }
     setLoading(true);
     setFeedback(null);
     try {
       const payload = { ...selected };
+      if (tab === 'Hero' && !file && !String(payload.foto || '').trim()) throw new Error('Pilih foto slide atau masukkan URL gambar terlebih dahulu.');
       if (file) {
         const url = await uploadImage(file, token);
         if (tab === 'Berita' || tab === 'Artikel') payload.thumbnail = url;
@@ -468,7 +475,7 @@ export function NativeAdminDashboard() {
                       Slider yang tampil di beranda tetap menggunakan foto-foto yang sekarang. Pilih slide untuk mengganti gambar, judul, urutan, atau status. Tekan Tambah Baru untuk membuat slide. Slide nonaktif tidak ditampilkan, tetapi tetap tersimpan.
                       {selected.id && role.toLowerCase() === 'superadmin' ? <div style={{marginTop:10}}><button type="button" onClick={() => void deleteHero()} disabled={loading} style={{border:'1px solid #b86464',borderRadius:8,background:'white',color:'#9b2929',padding:'9px 14px',cursor:'pointer'}}>Hapus slide terpilih</button></div> : null}
                     </div> : null}
-                    <Editor tab={tab} value={selected} setValue={setSelected} programs={data.ProgramFoto?.programs || []} setFile={setFile} save={save} loading={loading} />
+                    <Editor tab={tab} value={selected} setValue={setSelected} programs={data.ProgramFoto?.programs || []} setFile={setFile} save={save} loading={loading || (tab === 'Hero' && role.toLowerCase() !== 'superadmin')} />
                   </div>
                 </div>
               )}
