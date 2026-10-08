@@ -29,7 +29,7 @@ export function LivingCursor() {
     let x = -90, y = -90, px = -90, py = -90;
     let dotX = -90, dotY = -90;
     let magnetic: HTMLElement | null = null;
-    let activeProgramBody: HTMLElement | null = null;
+    let activeFillTarget: HTMLElement | null = null;
 
     const permitted = () => finePointer.matches && !reducedMotion.matches;
 
@@ -47,7 +47,7 @@ export function LivingCursor() {
       ring.classList.remove('is-visible', 'is-expanded');
       dot.classList.remove('is-visible');
       resetMagnetic();
-      if (activeProgramBody) activeProgramBody = null;
+      activeFillTarget = null;
       if (raf) { window.cancelAnimationFrame(raf); raf = 0; }
     };
 
@@ -77,7 +77,7 @@ export function LivingCursor() {
         ring.classList.add('is-visible');
         dot.classList.add('is-visible');
       }
-      const interactive = event.target.closest('a, button, [role="button"], .etos-motion-metric');
+      const interactive = event.target.closest('a, button, [role="button"], .etos-motion-metric, .etos-living-value-card');
       const expanded = Boolean(interactive);
       ring.classList.toggle('is-expanded', expanded);
 
@@ -92,15 +92,21 @@ export function LivingCursor() {
         magnetic.style.setProperty('--etos-magnetic-y', `${(Math.max(-.5, Math.min(.5, relY)) * 7).toFixed(2)}px`);
       }
 
+      // A single delegated pointer tracker powers fluid color fill throughout
+      // the program cards and the four About ETOS cards. No extra listeners.
+      const aboutCard = event.target.closest<HTMLElement>('.etos-living-about-lead, .etos-living-value-card');
       const program = event.target.closest<HTMLElement>('.etos-living-program-card');
-      const body = program?.querySelector<HTMLElement>('.etos-program-editorial-body') || null;
-      if (body) {
-        activeProgramBody = body;
-        const rect = body.getBoundingClientRect();
-        body.style.setProperty('--etos-fill-x', `${Math.max(0, Math.min(100, (event.clientX - rect.left) / rect.width * 100)).toFixed(1)}%`);
-        body.style.setProperty('--etos-fill-y', `${Math.max(0, Math.min(100, (event.clientY - rect.top) / rect.height * 100)).toFixed(1)}%`);
+      const programBody = program?.querySelector<HTMLElement>('.etos-program-editorial-body') || null;
+      const fillTarget = aboutCard || programBody;
+      if (fillTarget) {
+        activeFillTarget = fillTarget;
+        const rect = fillTarget.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          fillTarget.style.setProperty('--etos-fill-x', `${Math.max(0, Math.min(100, (event.clientX - rect.left) / rect.width * 100)).toFixed(1)}%`);
+          fillTarget.style.setProperty('--etos-fill-y', `${Math.max(0, Math.min(100, (event.clientY - rect.top) / rect.height * 100)).toFixed(1)}%`);
+        }
       } else {
-        activeProgramBody = null;
+        activeFillTarget = null;
       }
 
       if (!following) { following = true; raf = window.requestAnimationFrame(draw); }
