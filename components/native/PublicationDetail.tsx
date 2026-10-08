@@ -41,8 +41,24 @@ export function NativePublicationDetailView({ detail, related }: { detail: Nativ
     ? 'Etos ID Palu'
     : (detail.activity || 'Kontributor Etos ID Palu');
 
+  const canonicalUrl = `https://www.etosidpalu.com/${detail.kind === 'Berita' ? 'berita' : 'opini'}/${encodeURIComponent(detail.slug)}`;
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': detail.kind === 'Berita' ? 'NewsArticle' : 'Article',
+    headline: detail.title,
+    description: detail.excerpt,
+    mainEntityOfPage: canonicalUrl,
+    url: canonicalUrl,
+    ...(detail.publishedAt ? { datePublished: detail.publishedAt } : {}),
+    ...(detail.thumbnail ? { image: [detail.thumbnail] } : {}),
+    author: { '@type': 'Organization', name: displayAuthor },
+    publisher: { '@type': 'Organization', name: 'Etos ID Palu', url: 'https://www.etosidpalu.com' },
+    inLanguage: 'id-ID',
+  };
+
   return (
     <main className={`${styles.page} native-publication`}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, '\\u003c') }} />
       <SiteHeader />
       <div className={`${styles.shell} native-publication-shell`}>
         <Link

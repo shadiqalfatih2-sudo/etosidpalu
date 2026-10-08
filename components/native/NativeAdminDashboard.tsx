@@ -170,7 +170,8 @@ export function NativeAdminDashboard() {
     if (!silent) setLoading(true);
     if (!silent) setFeedback(null);
     try {
-      const [berita, artikel, awardee, program, hero, programMedia, media] = await Promise.all([
+      const [context, berita, artikel, awardee, program, hero, programMedia, media] = await Promise.all([
+        rpc('getAdminData', ['Context'], sessionToken),
         rpc('getAdminData', ['Berita'], sessionToken),
         rpc('getAdminData', ['Artikel'], sessionToken),
         rpc('getAdminData', ['Awardee'], sessionToken),
@@ -179,6 +180,7 @@ export function NativeAdminDashboard() {
         rpc('getAdminProgramPhotos', [], sessionToken),
         rpc('getAdminData', ['Media'], sessionToken),
       ]);
+      setRole(String(context?.role || 'Admin'));
       setData({
         Berita: berita || [], Artikel: artikel || [], Awardee: awardee || [], Program: program || [], Hero: hero || [],
         ProgramFoto: programMedia || { programs: [], photos: [] }, Media: media || [],
@@ -295,10 +297,15 @@ export function NativeAdminDashboard() {
 
   async function save() {
     if (!token || tab === 'Overview' || tab === 'Media') return;
+    if (tab === 'Hero' && role.toLowerCase() !== 'superadmin') {
+      setFeedback({ type: 'error', message: 'Untuk mengelola hero slider, gunakan akun SuperAdmin.' });
+      return;
+    }
     setLoading(true);
     setFeedback(null);
     try {
       const payload = { ...selected };
+      if (tab === 'Hero' && !file && !String(payload.foto || '').trim()) throw new Error('Pilih foto slide atau masukkan URL gambar terlebih dahulu.');
       if (file) {
         const url = await uploadImage(file, token);
         if (tab === 'Berita' || tab === 'Artikel') payload.thumbnail = url;
@@ -320,9 +327,27 @@ export function NativeAdminDashboard() {
       setFeedback({ type: 'success', message: result.message || 'Perubahan berhasil disimpan.' });
       setFile(null);
       await loadAll(token, true);
-      if (!selected.id) setSelected(newRow(tab));
+      setSelected(selected.id ? normalizeRow(tab, { ...payload, id: result.id || selected.id }) : newRow(tab));
     } catch (error) {
       setFeedback({ type: 'error', message: error instanceof Error ? error.message : 'Perubahan gagal disimpan.' });
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function deleteHero() {
+    if (!token || tab !== 'Hero' || !selected.id) return;
+    if (!window.confirm('Hapus slide hero ini secara permanen? Foto di penyimpanan tidak ikut dihapus.')) return;
+    setLoading(true);
+    setFeedback(null);
+    try {
+      const result = await rpc('saveHeroAdmin', [{ id: selected.id, _delete: true }], token);
+      if (result?.status !== 'success') throw new Error(result?.message || 'Slide gagal dihapus.');
+      setSelected(newRow('Hero'));
+      await loadAll(token, true);
+      setFeedback({ type: 'success', message: 'Slide hero berhasil dihapus.' });
+    } catch (error) {
+      setFeedback({ type: 'error', message: error instanceof Error ? error.message : 'Slide hero gagal dihapus.' });
     } finally {
       setLoading(false);
     }
@@ -445,7 +470,13 @@ export function NativeAdminDashboard() {
                       );
                     }) : <div className={styles.empty}>Tidak ada data yang cocok dengan filter.</div>}
                   </div>
-                  <Editor tab={tab} value={selected} setValue={setSelected} programs={data.ProgramFoto?.programs || []} setFile={setFile} save={save} loading={loading} />
+                  <div>
+                    {tab === 'Hero' ? <div style={{marginBottom:16,padding:'14px 18px',border:'1px solid #d7e2da',borderRadius:14,background:'#f7faf7',color:'#284b3d',fontSize:13,lineHeight:1.6}}>
+                      {role.toLowerCase() !== 'superadmin' ? 'Pengelolaan slide hanya tersedia untuk akun SuperAdmin. Akun Editor tetap dapat melihat daftar tanpa mengubahnya.' : 'Kelola foto, teks, tautan, urutan, dan status setiap slide. Foto-foto lama tetap tersimpan sampai Anda mengubah atau menghapusnya. Slide nonaktif tetap tersimpan, tetapi tidak muncul di beranda.'}
+                      {selected.id && role.toLowerCase() === 'superadmin' ? <div style={{marginTop:10}}><button type="button" onClick={() => void deleteHero()} disabled={loading} style={{border:'1px solid #b86464',borderRadius:8,background:'white',color:'#9b2929',padding:'9px 14px',cursor:'pointer'}}>Hapus slide terpilih</button></div> : null}
+                    </div> : null}
+                    <Editor tab={tab} value={selected} setValue={setSelected} programs={data.ProgramFoto?.programs || []} setFile={setFile} save={save} loading={loading || (tab === 'Hero' && role.toLowerCase() !== 'superadmin')} />
+                  </div>
                 </div>
               )}
             </>
