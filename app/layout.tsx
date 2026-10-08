@@ -24,6 +24,8 @@ import './final-drawer-partner-fix-2026.css';
 import './final-interaction-rebuild-2026.css';
 // Last layer: ETOS public cursor and editorial hover. Admin stays unaffected.
 import './etos-living-interaction.css';
+// Four About ETOS cards: smooth pointer-origin interaction (last cascade layer).
+import './etos-living-interaction-v2.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.etosidpalu.com'),
