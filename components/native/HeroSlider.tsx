@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { NativeHero } from '@/lib/native-public';
 import './SeamlessEditorialHero.css';
 
-const INTERVAL_MS = 7200;
+const INTERVAL_MS = 2000;
 const fallback = [
   { title: 'Membentuk Nalar Kritis, Menempa Etos Peradaban.', summary: 'Ruang pembinaan mahasiswa yang menguatkan karakter, cara berpikir, dan kepemimpinan.', link: '/#program' },
   { title: 'Bertumbuh Bersama. Menguatkan Karakter.', summary: 'Setiap proses belajar membuka ruang untuk mengenal diri dan berkembang bersama.', link: '/#tentang' },
