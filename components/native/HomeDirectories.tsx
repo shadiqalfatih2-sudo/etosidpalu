@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { NativeAwardee, NativeProgram, NativeProgramPhoto } from '@/lib/native-public';
 import homeStyles from './HomePreview.module.css';
 import styles from './HomeDirectories.module.css';
+import './AwardeeShowcase.css';
 
 type DrawerState =
   | { kind: 'program'; item: NativeProgram }
@@ -248,10 +249,17 @@ function StoryBridge({ programs, awardees }: { programs: NativeProgram[]; awarde
 export function HomeDirectories({ programs, awardees }: { programs: NativeProgram[]; awardees: NativeAwardee[] }) {
   const [showAllPrograms, setShowAllPrograms] = useState(false);
   const [showAllAwardees, setShowAllAwardees] = useState(false);
+  const [awardeeSearch, setAwardeeSearch] = useState('');
+  const [awardeeCohort, setAwardeeCohort] = useState('Semua');
   const [drawer, setDrawer] = useState<DrawerState>(null);
 
   const visiblePrograms = showAllPrograms ? programs : programs.slice(0, HOMEPAGE_DIRECTORY_LIMIT);
-  const visibleAwardees = showAllAwardees ? awardees : awardees.slice(0, HOMEPAGE_DIRECTORY_LIMIT);
+  const cohorts = useMemo(() => Array.from(new Set(awardees.map(item => item.cohort).filter(Boolean))).sort(), [awardees]);
+  const filteredAwardees = awardees.filter(item =>
+    (awardeeCohort === 'Semua' || item.cohort === awardeeCohort) &&
+    [item.name, item.studyProgram, item.university].some(value => String(value || '').toLowerCase().includes(awardeeSearch.trim().toLowerCase()))
+  );
+  const visibleAwardees = showAllAwardees ? filteredAwardees : awardees.slice(0, HOMEPAGE_DIRECTORY_LIMIT);
 
   return (
     <>
@@ -315,6 +323,14 @@ export function HomeDirectories({ programs, awardees }: { programs: NativeProgra
             </button>
           ) : null}
         </div>
+        {showAllAwardees ? (
+          <div className="etos-awardee-filter-bar">
+            <label><span className="etos-awardee-label">Cari awardee</span><input aria-label="Cari nama, program studi, atau universitas" placeholder="Cari nama, jurusan, atau universitas..." value={awardeeSearch} onChange={event => setAwardeeSearch(event.target.value)} /></label>
+            <label><span className="etos-awardee-label">Angkatan</span><select aria-label="Filter angkatan awardee" value={awardeeCohort} onChange={event => setAwardeeCohort(event.target.value)}><option value="Semua">Semua angkatan</option>{cohorts.map(cohort => <option key={cohort} value={cohort}>{cohort}</option>)}</select></label>
+            <span className="etos-awardee-results">{filteredAwardees.length} profil</span>
+          </div>
+        ) : null}
+        {showAllAwardees && !visibleAwardees.length ? <p className="etos-awardee-empty">Tidak ada awardee yang cocok dengan pencarian.</p> : null}
         <div className={`${homeStyles.awardeeGrid} etos-home-awardee-grid`} data-etos-stagger="awardee-grid">
           {visibleAwardees.map((awardee) => {
             const detailLine = [awardee.studyProgram, awardee.university]
