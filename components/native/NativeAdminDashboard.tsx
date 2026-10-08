@@ -84,7 +84,7 @@ function fileToDataUrl(file: File) {
 const SAFE_IMAGE_BYTES = Math.floor(2.5 * 1024 * 1024);
 const MAX_RAW_IMAGE_BYTES = 30 * 1024 * 1024;
 
-function encodeImage(blob: Blob, format: string, quality: number, canvas: HTMLCanvasElement) {
+function encodeImage(format: string, quality: number, canvas: HTMLCanvasElement) {
   return new Promise<Blob>((resolve, reject) => {
     canvas.toBlob(result => result ? resolve(result) : reject(new Error('Foto tidak dapat diproses.')), format, quality);
   });
@@ -113,7 +113,8 @@ async function optimizeForUpload(file: File): Promise<File> {
       if (!ctx) throw new Error('Browser tidak mendukung pengolahan foto.');
       ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
       for (const quality of tries) {
-        const blob = await encodeImage(file, 'image/webp', quality, canvas);
+        let blob = await encodeImage('image/webp', quality, canvas);
+        if (blob.type !== 'image/webp') blob = await encodeImage('image/jpeg', quality, canvas);
         if (blob.size <= SAFE_IMAGE_BYTES) {
           const mime = blob.type === 'image/webp' ? 'image/webp' : 'image/jpeg';
           const ext = mime === 'image/webp' ? 'webp' : 'jpg';
