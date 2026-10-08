@@ -3,6 +3,7 @@
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import styles from './NativeForms.module.css';
+import { BrandMark } from './BrandMark';
 import './AdminEditorialPreview.css';
 
 const TOKEN_KEY = 'etos_admin_session_token';
@@ -79,7 +80,7 @@ function newRow(tab: Tab): AnyRow {
   if (tab === 'Artikel') return { id: '', penulis: '', aktivitas: '', judul: '', isi: '', thumbnail: '', thumbnailPosition: '50% 50%', status: 'Pending' };
   if (tab === 'Program') return { id: '', nama: '', kategori: 'Program Pembinaan Wilayah', ringkasan: '', deskripsi: '', preview: '', icon: 'ph-sparkle', urutan: 1, status: 'Aktif' };
   if (tab === 'Awardee') return { id: '', nama: '', statusAwardee: 'Aktif', angkatan: '', prodi: '', universitas: 'Universitas Tadulako', profil: '', foto: '', fotoPosition: '50% 50%', portofolio: '', urutan: 1, statusTampil: 'Aktif' };
-  if (tab === 'Hero') return { id: '', foto: '', judul: '', subjudul: '', posisi: '50% 50%', urutan: 1, tautan: '', status: 'Aktif' };
+  if (tab === 'Hero') return { id: '', foto: '', judul: '', subjudul: '', posisi: '50% 50%', modeTampil: 'full-frame', urutan: 1, tautan: '', status: 'Aktif' };
   if (tab === 'ProgramFoto') return { id: '', programId: '', foto: '', caption: '', urutan: 1, status: 'Aktif', posisi: '50% 50%', setAsPreview: false };
   return {};
 }
@@ -141,7 +142,7 @@ function normalizeRow(tab: Tab, row: AnyRow) {
   if (tab === 'Artikel') return { ...row, thumbnail: row.thumb || row.thumbnail || '', thumbnailPosition: row.thumbPosition || row.thumbnailPosition || '50% 50%' };
   if (tab === 'Program') return { ...row, preview: row.previewRaw || row.preview || '', status: row.status || 'Aktif' };
   if (tab === 'Awardee') return { ...row, foto: row.fotoRaw || row.foto || '', fotoPosition: row.fotoPosition || '50% 50%' };
-  if (tab === 'Hero') return { ...row, foto: row.fotoRaw || row.foto || '', posisi: row.posisi || '50% 50%', status: row.status || 'Aktif' };
+  if (tab === 'Hero') return { ...row, foto: row.fotoRaw || row.foto || '', posisi: row.posisi || '50% 50%', modeTampil: row.modeTampil || 'full-frame', status: row.status || 'Aktif' };
   if (tab === 'ProgramFoto') return { ...row, programId: row.programId || '', foto: row.fotoRaw || row.foto || '', posisi: row.posisi || '50% 50%', setAsPreview: false };
   return { ...row };
 }
@@ -370,6 +371,7 @@ export function NativeAdminDashboard() {
           <Link className={styles.back} href="/">← Kembali ke Portal</Link>
           <div className={styles.loginWrap}>
             <div className={styles.loginIntro}>
+              <BrandMark />
               <div className={styles.eyebrow}>ADMIN ETOS ID PALU</div>
               <h1>Ruang kerja editorial dan pengelolaan ekosistem ETOS.</h1>
               <p>Konten, awardee, program, hero, dan media dikelola melalui satu dashboard. Session tetap diverifikasi di Supabase melalui gateway server.</p>
@@ -398,8 +400,8 @@ export function NativeAdminDashboard() {
       <div className={styles.adminWorkspace}>
         <aside className={styles.adminSidebar}>
           <Link href="/" className={styles.adminBrand}>
-            <span className={styles.adminBrandMark}>E</span>
-            <span><strong>ETOS ID</strong><small>PALU • ADMIN</small></span>
+            <BrandMark compact />
+            <span><strong>PORTAL</strong><small>ADMIN ETOS</small></span>
           </Link>
           <nav className={styles.adminNav} aria-label="Modul admin">
             {NAV_ITEMS.map((item) => (
@@ -564,8 +566,8 @@ function Editor({ tab, value, setValue, programs, setFile, save, loading }: { ta
   const isNew = !value.id;
   const [heroDevice, setHeroDevice] = useState<'desktop' | 'mobile'>('desktop');
   const genericTitle = !String(value.judul || '').trim() || String(value.judul).trim().toLowerCase() === 'etos id palu';
-  const fallbackCopies = ['Membentuk Nalar Kritis, Menempa Etos Peradaban.','Bertumbuh Bersama. Menguatkan Karakter.','Belajar Memimpin, Berani Berkontribusi.','Merawat Gagasan, Membangun Kolaborasi.','Dari Proses, Menuju Kontribusi.'];
-  const heroHeading = genericTitle ? String(value.subjudul || '').trim() || fallbackCopies[Math.max(0,Math.min(4,Number(value.urutan || 1)-1))] : String(value.judul);
+  const fallbackCopies = ['Membentuk Nalar Kritis, Menempa Etos Peradaban.','Bertumbuh Bersama. Menguatkan Karakter.','Belajar Memimpin, Berani Berkontribusi.','Merawat Gagasan, Membangun Kolaborasi.','Dari Proses, Menuju Kontribusi.','Bertumbuh Bersama. Melangkah Membawa Dampak.'];
+  const heroHeading = genericTitle ? String(value.subjudul || '').trim() || fallbackCopies[Math.max(0,Math.min(5,Number(value.urutan || 1)-1))] : String(value.judul);
   const heroSupport = genericTitle ? 'Ruang bertumbuh dalam karakter, kepemimpinan, dan kontribusi.' : String(value.subjudul || '');
   const seoExcerpt = String(value.isi || '').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim().slice(0,155);
   const seoTitle = String(value.judul || 'Judul berita Anda');
@@ -584,13 +586,13 @@ function Editor({ tab, value, setValue, programs, setFile, save, loading }: { ta
           <button type="button" className={heroDevice === 'desktop' ? 'is-current' : ''} onClick={() => setHeroDevice('desktop')}>Desktop</button>
           <button type="button" className={heroDevice === 'mobile' ? 'is-current' : ''} onClick={() => setHeroDevice('mobile')}>Mobile</button>
         </div></div>
-        <div className={`etos-admin-preview-frame ${heroDevice}`}>
-          {image ? <img src={image} alt="Pratinjau foto slide" style={{ objectPosition: value.posisi || '50% 50%' }} /> : null}
-          <div className="etos-admin-preview-shade" />
-          {heroDevice === 'desktop' ? <div className="etos-admin-preview-safe-zone" aria-hidden="true">Area foto aksen</div> : null}
-          <div className="etos-admin-preview-copy"><span>ETOS ID PALU</span><strong>{heroHeading}</strong>{heroSupport ? <p>{heroSupport}</p> : null}</div>
+        <div className={`etos-admin-preview-frame etos-admin-seamless-frame ${heroDevice}`}>
+          <div className="etos-admin-seamless-visual">
+            {image ? <img src={image} alt="Pratinjau foto slide" style={{ objectPosition: value.posisi || '50% 50%', objectFit: value.modeTampil === 'cover' ? 'cover' : 'contain' }} /> : null}
+          </div>
+          <div className="etos-admin-seamless-copy"><span>ETOS ID PALU — WE ARE RESILIENT LEADER</span><strong>{heroHeading}</strong>{heroSupport ? <p>{heroSupport}</p> : null}<em>Jelajahi ETOS ↗</em></div>
         </div>
-        <p className="etos-admin-preview-note">Pastikan wajah tidak tertutup teks. Foto pendamping selalu ditempatkan di bawah pada desktop dan disembunyikan pada mobile. Geser fokus dengan persentase seperti 50% 30%.</p>
+        <p className="etos-admin-preview-note">Foto dipisahkan dari headline dan menyatu melalui gradasi lembut. Gunakan mode Foto Utuh terutama untuk kelompok besar. Periksa pratinjau desktop dan HP sebelum menyimpan; ubah fokus hanya jika diperlukan.</p>
       </section> : null}
       {tab === 'Berita' ? <section className="etos-admin-seo-preview" aria-label="Pratinjau SEO">
         <strong>Pratinjau di Google (simulasi)</strong>
@@ -653,6 +655,7 @@ function Editor({ tab, value, setValue, programs, setFile, save, loading }: { ta
           <label>Status<select value={value.status || 'Aktif'} onChange={(e) => update('status', e.target.value)}><option>Aktif</option><option>Nonaktif</option></select></label>
           <label>Urutan<input type="number" min="1" value={value.urutan || 1} onChange={(e) => update('urutan', Number(e.target.value))} /></label>
           <label>Fokus Foto<input value={value.posisi || '50% 50%'} onChange={(e) => update('posisi', e.target.value)} placeholder="50% 35%" /><small>Sesuaikan titik fokus agar wajah terlihat.</small></label>
+          <label>Mode Foto<select value={value.modeTampil || 'full-frame'} onChange={(e) => update('modeTampil', e.target.value)}><option value="full-frame">Foto Utuh (rekomendasi)</option><option value="cover">Isi Bidang (hanya bila aman)</option></select></label>
           <label>Tautan<input value={value.tautan || ''} onChange={(e) => update('tautan', e.target.value)} placeholder="/program atau https://..." /></label>
           <label className={styles.full}>URL Foto<input value={value.foto || ''} onChange={(e) => update('foto', e.target.value)} /></label>
           <label className={styles.full}>Upload Foto Baru<input type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} /></label>
