@@ -37,6 +37,7 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
   const slides = useMemo(() => heroes.filter(item => item.photo), [heroes]);
   const [active, setActive] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [explicitPlay, setExplicitPlay] = useState(false);
   const [paused, setPaused] = useState(false);
   const [interacting, setInteracting] = useState(false);
   const [visible, setVisible] = useState(true);
@@ -64,7 +65,7 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
   }, [slides.length]);
 
   useEffect(() => {
-    if (slides.length < 2 || paused || interacting || reducedMotion || !visible) return;
+    if (slides.length < 2 || paused || interacting || (reducedMotion && !explicitPlay) || !visible) return;
     const advance = () => setActive(previous => (previous + 1) % slides.length);
     let timer: number | null = null;
     const resume = () => {
@@ -77,7 +78,7 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
       if (timer !== null) window.clearInterval(timer);
       document.removeEventListener('visibilitychange', resume);
     };
-  }, [slides.length, paused, interacting, reducedMotion, visible]);
+  }, [slides.length, paused, interacting, reducedMotion, explicitPlay, visible]);
 
   const goTo = (next: number) => {
     if (!slides.length) return;
@@ -147,11 +148,11 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
               aria-current={index === active ? 'true' : undefined} />)}
           </div>
           <button type="button" className="etos-editorial-slide-pause"
-            onClick={() => setPaused(value => !value)}
-            aria-label={paused || reducedMotion ? 'Jalankan slide otomatis' : 'Jeda slide otomatis'}
+            onClick={() => { if (reducedMotion && !explicitPlay) { setExplicitPlay(true); setPaused(false); } else { setPaused(value => !value); } }}
+            aria-label={paused || (reducedMotion && !explicitPlay) ? 'Jalankan slide otomatis' : 'Jeda slide otomatis'}
             aria-pressed={paused}
             title={paused ? 'Lanjutkan slide' : 'Jeda slide'}>
-            <span aria-hidden="true">{paused || reducedMotion ? '▶' : 'Ⅱ'}</span>
+            <span aria-hidden="true">{paused || (reducedMotion && !explicitPlay) ? '▶' : 'Ⅱ'}</span>
           </button>
         </nav> : null}
       </div>
