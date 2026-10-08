@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import type { NativeHero } from '@/lib/native-public';
 import styles from './HomePreview.module.css';
 import './HybridHero.css';
+import './EditorialPhotoMotion.css';
 
 const AUTOPLAY_MS = 6500;
 
