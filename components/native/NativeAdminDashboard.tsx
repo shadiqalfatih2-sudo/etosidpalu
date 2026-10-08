@@ -39,9 +39,25 @@ const EMPTY_DATA: AdminData = {
 };
 
 async function parseResponse(response: Response) {
-  const body = await response.json();
-  if (!response.ok) throw Object.assign(new Error(body.error || 'Request gagal.'), { status: response.status });
-  return typeof body.result === 'string' ? JSON.parse(body.result) : body.result;
+  // A hosting proxy can return plain text (not JSON) for 413/502 errors.
+  // Never surface the browser's confusing "Unexpected token" to an editor.
+  const responseText = await response.text();
+  let body: any = null;
+  try { body = JSON.parse(responseText); } catch { /* non-JSON platform response */ }
+
+  if (!response.ok) {
+    const tooLarge = response.status === 413 || /request entity too large|payload too large/i.test(responseText);
+    const message = tooLarge
+      ? 'Ukuran permintaan melebihi batas server. Foto akan dioptimalkan otomatis; coba unggah kembali.'
+      : String(body?.error || body?.message || `Server tidak dapat memproses permintaan (HTTP ${response.status}). Silakan coba lagi.`);
+    throw Object.assign(new Error(message), { status: response.status });
+  }
+  if (!body) throw new Error('Server mengirim respons tidak valid. Muat ulang halaman dan coba lagi.');
+  if (typeof body.result === 'string') {
+    try { return JSON.parse(body.result); }
+    catch { throw new Error('Respons layanan admin tidak valid. Coba sinkronkan halaman.'); }
+  }
+  return body.result ?? body;
 }
 
 async function rpc(fn: string, args: unknown[], token: string) {
@@ -63,12 +79,59 @@ function fileToDataUrl(file: File) {
   });
 }
 
+// Vercel rejects request bodies above its platform limit before our API can
+// answer with JSON. Keep binary below 2.5 MiB (3.4 MiB after Base64 encoding).
+const SAFE_IMAGE_BYTES = Math.floor(2.5 * 1024 * 1024);
+const MAX_RAW_IMAGE_BYTES = 30 * 1024 * 1024;
+
+function encodeImage(blob: Blob, format: string, quality: number, canvas: HTMLCanvasElement) {
+  return new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob(result => result ? resolve(result) : reject(new Error('Foto tidak dapat diproses.')), format, quality);
+  });
+}
+
+async function optimizeForUpload(file: File): Promise<File> {
+  if (!file.type.startsWith('image/')) throw new Error('Silakan pilih file foto/gambar.');
+  if (file.size > MAX_RAW_IMAGE_BYTES) throw new Error('Foto asli maksimal 30 MB.');
+  if (file.size <= SAFE_IMAGE_BYTES && /^(image\/jpeg|image\/png|image\/webp)$/i.test(file.type)) return file;
+
+  // The optimization is client-side, preserving HD for ordinary photos.
+  // Only downscale gradually when the payload cannot fit server limits.
+  let bitmap: ImageBitmap;
+  try { bitmap = await createImageBitmap(file); }
+  catch { throw new Error('Gambar tidak bisa dibaca. Gunakan JPG, PNG, atau WebP.'); }
+  try {
+    const canvas = document.createElement('canvas');
+    const naturalLongest = Math.max(bitmap.width, bitmap.height);
+    const steps = [Math.min(naturalLongest, 2560), Math.min(naturalLongest, 2200), Math.min(naturalLongest, 1920), Math.min(naturalLongest, 1600)];
+    const tries = [0.88, 0.80, 0.72, 0.65];
+    for (let i = 0; i < steps.length; i += 1) {
+      const ratio = steps[i] / naturalLongest;
+      canvas.width = Math.round(bitmap.width * ratio);
+      canvas.height = Math.round(bitmap.height * ratio);
+      const ctx = canvas.getContext('2d');
+      if (!ctx) throw new Error('Browser tidak mendukung pengolahan foto.');
+      ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      for (const quality of tries) {
+        const blob = await encodeImage(file, 'image/webp', quality, canvas);
+        if (blob.size <= SAFE_IMAGE_BYTES) {
+          const mime = blob.type === 'image/webp' ? 'image/webp' : 'image/jpeg';
+          const ext = mime === 'image/webp' ? 'webp' : 'jpg';
+          return new File([blob], file.name.replace(/\.[^.]+$/, '') + '-optimized.' + ext, { type: mime });
+        }
+      }
+    }
+    throw new Error('Foto masih terlalu besar setelah optimasi. Gunakan foto JPG atau WebP yang lebih ringan.');
+  } finally { bitmap.close(); }
+}
+
 async function uploadImage(file: File, token: string) {
-  if (file.size > 10 * 1024 * 1024) throw new Error('Ukuran gambar maksimal 10 MB.');
+  const prepared = await optimizeForUpload(file);
   const response = await fetch('/api/upload', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'X-Etos-Admin-Token': token },
-    body: JSON.stringify({ dataUrl: await fileToDataUrl(file), fileName: file.name }),
+    body: JSON.stringify({ dataUrl: await fileToDataUrl(prepared), fileName: prepared.name }),
+    cache: 'no-store',
   });
   const result = await parseResponse(response);
   if (result.status !== 'success' || !result.url) throw new Error(result.message || 'Upload gagal.');
