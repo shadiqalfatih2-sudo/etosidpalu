@@ -1,0 +1,44 @@
+/* Editorial Institutional Premium — controlled final hero, keeping every existing slide. */
+.etos-premium-hero .etos-hero-media{isolation:isolate}
+.etos-premium-hero .etos-hero-content{z-index:6!important;pointer-events:none}
+.etos-premium-hero .etos-hero-copy-panel{pointer-events:auto}
+.etos-premium-hero .etos-hybrid-ornament{z-index:3;right:10%!important;top:17%!important;width:clamp(130px,17vw,260px)!important;opacity:.20!important;animation-duration:19s!important}
+.etos-premium-hero .etos-hybrid-photo-stack{z-index:4;top:auto!important;bottom:105px!important;right:clamp(28px,4.7vw,75px)!important;display:flex;gap:0;pointer-events:none}
+.etos-premium-hero .etos-hybrid-photo-card{width:clamp(78px,8vw,115px)!important;height:clamp(92px,10vw,132px)!important;margin:0!important;border:2px solid rgba(255,255,255,.91)!important;border-radius:10px!important;box-shadow:0 12px 31px rgba(10,38,24,.19)!important;animation:etos-premium-float 17s ease-in-out infinite alternate!important}
+.etos-premium-hero .etos-hybrid-photo-card:nth-child(n+2){display:none!important}
+@keyframes etos-premium-float{0%{transform:translateY(-4px) rotate(-2deg)}100%{transform:translateY(5px) rotate(1deg)}}
+.etos-premium-hero .etos-editorial-hero-copy{position:relative}
+.etos-premium-hero .etos-hero-kicker{font-size:10px!important;letter-spacing:.18em!important;font-weight:650!important;opacity:.93}
+.etos-premium-hero .etos-hero-copy-panel h1{font-family:var(--etos-font-serif),Georgia,serif!important;font-weight:580!important;font-size:clamp(49px,4.55vw,73px)!important;line-height:1.025!important;letter-spacing:-.047em!important;max-width:760px!important;text-wrap:balance}
+.etos-premium-hero .etos-hero-copy-panel p{max-width:550px!important;font-size:clamp(14px,1.05vw,16px)!important;line-height:1.7!important;color:rgba(248,252,248,.92)!important;font-weight:400!important}
+.etos-premium-hero .etos-hero-actions a{font-size:11px!important;letter-spacing:.025em!important;text-transform:none!important;font-weight:670!important;min-height:46px;display:inline-flex;align-items:center;gap:9px;padding:0 20px!important}
+.etos-premium-hero .etos-hero-secondary{background:transparent!important;border-color:rgba(255,255,255,.52)!important}
+.etos-premium-hero .etos-hero-type-motion{will-change:opacity,transform;animation:etos-premium-type .82s cubic-bezier(.2,.7,.2,1) both}
+.etos-premium-hero .etos-hero-type-motion>p{animation:etos-premium-type .8s .08s cubic-bezier(.2,.7,.2,1) both}
+.etos-premium-hero .etos-hero-type-motion>.etos-hero-actions{animation:etos-premium-type .8s .17s cubic-bezier(.2,.7,.2,1) both}
+@keyframes etos-premium-type{from{opacity:0;transform:translate3d(0,12px,0)}to{opacity:1;transform:translate3d(0,0,0)}}
+.etos-editorial-slide-nav{position:absolute;bottom:clamp(20px,2.7vw,36px);right:clamp(23px,3.5vw,56px);z-index:9;display:flex;align-items:center;gap:16px;min-height:40px}
+.etos-editorial-slide-tracks{display:flex;align-items:center;gap:6px}
+.etos-editorial-slide-track{display:block;appearance:none;padding:0;width:clamp(23px,2.2vw,33px);height:3px;min-height:3px;border:0;border-radius:8px;background:rgba(255,255,255,.42);cursor:pointer;position:relative;transition:background .25s ease,width .25s ease}
+.etos-editorial-slide-track.is-active{width:clamp(34px,3.25vw,49px);background:#fff}
+.etos-editorial-slide-track:before{content:'';position:absolute;inset:-20px -3px}
+.etos-editorial-slide-pause{display:grid;place-items:center;border:1px solid rgba(255,255,255,.35);width:36px;height:36px;background:rgba(20,48,32,.25);border-radius:50%;color:#fff;font-size:12px;line-height:1;cursor:pointer}
+.etos-editorial-slide-track:focus-visible,.etos-editorial-slide-pause:focus-visible{outline:2px solid #fff;outline-offset:6px}
+@media(min-width:681px){.etos-premium-hero .etos-hero-overlay{background:linear-gradient(90deg,rgba(5,25,16,.82),rgba(5,25,16,.56) 43%,rgba(5,25,16,.14) 77%,rgba(5,25,16,.05)),linear-gradient(0deg,rgba(7,29,20,.35),transparent 44%)!important}}
+@media(max-width:1100px){.etos-premium-hero .etos-hybrid-photo-stack{display:none!important}.etos-premium-hero .etos-hybrid-ornament{opacity:.16!important}}
+@media(max-width:680px){
+ .etos-premium-hero .etos-hybrid-photo-stack,.etos-premium-hero .etos-hybrid-ornament{display:none!important}
+ .etos-premium-hero .etos-hero-copy-panel h1{font-size:clamp(30px,8.2vw,39px)!important;letter-spacing:-.042em!important;line-height:1.07!important}
+ .etos-premium-hero .etos-hero-copy-panel p{font-size:13px!important;line-height:1.62!important}
+ .etos-premium-hero .etos-hero-actions a{font-size:10px!important;min-height:46px;padding:0 12px!important;justify-content:center}
+ .etos-editorial-slide-nav{position:relative;bottom:auto;right:auto;padding:0 20px 15px;margin-top:3px;justify-content:space-between;min-height:44px;z-index:8;background:#f4f7f5}
+ .etos-editorial-slide-track{background:#9caf9f}
+ .etos-editorial-slide-track.is-active{background:#235c41}
+ .etos-editorial-slide-pause{color:#24543a;background:transparent;border-color:#d4dfd5}
+ .etos-editorial-slide-track:focus-visible,.etos-editorial-slide-pause:focus-visible{outline-color:#194c33}
+}
+@media(prefers-reduced-motion:reduce){.etos-premium-hero .etos-hero-type-motion,.etos-premium-hero .etos-hero-type-motion>p,.etos-premium-hero .etos-hero-type-motion>.etos-hero-actions,.etos-premium-hero .etos-hybrid-photo-card{animation:none!important;transition:none!important}}
+/* Calm typographic consistency with existing design tokens */
+.native-home-2026 .etos-publication-card h3,.native-home-2026 .etos-home-program-card h3,.native-home-2026 .etos-home-awardee-card h3{letter-spacing:-.025em}
+.native-home-2026 .etos-program-editorial-card,.native-home-2026 .etos-publication-card{transition:transform .26s ease,box-shadow .26s ease}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){.native-home-2026 .etos-program-editorial-card:hover,.native-home-2026 .etos-publication-card:hover{transform:translateY(-3px)}}
