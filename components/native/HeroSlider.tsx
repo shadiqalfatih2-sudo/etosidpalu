@@ -12,6 +12,7 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
   const [active, setActive] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [paused, setPaused] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const leadTitle = slides[0]?.title || slides[0]?.subtitle || 'Membentuk Nalar Kritis, Menempa Etos Peradaban.';
 
   useEffect(() => {
@@ -42,7 +43,7 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
   }, [slides]);
 
   useEffect(() => {
-    if (slides.length < 2 || paused || reducedMotion) return;
+    if (slides.length < 2 || paused || hovered || reducedMotion) return;
 
     let timer = window.setInterval(() => {
       setActive((current) => (current + 1) % slides.length);
@@ -62,14 +63,14 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
       window.clearInterval(timer);
       document.removeEventListener('visibilitychange', onVisibility);
     };
-  }, [slides.length, paused, reducedMotion]);
+  }, [slides.length, paused, hovered, reducedMotion]);
 
   const current = slides[active] || slides[0];
   const goTo = (next: number) => { setPaused(true); setActive((next + slides.length) % slides.length); };
   const firstSlide = slides[0];
 
   return (
-    <section className={`${styles.hero} etos-hero etos-hero-2026`} id="beranda" aria-label="Sorotan Etos ID Palu" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocusCapture={() => setPaused(true)}>
+    <section className={`${styles.hero} etos-hero etos-hero-2026`} id="beranda" aria-label="Sorotan Etos ID Palu" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} onFocusCapture={() => setHovered(true)} onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setHovered(false); }}>
       <div className={`${styles.heroMedia} etos-hero-media`}>
         <div
           className="etos-hero-slides"
