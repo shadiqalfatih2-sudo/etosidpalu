@@ -328,6 +328,24 @@ export function NativeAdminDashboard() {
     }
   }
 
+  async function deleteHero() {
+    if (!token || tab !== 'Hero' || !selected.id) return;
+    if (!window.confirm('Hapus slide hero ini secara permanen? Foto di penyimpanan tidak ikut dihapus.')) return;
+    setLoading(true);
+    setFeedback(null);
+    try {
+      const result = await rpc('saveHeroAdmin', [{ id: selected.id, _delete: true }], token);
+      if (result?.status !== 'success') throw new Error(result?.message || 'Slide gagal dihapus.');
+      setSelected(newRow('Hero'));
+      await loadAll(token, true);
+      setFeedback({ type: 'success', message: 'Slide hero berhasil dihapus.' });
+    } catch (error) {
+      setFeedback({ type: 'error', message: error instanceof Error ? error.message : 'Slide hero gagal dihapus.' });
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function copyMedia(row: AnyRow) {
     try {
       await navigator.clipboard.writeText(mediaUrl(row.path || ''));
@@ -445,7 +463,13 @@ export function NativeAdminDashboard() {
                       );
                     }) : <div className={styles.empty}>Tidak ada data yang cocok dengan filter.</div>}
                   </div>
-                  <Editor tab={tab} value={selected} setValue={setSelected} programs={data.ProgramFoto?.programs || []} setFile={setFile} save={save} loading={loading} />
+                  <div>
+                    {tab === 'Hero' ? <div style={{marginBottom:16,padding:'14px 18px',border:'1px solid #d7e2da',borderRadius:14,background:'#f7faf7',color:'#284b3d',fontSize:13,lineHeight:1.6}}>
+                      Slider yang tampil di beranda tetap menggunakan foto-foto yang sekarang. Pilih slide untuk mengganti gambar, judul, urutan, atau status. Tekan Tambah Baru untuk membuat slide. Slide nonaktif tidak ditampilkan, tetapi tetap tersimpan.
+                      {selected.id && role.toLowerCase() === 'superadmin' ? <div style={{marginTop:10}}><button type="button" onClick={() => void deleteHero()} disabled={loading} style={{border:'1px solid #b86464',borderRadius:8,background:'white',color:'#9b2929',padding:'9px 14px',cursor:'pointer'}}>Hapus slide terpilih</button></div> : null}
+                    </div> : null}
+                    <Editor tab={tab} value={selected} setValue={setSelected} programs={data.ProgramFoto?.programs || []} setFile={setFile} save={save} loading={loading} />
+                  </div>
                 </div>
               )}
             </>
