@@ -114,6 +114,17 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
         <div className={`${styles.heroOverlay} etos-hero-overlay`} />
         <div className="etos-hybrid-ornament" aria-hidden="true"><svg viewBox="0 0 260 260" fill="none"><path d="M43 149C-1 53 147 4 201 79c70 99-77 194-151 111C-18 115 191 5 228 157" stroke="currentColor" strokeWidth="18" strokeLinecap="round"/><path d="M39 149C-1 53 147 4 201 79c70 99-77 194-151 111C-18 115 191 5 228 157" stroke="white" strokeOpacity=".25" strokeWidth="3" strokeLinecap="round"/></svg></div>
 
+        {slides.length > 2 ? (
+          <div className="etos-hybrid-photo-stack" aria-hidden="true">
+            {[1, 2].map((offset) => {
+              const photo = slides[(active + offset) % slides.length];
+              return <div className="etos-hybrid-photo-card" key={photo.id}>
+                <img src={photo.photo} alt="" style={{ objectPosition: photo.photoPosition || '50% 50%' }} loading="lazy" decoding="async" />
+              </div>;
+            })}
+          </div>
+        ) : null}
+
         <div className={`${styles.heroContent} etos-hero-content`}>
           <div className="etos-hero-copy-panel" data-etos-stagger="hero">
             <div className={`${styles.heroKicker} etos-hero-kicker`} data-etos-reveal="soft">
