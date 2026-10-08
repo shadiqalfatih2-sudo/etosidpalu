@@ -12,6 +12,7 @@ import { HomeDirectories, ProgramPartner } from './HomeDirectories';
 import { HomepageMotion } from './HomepageMotion';
 import { MobileMenu } from './MobileMenu';
 import styles from './HomePreview.module.css';
+import './PremiumImpact.css';
 
 function publicationHref(item: NativePublication) {
   return `/${item.kind === 'Berita' ? 'berita' : 'opini'}/${encodeURIComponent(item.slug)}`;
@@ -59,28 +60,19 @@ export function SiteHeader() {
 
 function ImpactStrip({ stats }: { stats: NativeHomeStats }) {
   const items = [
-    { value: stats.awardees, label: 'Awardee dalam ekosistem', note: 'bertumbuh bersama Etos ID Palu' },
-    { value: stats.programs, label: 'Program pembinaan aktif', note: 'spiritual, intelektual, dan kepemimpinan' },
-    { value: stats.publications, label: 'Publikasi & cerita', note: 'gagasan dan perjalanan dampak' },
-    { value: '2021', label: 'Bersama Universitas Tadulako', note: 'kampus program ETOS ID di Palu' },
+    { value: stats.awardees, label: 'Awardee', note: 'Profil dalam ekosistem' },
+    { value: stats.programs, label: 'Program', note: 'Ruang pembinaan aktif' },
+    { value: stats.publications, label: 'Publikasi', note: 'Berita dan gagasan' },
+    { value: '2021', label: 'Universitas Tadulako', note: 'Kampus program sejak' },
   ];
-
-  const renderItems = (copy: 'primary' | 'duplicate') => items.map((item) => (
-    <article className="etos-impact-card" key={`${copy}-${item.value}-${item.label}`}>
-      <strong>{item.value}</strong>
-      <div>
-        <span>{item.label}</span>
-        <p>{item.note}</p>
-      </div>
-    </article>
-  ));
-
   return (
-    <section className="etos-impact" aria-label="Ringkasan Etos ID Palu" data-etos-reveal="soft">
-      <div className="etos-impact-viewport">
-        <div className="etos-impact-track">
-          <div className="etos-impact-group">{renderItems('primary')}</div>
-          <div className="etos-impact-group" aria-hidden="true">{renderItems('duplicate')}</div>
+    <section className="etos-impact etos-editorial-impact" aria-label="ETOS ID Palu dalam angka">
+      <div className="etos-editorial-impact-shell">
+        <div className="etos-editorial-impact-heading"><span>ETOS ID PALU / AT A GLANCE</span><strong>Ruang tumbuh. Jejak perjalanan.</strong></div>
+        <div className="etos-editorial-impact-grid">
+          {items.map(item => <div className="etos-editorial-impact-item" key={item.label}>
+            <strong>{item.value}</strong><div><span>{item.label}</span><p>{item.note}</p></div>
+          </div>)}
         </div>
       </div>
     </section>
