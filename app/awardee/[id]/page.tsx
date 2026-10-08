@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { supabaseServer } from '@/lib/supabase';
+import { mediaUrl } from '@/lib/native-public';
 import { SiteHeader, Footer } from '@/components/native/HomePreview';
 import '../../etos-feature-pages.css';
 
@@ -26,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: `${person.name} | Awardee Etos ID Palu`, description,
     alternates: { canonical }, robots: { index: true, follow: true },
     openGraph: { type: 'profile', title: `${person.name} | Etos ID Palu`, description, url: canonical,
-      images: person.photo_url ? [{ url: person.photo_url }] : undefined } };
+      images: person.photo_url ? [{ url: mediaUrl(person.photo_url) }] : undefined } };
 }
 
 export default async function AwardeePage({ params }: Props) {
@@ -51,7 +52,7 @@ export default async function AwardeePage({ params }: Props) {
             <p className="etos-feature-intro">Mengenal perjalanan, pembelajaran, dan kontribusi awardee Etos ID Palu.</p>
             {portfolio ? <a className="etos-feature-cta" href={portfolio} target="_blank" rel="noopener noreferrer">Lihat portofolio ↗</a> : null}
           </div>
-          {person.photo_url ? <div className="etos-feature-media"><img src={person.photo_url} alt={person.name} style={{ objectPosition: person.photo_position || '50% 50%' }} /></div> : null}
+          {person.photo_url ? <div className="etos-feature-media"><img src={mediaUrl(person.photo_url)} alt={person.name} style={{ objectPosition: person.photo_position || '50% 50%' }} /></div> : null}
         </div>
         {person.profile_summary ? <section className="etos-feature-content">
           <span className="etos-feature-eyebrow">PERJALANAN AWARDEE</span>
