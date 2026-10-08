@@ -1,0 +1,115 @@
+/* ETOS Living Interaction V2 — the About ETOS cards.
+ * The same pointer coordinates used by Program are applied here.
+ * Imported after all previous public styles to avoid another visual cascade conflict.
+ */
+
+/* The narrative panel responds gently. It remains readable and never flips to
+ * white-on-green as it contains a full paragraph. */
+.native-home-2026 .etos-about-lead.etos-living-about-lead {
+  position:relative!important;
+  isolation:isolate;
+  overflow:hidden!important;
+  transition:transform .4s cubic-bezier(.22,.7,.22,1),
+    border-color .38s ease, box-shadow .42s ease!important;
+}
+
+/* Three values share the same visual vocabulary as program cards while keeping
+ * their numbered icon circles and textual hierarchy. */
+.native-home-2026 .etos-value-card.etos-living-value-card {
+  position:relative!important;
+  isolation:isolate;
+  overflow:hidden!important;
+  transition:transform .43s cubic-bezier(.22,.7,.22,1),
+    border-color .37s ease, box-shadow .43s ease!important;
+}
+.native-home-2026 .etos-value-card.etos-living-value-card::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:linear-gradient(117deg,#286f4d 0%,#15503b 100%);
+  clip-path:circle(0% at var(--etos-fill-x, 85%) var(--etos-fill-y, 70%));
+  transition:clip-path .63s cubic-bezier(.2,.72,.2,1);
+}
+.native-home-2026 .etos-value-card.etos-living-value-card>span,
+.native-home-2026 .etos-value-card.etos-living-value-card>div {
+  position:relative;
+  z-index:1;
+}
+.native-home-2026 .etos-value-card.etos-living-value-card>span {
+  transition:background-color .34s ease, color .34s ease,
+    transform .4s cubic-bezier(.2,.7,.2,1),box-shadow .35s ease;
+}
+.native-home-2026 .etos-value-card.etos-living-value-card strong,
+.native-home-2026 .etos-value-card.etos-living-value-card p {
+  transition:color .35s ease!important;
+}
+
+/* Designed for mouse hover, not synthetic/latched hover on touch devices. */
+@media (hover:hover) and (pointer:fine) {
+  .native-home-2026 .etos-about-lead.etos-living-about-lead:hover {
+    transform:translateY(-3px)!important;
+    border-color:#b1d0bc!important;
+    box-shadow:0 16px 37px rgba(34,92,60,.085)!important;
+  }
+  .native-home-2026 .etos-value-card.etos-living-value-card:hover {
+    transform:translateY(-3px)!important;
+    border-color:#397c56!important;
+    box-shadow:0 16px 35px rgba(25,73,48,.14)!important;
+  }
+  .native-home-2026 .etos-value-card.etos-living-value-card:hover::before {
+    clip-path:circle(165% at var(--etos-fill-x,85%) var(--etos-fill-y,70%));
+  }
+  .native-home-2026 .etos-value-card.etos-living-value-card:hover>span {
+    background:#fff!important;
+    color:#1a6543!important;
+    box-shadow:0 6px 17px rgba(8,42,26,.13);
+    transform:translateY(-1px);
+  }
+  .native-home-2026 .etos-value-card.etos-living-value-card:hover strong {
+    color:#fff!important;
+  }
+  .native-home-2026 .etos-value-card.etos-living-value-card:hover p {
+    color:rgba(246,252,247,.9)!important;
+  }
+}
+
+/* Desktop has no existing ::after decoration; a subdued radial wash follows
+ * the pointer behind the paragraph. Mobile has an existing decorative ::after
+ * and a ::before label; they remain untouched. */
+@media (hover:hover) and (pointer:fine) and (min-width:681px) {
+  .native-home-2026 .etos-about-lead.etos-living-about-lead::after {
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:-1;
+    pointer-events:none;
+    background:radial-gradient(
+      circle 310px at var(--etos-fill-x,50%) var(--etos-fill-y,50%),
+      rgba(157,215,171,.26) 0%,
+      rgba(168,218,177,.10) 57%,
+      transparent 100%
+    );
+    opacity:0;
+    transition:opacity .4s ease;
+  }
+  .native-home-2026 .etos-about-lead.etos-living-about-lead:hover::after {opacity:1;}
+}
+
+/* Reading and motion accessibility. Focusable controls inside these sections
+ * keep the site's existing focus-visible outlines. */
+@media(prefers-reduced-motion:reduce) {
+  .native-home-2026 .etos-value-card.etos-living-value-card,
+  .native-home-2026 .etos-value-card.etos-living-value-card::before,
+  .native-home-2026 .etos-value-card.etos-living-value-card *,
+  .native-home-2026 .etos-about-lead.etos-living-about-lead,
+  .native-home-2026 .etos-about-lead.etos-living-about-lead::after {
+    transition:none!important;
+    animation:none!important;
+  }
+  .native-home-2026 .etos-value-card.etos-living-value-card:hover,
+  .native-home-2026 .etos-about-lead.etos-living-about-lead:hover {
+    transform:none!important;
+  }
+}
