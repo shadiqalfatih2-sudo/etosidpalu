@@ -66,6 +66,7 @@ function ProgramDrawer({ program, onClose }: { program: NativeProgram; onClose: 
             <p>{description}</p>
           </div>
         ) : null}
+        <a className={styles.portfolioLink} href={`/program/${encodeURIComponent(program.id)}`}>Baca halaman program lengkap →</a>
         {photos.length > 1 ? (
           <div className={styles.detailBlock}>
             <h3>Dokumentasi</h3>
@@ -124,6 +125,7 @@ function AwardeeDrawer({ awardee, onClose }: { awardee: NativeAwardee; onClose: 
             <p>{awardee.summary}</p>
           </div>
         ) : null}
+        <a className={styles.portfolioLink} href={`/awardee/${encodeURIComponent(awardee.id)}`}>Lihat profil lengkap →</a>
         {awardee.portfolio ? <a className={styles.portfolioLink} href={awardee.portfolio} target="_blank" rel="noreferrer">Lihat Portofolio / CV →</a> : null}
       </div>
     </>
