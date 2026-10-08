@@ -5,14 +5,14 @@ import type { NativeHero } from '@/lib/native-public';
 import styles from './HomePreview.module.css';
 import './HybridHero.css';
 
-const AUTOPLAY_MS = 4800;
+const AUTOPLAY_MS = 6500;
 
 export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
   const slides = useMemo(() => heroes.filter((item) => item.photo), [heroes]);
   const [active, setActive] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [paused, setPaused] = useState(false);
-  const leadTitle = slides[0]?.subtitle || 'Membentuk Nalar Kritis, Menempa Etos Peradaban.';
+  const leadTitle = slides[0]?.title || slides[0]?.subtitle || 'Membentuk Nalar Kritis, Menempa Etos Peradaban.';
 
   useEffect(() => {
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -69,7 +69,7 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
   const firstSlide = slides[0];
 
   return (
-    <section className={`${styles.hero} etos-hero etos-hero-2026`} id="beranda" aria-label="Sorotan Etos ID Palu">
+    <section className={`${styles.hero} etos-hero etos-hero-2026`} id="beranda" aria-label="Sorotan Etos ID Palu" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocusCapture={() => setPaused(true)}>
       <div className={`${styles.heroMedia} etos-hero-media`}>
         <div
           className="etos-hero-slides"
@@ -118,13 +118,13 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
             <div className={`${styles.heroKicker} etos-hero-kicker`} data-etos-reveal="soft">
               ETOS ID PALU • WE ARE RESILIENT LEADER
             </div>
-            <h1 data-etos-reveal="soft">{current?.subtitle || leadTitle}</h1>
+            <h1 data-etos-reveal="soft">{current?.title && current.title.trim().toLowerCase() !== 'etos id palu' ? current.title : current?.subtitle || leadTitle}</h1>
             <p data-etos-reveal="soft">
-              Ruang tumbuh bagi mahasiswa untuk memperkuat nilai, nalar, spiritualitas, dan keberanian memberi dampak.
+              {current?.title && current.title.trim().toLowerCase() !== 'etos id palu' && current?.subtitle ? current.subtitle : 'Ruang tumbuh bagi mahasiswa untuk memperkuat nilai, nalar, spiritualitas, dan keberanian memberi dampak.'}
             </p>
 
             <div className={`${styles.heroActions} etos-hero-actions`} data-etos-reveal="soft">
-              <a href={current?.link && (/^https?:\/\//.test(current.link) || current.link.startsWith('/')) ? current.link : '/#program'} className={`${styles.heroPrimary} etos-hero-primary`}>Jelajahi Program</a>
+              <a href={current?.link && (/^https?:\/\//.test(current.link) || (current.link.startsWith('/') && !current.link.startsWith('//'))) ? current.link : '/#program'} className={`${styles.heroPrimary} etos-hero-primary`}>Jelajahi Program</a>
               <a href="/" data-etos-section-target="awardee" className={`${styles.heroGhost} etos-hero-secondary`}>Kenal Awardee <b>→</b></a>
             </div>
           </div>
