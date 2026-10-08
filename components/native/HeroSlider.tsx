@@ -126,8 +126,8 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
             <h1>{headline}</h1>
             <p>{description}</p>
             <div className="etos-signature-actions">
-              <a className="etos-signature-primary" href={link}>{actionText(link)} <span aria-hidden="true">↗</span></a>
-              <a className="etos-signature-secondary" href="/#awardee">Kenali Ekosistem <span aria-hidden="true">→</span></a>
+              <a className="etos-signature-primary etos-living-magnetic" data-etos-magnetic href={link}>{actionText(link)} <span aria-hidden="true">↗</span></a>
+              <a className="etos-signature-secondary etos-living-magnetic" data-etos-magnetic href="/#awardee">Kenali Ekosistem <span aria-hidden="true">→</span></a>
             </div>
           </div>
         </div>

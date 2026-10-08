@@ -50,7 +50,7 @@ export function SiteHeader() {
       </nav>
 
       <div className={`${styles.actions} etos-header-actions`}>
-        <Link className={`${styles.primaryButton} etos-header-primary`} href="/kirim-tulisan">Kirim Tulisan</Link>
+        <Link className={`${styles.primaryButton} etos-header-primary etos-living-magnetic`} data-etos-magnetic href="/kirim-tulisan">Kirim Tulisan</Link>
         <Link className={`${styles.secondaryButton} etos-header-admin`} href="/admin" aria-label="Masuk ke halaman admin">Admin</Link>
         <MobileMenu />
       </div>
@@ -68,7 +68,7 @@ function ImpactStrip({ stats }: { stats: NativeHomeStats }) {
   const metrics = (copy: boolean) => (
     <div className="etos-motion-metrics-group" aria-hidden={copy}>
       {items.map(item => (
-        <article className="etos-motion-metric" key={item.label}>
+        <article className="etos-motion-metric etos-living-metric" key={item.label}>
           <strong>{item.value}</strong>
           <div><span>{item.label}</span><p>{item.note}</p></div>
         </article>
@@ -146,7 +146,7 @@ function Publications({ publications }: { publications: NativePublication[] }) {
 
       <div className="etos-publication-grid" data-etos-stagger="publication-grid">
         {cards.map((item) => (
-          <Link href={publicationHref(item)} className="etos-publication-card" key={`${item.kind}-${item.id}`} data-etos-reveal="media" prefetch>
+          <Link href={publicationHref(item)} className="etos-publication-card etos-living-publication" key={`${item.kind}-${item.id}`} data-etos-reveal="media" prefetch>
             <div className="etos-publication-image">
               {item.thumbnail ? <img src={item.thumbnail} alt="" loading="lazy" decoding="async" fetchPriority="low" /> : <div className="etos-publication-placeholder" />}
               <span className="etos-publication-kind">{item.kind}</span>
@@ -179,7 +179,7 @@ function ClosingCta() {
         <p>Kirim tulisanmu dan ikut merawat ruang belajar yang tumbuh dari pengalaman nyata awardee.</p>
       </div>
       <div className={styles.ctaActions}>
-        <Link href="/kirim-tulisan" className={styles.ctaPrimary}>Kirim Tulisan</Link>
+        <Link href="/kirim-tulisan" className={`${styles.ctaPrimary} etos-living-magnetic`} data-etos-magnetic>Kirim Tulisan</Link>
         <a href="https://www.instagram.com/etosidpalu/" target="_blank" rel="noreferrer" className={styles.ctaSecondary}>Instagram Etos ID Palu</a>
       </div>
     </section>

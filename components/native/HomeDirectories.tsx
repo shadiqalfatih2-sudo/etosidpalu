@@ -278,7 +278,7 @@ export function HomeDirectories({ programs, awardees }: { programs: NativeProgra
             const summary = compactText(program.summary || program.description || '');
             return (
               <button
-                className={`${homeStyles.programCard} ${styles.cardButton} etos-home-program-card etos-program-editorial-card`}
+                className={`${homeStyles.programCard} ${styles.cardButton} etos-home-program-card etos-program-editorial-card etos-living-program-card`}
                 type="button"
                 onClick={() => setDrawer({ kind: 'program', item: program })}
                 key={program.id}
@@ -338,7 +338,7 @@ export function HomeDirectories({ programs, awardees }: { programs: NativeProgra
               .filter(Boolean)
               .join(' • ');
             return (
-              <button className={`${homeStyles.awardeeCard} ${styles.cardButton} etos-home-awardee-card`} type="button" onClick={() => setDrawer({ kind: 'awardee', item: awardee })} key={awardee.id} data-etos-reveal="media">
+              <button className={`${homeStyles.awardeeCard} ${styles.cardButton} etos-home-awardee-card etos-living-awardee-card`} type="button" onClick={() => setDrawer({ kind: 'awardee', item: awardee })} key={awardee.id} data-etos-reveal="media">
                 <div className={`${homeStyles.imageWrap} etos-home-awardee-image`}>
                   {awardee.photo ? <img src={awardee.photo} alt={cleanText(awardee.name)} style={{ objectPosition: awardee.photoPosition }} loading="lazy" decoding="async" fetchPriority="low" /> : null}
                 </div>

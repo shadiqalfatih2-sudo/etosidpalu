@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { NavigationFeedback } from '@/components/native/NavigationFeedback';
+import { LivingCursor } from '@/components/native/LivingCursor';
 import './design-system.css';
 import './navigation-performance.css';
 import './motion-system.css';
@@ -21,6 +22,8 @@ import './final-edge-polish-2026.css';
 import './final-drawer-partner-fix-2026.css';
 // Final interaction architecture: native dialogs, reliable slider, portrait header, reveal motion.
 import './final-interaction-rebuild-2026.css';
+// Last layer: ETOS public cursor and editorial hover. Admin stays unaffected.
+import './etos-living-interaction.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.etosidpalu.com'),
@@ -52,6 +55,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="id">
       <body>
         <NavigationFeedback />
+        <LivingCursor />
         {children}
       </body>
     </html>
