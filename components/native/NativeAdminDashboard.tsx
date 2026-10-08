@@ -478,7 +478,7 @@ export function NativeAdminDashboard() {
                       {role.toLowerCase() !== 'superadmin' ? 'Pengelolaan slide hanya tersedia untuk akun SuperAdmin. Akun Editor tetap dapat melihat daftar tanpa mengubahnya.' : 'Kelola foto, teks, tautan, urutan, dan status setiap slide. Foto-foto lama tetap tersimpan sampai Anda mengubah atau menghapusnya. Slide nonaktif tetap tersimpan, tetapi tidak muncul di beranda.'}
                       {selected.id && role.toLowerCase() === 'superadmin' ? <div style={{marginTop:10}}><button type="button" onClick={() => void deleteHero()} disabled={loading} style={{border:'1px solid #b86464',borderRadius:8,background:'white',color:'#9b2929',padding:'9px 14px',cursor:'pointer'}}>Hapus slide terpilih</button></div> : null}
                     </div> : null}
-                    <Editor tab={tab} value={selected} setValue={setSelected} programs={data.ProgramFoto?.programs || []} setFile={setFile} save={save} loading={loading || (tab === 'Hero' && role.toLowerCase() !== 'superadmin')} />
+                    <Editor tab={tab} value={selected} setValue={setSelected} programs={data.ProgramFoto?.programs || []} file={file} setFile={setFile} save={save} loading={loading || (tab === 'Hero' && role.toLowerCase() !== 'superadmin')} />
                   </div>
                 </div>
               )}
@@ -559,9 +559,16 @@ function MediaLibrary({ rows, onCopy }: { rows: AnyRow[]; onCopy: (row: AnyRow) 
   );
 }
 
-function Editor({ tab, value, setValue, programs, setFile, save, loading }: { tab: Tab; value: AnyRow; setValue: (row: AnyRow) => void; programs: AnyRow[]; setFile: (file: File | null) => void; save: () => void; loading: boolean }) {
+function Editor({ tab, value, setValue, programs, file, setFile, save, loading }: { tab: Tab; value: AnyRow; setValue: (row: AnyRow) => void; programs: AnyRow[]; file: File | null; setFile: (file: File | null) => void; save: () => void; loading: boolean }) {
   const update = (key: string, val: any) => setValue({ ...value, [key]: val });
-  const image = rowImage(tab, value);
+  const [localPreview, setLocalPreview] = useState('');
+  useEffect(() => {
+    if (!file) { setLocalPreview(''); return; }
+    const url = URL.createObjectURL(file);
+    setLocalPreview(url);
+    return () => URL.revokeObjectURL(url);
+  }, [file]);
+  const image = localPreview || rowImage(tab, value);
   const preview = previewHref(tab, value);
   const isNew = !value.id;
   const [heroDevice, setHeroDevice] = useState<'desktop' | 'mobile'>('desktop');
