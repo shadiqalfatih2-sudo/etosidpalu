@@ -23,10 +23,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'File harus berupa gambar.' }, { status: 400 });
     }
 
-    // Reject obviously oversized payloads before forwarding to the Edge Function.
-    // Base64 is ~4/3 of binary size; 14 MB safely covers the 10 MB storage limit.
-    if (dataUrl.length > 14 * 1024 * 1024) {
-      return NextResponse.json({ error: 'Ukuran gambar maksimal 10 MB.' }, { status: 413 });
+    // Vercel enforces a smaller request-body cap before this handler runs.
+    // Client compression targets 2.5 MiB binary / 3.4 MiB Base64.
+    // Keep an additional hard limit below the hosting request limit.
+    if (dataUrl.length > 3.9 * 1024 * 1024) {
+      return NextResponse.json({ error: 'Foto terlalu besar untuk diunggah. Gunakan optimasi otomatis dan coba lagi.' }, { status: 413 });
     }
 
     const response = await fetch(`${SUPABASE_URL}/functions/v1/etos-media-upload`, {
