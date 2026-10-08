@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import sanitizeHtml from 'sanitize-html';
 import { supabaseServer } from '@/lib/supabase';
+import { mediaUrl } from '@/lib/native-public';
 import { SiteHeader, Footer } from '@/components/native/HomePreview';
 import '../../etos-feature-pages.css';
 
@@ -29,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: `${program.name} | Program Etos ID Palu`, description,
     alternates: { canonical }, robots: { index: true, follow: true },
     openGraph: { type: 'website', title: program.name, description, url: canonical,
-      images: program.preview_url ? [{ url: program.preview_url }] : undefined } };
+      images: program.preview_url ? [{ url: mediaUrl(program.preview_url) }] : undefined } };
 }
 
 export default async function ProgramDetailPage({ params }: Props) {
@@ -57,7 +58,7 @@ export default async function ProgramDetailPage({ params }: Props) {
             {program.category ? <div className="etos-feature-meta"><span>{program.category}</span></div> : null}
             {program.summary ? <p className="etos-feature-intro">{program.summary}</p> : null}
           </div>
-          {program.preview_url ? <div className="etos-feature-media"><img src={program.preview_url} alt={program.name} /></div> : null}
+          {program.preview_url ? <div className="etos-feature-media"><img src={mediaUrl(program.preview_url)} alt={program.name} /></div> : null}
         </div>
         {html ? <section className="etos-feature-content">
           <span className="etos-feature-eyebrow">PROSES DAN PEMBELAJARAN</span>
@@ -69,7 +70,7 @@ export default async function ProgramDetailPage({ params }: Props) {
           <h2>Galeri kegiatan</h2>
           <div className="etos-feature-photos">
             {photos.map((photo) => <figure key={photo.id}>
-              <img src={photo.photo_url} alt={photo.caption || `Dokumentasi ${program.name}`} loading="lazy" style={{ objectPosition: photo.photo_position || '50% 50%' }} />
+              <img src={mediaUrl(photo.photo_url)} alt={photo.caption || `Dokumentasi ${program.name}`} loading="lazy" style={{ objectPosition: photo.photo_position || '50% 50%' }} />
               {photo.caption ? <figcaption>{photo.caption}</figcaption> : null}
             </figure>)}
           </div>
