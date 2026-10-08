@@ -1,19 +1,19 @@
 /* ETOS Seamless Editorial Signature. Independent of legacy full-photo Hero CSS. */
 .native-home-2026 .etos-signature-hero{padding:16px clamp(12px,3.6vw,58px) 0;background:#f7f8f5;isolation:isolate}
-.etos-signature-stage{position:relative;overflow:hidden;isolation:isolate;min-height:clamp(550px,48vw,650px);background:#f7f8f3;border-radius:22px;box-shadow:0 12px 34px rgba(29,65,43,.055)}
+.etos-signature-stage{--etos-signature-left:clamp(22px,2.7vw,44px);position:relative;overflow:hidden;isolation:isolate;min-height:clamp(550px,48vw,650px);background:#f7f8f3;border-radius:22px;box-shadow:0 12px 34px rgba(29,65,43,.055)}
 .etos-signature-visual{position:absolute;z-index:0;right:0;top:0;bottom:0;width:65%;overflow:hidden;background:#d0dcd0}
-.etos-signature-visual-slide{position:absolute;inset:0;transition:opacity 800ms cubic-bezier(.22,.63,.24,1);overflow:hidden;will-change:opacity}
+.etos-signature-visual-slide{position:absolute;inset:0;transition:opacity 900ms cubic-bezier(.22,.63,.24,1);overflow:hidden;will-change:opacity}
 .etos-signature-image-ambient{position:absolute;width:116%;height:116%;inset:-8%;object-fit:cover;filter:blur(25px) saturate(.95);opacity:.64}
 .etos-signature-image-main{position:absolute;top:0;bottom:0;right:0;width:88%;height:100%;display:block;object-fit:contain;object-position:center center;mask-image:linear-gradient(90deg,transparent 0%,#000 4.4%,#000 100%);-webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 4.4%,#000 100%);filter:saturate(.99)}
 .etos-signature-image-main.is-cover{object-fit:cover}
 .etos-signature-feather{pointer-events:none;position:absolute;inset:0;z-index:2;background:linear-gradient(90deg,#f7f8f3 0%,rgba(247,248,243,.98) 9%,rgba(247,248,243,.82) 18%,rgba(247,248,243,.28) 31%,transparent 43%);}
-.etos-signature-content{position:relative;z-index:3;display:flex;flex-direction:column;justify-content:center;min-height:clamp(550px,48vw,650px);padding:clamp(44px,5.3vw,82px) 0 clamp(95px,8vw,114px) clamp(31px,4.8vw,76px);width:min(49%,750px);color:#183c2b;box-sizing:border-box;pointer-events:none}
+.etos-signature-content{position:relative;z-index:3;display:flex;flex-direction:column;justify-content:center;min-height:clamp(550px,48vw,650px);padding:clamp(44px,5.3vw,82px) clamp(10px,1.15vw,22px) clamp(95px,8vw,114px) var(--etos-signature-left);width:min(46%,710px);min-width:0;color:#183c2b;box-sizing:border-box;pointer-events:none}
 .etos-signature-content>*{pointer-events:auto}
 .etos-signature-eyebrow{font:750 10px/1.55 system-ui,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#4c7e5d;margin-bottom:18px}
 .etos-signature-eyebrow span{margin:0 6px;color:#95b49c}
-.etos-signature-dynamic{animation:etos-signature-arrive 380ms cubic-bezier(.18,.7,.25,1) both}
-.etos-signature-content h1{font-family:Georgia,'Times New Roman',serif!important;font-size:clamp(40px,3.65vw,58px)!important;line-height:1.095!important;letter-spacing:-.045em!important;font-weight:560!important;text-wrap:balance;max-width:610px;margin:0;color:#153d2c!important;text-shadow:none!important}
-.etos-signature-content p{font:400 clamp(14px,1.1vw,16px)/1.7 system-ui,sans-serif!important;max-width:485px;color:#5a6f5f!important;margin:22px 0 0!important;text-shadow:none!important}
+.etos-signature-dynamic{min-width:0;max-width:100%;animation:etos-signature-arrive 470ms cubic-bezier(.18,.7,.25,1) both}
+.etos-signature-content h1{font-family:Georgia,'Times New Roman',serif!important;font-size:clamp(38px,3.45vw,56px)!important;line-height:1.105!important;letter-spacing:-.045em!important;font-weight:560!important;text-wrap:balance;max-width:100%;min-width:0;margin:0;overflow-wrap:break-word;color:#153d2c!important;text-shadow:none!important}
+.etos-signature-content p{font:400 clamp(14px,1.1vw,16px)/1.7 system-ui,sans-serif!important;max-width:min(100%,470px);color:#5a6f5f!important;margin:22px 0 0!important;text-shadow:none!important}
 .etos-signature-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:29px}
 .etos-signature-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:48px;box-sizing:border-box;padding:12px 18px;border-radius:999px;font:650 12px/1.35 system-ui,sans-serif;text-decoration:none;gap:12px;white-space:nowrap;transition:background .25s ease,transform .25s ease,border-color .25s ease}
 .etos-signature-primary{background:#195039;color:#fff;box-shadow:0 8px 18px rgba(22,66,42,.13)}
@@ -22,7 +22,7 @@
 .etos-signature-secondary:hover{border-color:#5b986b;background:#fff;transform:translateY(-2px)}
 .etos-signature-actions a:focus-visible{outline:3px solid #378958;outline-offset:3px}
 @keyframes etos-signature-arrive{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.etos-signature-nav{position:absolute;bottom:clamp(25px,3vw,43px);left:clamp(31px,4.8vw,76px);z-index:6;display:flex;align-items:center;gap:14px}
+.etos-signature-nav{position:absolute;bottom:clamp(25px,3vw,43px);left:var(--etos-signature-left);z-index:6;display:flex;align-items:center;gap:14px}
 .etos-signature-progress{display:flex;gap:7px;align-items:center}
 .etos-signature-progress-button{position:relative;display:grid;place-items:center;width:35px;height:28px;padding:0;border:0;background:none;cursor:pointer}
 .etos-signature-progress-button:before{content:'';position:absolute;inset:0}
@@ -34,8 +34,8 @@
 @keyframes etos-signature-progress{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 .etos-signature-pause{display:grid;place-items:center;appearance:none;width:32px;height:32px;padding:0;background:transparent;color:#23533b;border:1px solid #b4ceb9;border-radius:50%;cursor:pointer;font-size:11px;line-height:1}
 .etos-signature-progress-button:focus-visible,.etos-signature-pause:focus-visible{outline:2px solid #1b5b3f;outline-offset:3px}
-@media(min-width:1450px){.etos-signature-image-main{width:89%}.etos-signature-content{width:min(45%,670px)}}
-@media(min-width:760px) and (max-width:1080px){.etos-signature-content{width:50%;padding-left:35px}.etos-signature-content h1{font-size:clamp(34px,4vw,44px)!important}.etos-signature-content p{font-size:14px!important}.etos-signature-actions{gap:8px}.etos-signature-actions a{font-size:11px;padding:10px 14px;min-height:45px}.etos-signature-nav{left:35px}.etos-signature-visual{width:64%}}
+@media(min-width:1450px){.etos-signature-image-main{width:89%}.etos-signature-content{width:min(44.5%,710px)}}
+@media(min-width:760px) and (max-width:1080px){.etos-signature-content{width:51.5%;padding-left:var(--etos-signature-left);padding-right:12px}.etos-signature-content h1{font-size:clamp(34px,4vw,44px)!important}.etos-signature-content p{font-size:14px!important}.etos-signature-actions{gap:8px}.etos-signature-actions a{font-size:11px;padding:10px 14px;min-height:45px}.etos-signature-nav{left:var(--etos-signature-left)}.etos-signature-visual{width:64%}}
 @media(max-width:759px){
  .native-home-2026 .etos-signature-hero{padding:10px 11px 0}
  .etos-signature-stage{display:grid;grid-template-areas:'copy' 'photo' 'nav';grid-template-columns:minmax(0,1fr);min-height:0;border-radius:18px}
