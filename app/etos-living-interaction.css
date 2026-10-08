@@ -1,0 +1,92 @@
+/* ETOS Living Editorial Interaction
+   Scoped to the public experience. Native mouse, keyboard and click targets stay intact.
+*/
+.etos-living-cursor-layer{position:fixed;inset:0;pointer-events:none;z-index:9500;overflow:visible}
+.etos-living-cursor-ring,.etos-living-cursor-dot{position:fixed;top:0;left:0;pointer-events:none;border-radius:50%;opacity:0;transform:translate3d(-90px,-90px,0) translate(-50%,-50%);will-change:transform;transition:opacity .18s ease, width .32s cubic-bezier(.2,.7,.2,1),height .32s cubic-bezier(.2,.7,.2,1),border-color .3s ease,background .3s ease}
+.etos-living-cursor-ring{width:27px;height:27px;box-sizing:border-box;border:1.4px solid rgba(29,112,75,.81);background:rgba(57,142,86,.045);box-shadow:0 1px 9px rgba(33,88,56,.045)}
+.etos-living-cursor-dot{width:4px;height:4px;background:#245d40}
+.etos-living-cursor-ring.is-visible{opacity:.94}
+.etos-living-cursor-dot.is-visible{opacity:.75}
+.etos-living-cursor-ring.is-expanded{width:49px;height:49px;border-color:rgba(42,144,88,.65);background:rgba(56,156,88,.065)}
+
+/* Program: green fill emerges from the pointer, but NEVER covers the documentary photo. */
+.native-home-2026 .etos-program-editorial-card.etos-living-program-card{transition:box-shadow .4s cubic-bezier(.22,.7,.22,1),border-color .35s ease,transform .4s cubic-bezier(.22,.7,.22,1)!important}
+.native-home-2026 .etos-program-editorial-card.etos-living-program-card .etos-program-editorial-body{position:relative;isolation:isolate;overflow:hidden;transition:background .35s ease}
+.native-home-2026 .etos-program-editorial-card.etos-living-program-card .etos-program-editorial-body::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(135deg,#2c7951,#164934);clip-path:circle(0% at var(--etos-fill-x,90%) var(--etos-fill-y,80%));transition:clip-path .62s cubic-bezier(.22,.69,.2,1)}
+.native-home-2026 .etos-program-editorial-card.etos-living-program-card .etos-program-editorial-body>*{position:relative;z-index:1}
+.native-home-2026 .etos-program-editorial-card.etos-living-program-card .etos-program-editorial-body :is(h3,p,.etos-program-editorial-meta,.etos-program-editorial-link,.etos-program-editorial-link b){transition:color .38s ease,transform .36s cubic-bezier(.22,.7,.22,1)}
+.native-home-2026 .etos-program-editorial-card.etos-living-program-card:hover,
+.native-home-2026 .etos-program-editorial-card.etos-living-program-card:focus-visible{border-color:#3f8461!important;box-shadow:0 17px 36px rgba(20,67,45,.135)!important;transform:translateY(-4px)!important}
+.native-home-2026 .etos-program-editorial-card.etos-living-program-card:is(:hover,:focus-visible) .etos-program-editorial-body::before{clip-path:circle(165% at var(--etos-fill-x,90%) var(--etos-fill-y,80%))}
+.native-home-2026 .etos-program-editorial-card.etos-living-program-card:is(:hover,:focus-visible) .etos-program-editorial-body h3{color:#fff!important}
+.native-home-2026 .etos-program-editorial-card.etos-living-program-card:is(:hover,:focus-visible) .etos-program-editorial-body p{color:rgba(244,251,245,.88)!important}
+.native-home-2026 .etos-program-editorial-card.etos-living-program-card:is(:hover,:focus-visible) .etos-program-editorial-meta{color:#d0ead8!important}
+.native-home-2026 .etos-program-editorial-card.etos-living-program-card:is(:hover,:focus-visible) .etos-program-editorial-link{color:#fff!important}
+.native-home-2026 .etos-program-editorial-card.etos-living-program-card:is(:hover,:focus-visible) .etos-program-editorial-link b{display:inline-block;transform:translate(3px,-3px)}
+.native-home-2026 .etos-program-editorial-card.etos-living-program-card .etos-program-editorial-media img{transition:transform .7s cubic-bezier(.2,.72,.2,1)!important}
+.native-home-2026 .etos-program-editorial-card.etos-living-program-card:is(:hover,:focus-visible) .etos-program-editorial-media img{transform:scale(1.025)!important}
+
+/* Awardee: subtle portrait response; faces remain unobscured. */
+.native-home-2026 .etos-home-awardee-card.etos-living-awardee-card .etos-home-awardee-image{transition:border-color .36s ease,box-shadow .42s ease,transform .42s cubic-bezier(.2,.7,.2,1)!important}
+.native-home-2026 .etos-home-awardee-card.etos-living-awardee-card .etos-home-awardee-image img{transition:transform .65s cubic-bezier(.2,.7,.2,1)!important;transform-origin:center!important}
+.native-home-2026 .etos-home-awardee-card.etos-living-awardee-card:is(:hover,:focus-visible) .etos-home-awardee-image{border-color:#589470!important;box-shadow:0 14px 28px rgba(26,71,46,.14)!important;transform:translateY(-3px)!important}
+.native-home-2026 .etos-home-awardee-card.etos-living-awardee-card:is(:hover,:focus-visible) .etos-home-awardee-image img{transform:scale(1.023)!important}
+.native-home-2026 .etos-home-awardee-card.etos-living-awardee-card h3{width:fit-content;max-width:100%;background-image:linear-gradient(#377c51,#377c51);background-repeat:no-repeat;background-position:left bottom;background-size:0 1px;transition:background-size .34s ease,color .34s ease!important}
+.native-home-2026 .etos-home-awardee-card.etos-living-awardee-card:is(:hover,:focus-visible) h3{background-size:100% 1px;color:#205f43!important}
+
+/* Metric cards remain in motion, pause on hover via existing marquee logic. */
+.native-home-2026 .etos-motion-metric.etos-living-metric{transition:transform .33s cubic-bezier(.2,.7,.2,1),border-color .33s ease,box-shadow .33s ease,background .33s ease}
+.native-home-2026 .etos-motion-metric.etos-living-metric:hover{transform:translateY(-3px);border-color:#84b29a;background:#fafffa;box-shadow:0 13px 29px rgba(32,95,59,.11)}
+.native-home-2026 .etos-motion-metric.etos-living-metric:hover>strong{color:#1e734a}
+
+/* Editorial journal: quiet underlines and photo detail. */
+.native-home-2026 .etos-publication-card.etos-living-publication h3,
+.etos-impact-editorial-articles a h3{width:fit-content;max-width:100%;background-image:linear-gradient(#397a54,#397a54);background-repeat:no-repeat;background-position:0 100%;background-size:0 1px;transition:background-size .38s cubic-bezier(.22,.7,.22,1),color .3s ease}
+.native-home-2026 .etos-publication-card.etos-living-publication:is(:hover,:focus-visible) h3,
+.etos-impact-editorial-articles a:is(:hover,:focus-visible) h3{background-size:100% 1px}
+.native-home-2026 .etos-publication-card.etos-living-publication img{transition:transform .65s cubic-bezier(.2,.7,.2,1)}
+.native-home-2026 .etos-publication-card.etos-living-publication:is(:hover,:focus-visible) img{transform:scale(1.022)}
+.native-home-2026 .etos-publication-card.etos-living-publication :is(.etos-publication-body b,.etos-publication-body span){transition:transform .3s ease}
+
+/* Navigational lines grow horizontally, without additional ornaments. */
+.etos-site-header .etos-desktop-nav a,
+.etos-footer-2026 .etos-footer-group a{background-image:linear-gradient(#3e8b5b,#3e8b5b);background-repeat:no-repeat;background-position:left calc(100% - 1px);background-size:0 1.5px;transition:background-size .3s cubic-bezier(.2,.7,.2,1),color .26s ease}
+.etos-site-header .etos-desktop-nav a:is(:hover,:focus-visible),
+.etos-footer-2026 .etos-footer-group a:is(:hover,:focus-visible){background-size:100% 1.5px}
+
+/* Magnetic buttons: maximum 3.5px cursor pull, no shifting page layout. */
+.etos-signature-actions .etos-living-magnetic,
+.etos-cta-section .etos-living-magnetic,
+.etos-header-actions .etos-living-magnetic{transition:transform .28s cubic-bezier(.2,.75,.2,1),background .27s ease,color .27s ease,border-color .27s ease}
+.etos-signature-actions .etos-living-magnetic:is(:hover,:focus-visible),
+.etos-cta-section .etos-living-magnetic:is(:hover,:focus-visible),
+.etos-header-actions .etos-living-magnetic:is(:hover,:focus-visible){transform:translate3d(var(--etos-magnetic-x,0px),var(--etos-magnetic-y,0px),0)!important}
+.etos-signature-actions .etos-living-magnetic span[aria-hidden]{display:inline-block;transition:transform .29s cubic-bezier(.2,.7,.2,1)}
+.etos-signature-actions .etos-living-magnetic:is(:hover,:focus-visible) span[aria-hidden]{transform:translate(3px,-2px)}
+
+/* Non-home editorial detail cards get quieter micro interactions. */
+.etos-impact-editorial-card:is(:hover,:focus-visible){border-color:#8eb49a!important;box-shadow:0 16px 34px rgba(22,67,42,.1)}
+.etos-impact-editorial-card img{transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.etos-impact-editorial-card:is(:hover,:focus-visible) img{transform:scale(1.018)}
+
+@media(hover:none),(pointer:coarse){
+  .etos-living-cursor-layer{display:none}
+  .native-home-2026 .etos-program-editorial-card.etos-living-program-card:hover{transform:none!important;box-shadow:var(--card-shadow)!important}
+  .native-home-2026 .etos-program-editorial-card.etos-living-program-card:hover .etos-program-editorial-body::before{clip-path:circle(0% at 90% 80%)}
+  .native-home-2026 .etos-program-editorial-card.etos-living-program-card:hover .etos-program-editorial-body :is(h3,p,.etos-program-editorial-meta,.etos-program-editorial-link){color:inherit!important}
+  .native-home-2026 .etos-home-awardee-card.etos-living-awardee-card:hover .etos-home-awardee-image img{transform:none!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .etos-living-cursor-layer{display:none}
+  .native-home-2026 .etos-living-program-card,
+  .native-home-2026 .etos-living-program-card *,
+  .native-home-2026 .etos-living-program-card::before,
+  .native-home-2026 .etos-living-program-card .etos-program-editorial-body::before,
+  .native-home-2026 .etos-living-awardee-card *,
+  .native-home-2026 .etos-living-publication *,
+  .native-home-2026 .etos-living-metric,
+  .etos-living-magnetic{transition:none!important;animation:none!important}
+  .native-home-2026 .etos-living-program-card:is(:hover,:focus-visible){transform:none!important}
+  .native-home-2026 .etos-living-program-card .etos-program-editorial-body::before{transition:none!important}
+  .native-home-2026 .etos-home-awardee-card.etos-living-awardee-card:is(:hover,:focus-visible) .etos-home-awardee-image img{transform:none!important}
+}
