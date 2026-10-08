@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { NativeHero } from '@/lib/native-public';
 import styles from './HomePreview.module.css';
+import './HybridHero.css';
 
 const AUTOPLAY_MS = 4800;
 
@@ -10,6 +11,7 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
   const slides = useMemo(() => heroes.filter((item) => item.photo), [heroes]);
   const [active, setActive] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [paused, setPaused] = useState(false);
   const leadTitle = slides[0]?.subtitle || 'Membentuk Nalar Kritis, Menempa Etos Peradaban.';
 
   useEffect(() => {
@@ -40,7 +42,7 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
   }, [slides]);
 
   useEffect(() => {
-    if (slides.length < 2) return;
+    if (slides.length < 2 || paused || reducedMotion) return;
 
     let timer = window.setInterval(() => {
       setActive((current) => (current + 1) % slides.length);
@@ -60,9 +62,10 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
       window.clearInterval(timer);
       document.removeEventListener('visibilitychange', onVisibility);
     };
-  }, [slides.length]);
+  }, [slides.length, paused, reducedMotion]);
 
   const current = slides[active] || slides[0];
+  const goTo = (next: number) => { setPaused(true); setActive((next + slides.length) % slides.length); };
   const firstSlide = slides[0];
 
   return (
@@ -108,6 +111,7 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
         </div>
 
         <div className={`${styles.heroOverlay} etos-hero-overlay`} />
+        <div className="etos-hybrid-ornament" aria-hidden="true"><svg viewBox="0 0 260 260" fill="none"><path d="M43 149C-1 53 147 4 201 79c70 99-77 194-151 111C-18 115 191 5 228 157" stroke="currentColor" strokeWidth="18" strokeLinecap="round"/><path d="M39 149C-1 53 147 4 201 79c70 99-77 194-151 111C-18 115 191 5 228 157" stroke="white" strokeOpacity=".25" strokeWidth="3" strokeLinecap="round"/></svg></div>
 
         <div className={`${styles.heroContent} etos-hero-content`}>
           <div className="etos-hero-copy-panel" data-etos-stagger="hero">
@@ -120,10 +124,11 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
             </p>
 
             <div className={`${styles.heroActions} etos-hero-actions`} data-etos-reveal="soft">
-              <a href="/" data-etos-section-target="program" className={`${styles.heroPrimary} etos-hero-primary`}>Jelajahi Program</a>
+              <a href={current?.link && (/^https?:\/\//.test(current.link) || current.link.startsWith('/')) ? current.link : '/#program'} className={`${styles.heroPrimary} etos-hero-primary`}>Jelajahi Program</a>
               <a href="/" data-etos-section-target="awardee" className={`${styles.heroGhost} etos-hero-secondary`}>Kenal Awardee <b>→</b></a>
             </div>
           </div>
+          {slides.length > 1 ? <div className="etos-hybrid-controls" aria-label="Kontrol hero slider"><button type="button" onClick={() => goTo(active - 1)} aria-label="Slide sebelumnya">←</button><span aria-live="polite">{String(active + 1).padStart(2, '0')} / {String(slides.length).padStart(2, '0')}</span><button type="button" onClick={() => goTo(active + 1)} aria-label="Slide berikutnya">→</button><button type="button" onClick={() => setPaused((v) => !v)} aria-label={paused ? 'Putar otomatis' : 'Jeda slide otomatis'}>{paused ? 'Putar' : 'Jeda'}</button></div> : null}
         </div>
       </div>
     </section>
