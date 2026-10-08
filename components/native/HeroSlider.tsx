@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { NativeHero } from '@/lib/native-public';
 import './SeamlessEditorialHero.css';
 
-const INTERVAL_MS = 2000;
+const INTERVAL_MS = 2500;
 const fallback = [
   { title: 'Membentuk Nalar Kritis, Menempa Etos Peradaban.', summary: 'Ruang pembinaan mahasiswa yang menguatkan karakter, cara berpikir, dan kepemimpinan.', link: '/#program' },
   { title: 'Bertumbuh Bersama. Menguatkan Karakter.', summary: 'Setiap proses belajar membuka ruang untuk mengenal diri dan berkembang bersama.', link: '/#tentang' },
@@ -33,7 +33,6 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
   const [paused, setPaused] = useState(false);
   const [reduced, setReduced] = useState(false);
   const [manualPlay, setManualPlay] = useState(false);
-  const [hovered, setHovered] = useState(false);
   const [visible, setVisible] = useState(true);
   const [cycle, setCycle] = useState(0);
   const startX = useRef<number | null>(null);
@@ -56,7 +55,8 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
   useEffect(() => {
     setActive(old => slides.length ? Math.min(old, slides.length - 1) : 0);
   }, [slides.length]);
-  const autoPaused = paused || hovered || !visible || (reduced && !manualPlay);
+  // Autoplay remains independent of cursor movement and button focus.
+  const autoPaused = paused || !visible || (reduced && !manualPlay);
   useEffect(() => {
     if (slides.length < 2 || autoPaused) return;
     let timer: number | undefined;
@@ -73,13 +73,13 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
       if (timer !== undefined) window.clearInterval(timer);
       document.removeEventListener('visibilitychange', run);
     };
-  }, [slides.length, autoPaused]);
+  // Restart the 2.5s countdown after a manual indicator/swipe selection.
+  }, [slides.length, autoPaused, cycle]);
 
   const moveTo = (index: number) => {
     if (!slides.length) return;
     setActive((index + slides.length) % slides.length);
     setCycle(value => value + 1);
-    setPaused(true);
   };
   const selected = slides[active];
   const copy = fallback[active % fallback.length];
@@ -89,16 +89,13 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
   const link = safeLink(selected?.link || '', copy.link);
   const canAuto = !autoPaused;
   const togglePlay = () => {
+    setCycle(value => value + 1);
     if (reduced && !manualPlay) { setManualPlay(true); setPaused(false); return; }
     setPaused(value => !value);
   };
 
   return (
     <section ref={root} className="etos-signature-hero" id="beranda" aria-label="Sorotan ETOS ID Palu"
-      onPointerEnter={event => { if (event.pointerType === 'mouse') setHovered(true); }}
-      onPointerLeave={() => setHovered(false)}
-      onFocusCapture={() => setHovered(true)}
-      onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setHovered(false); }}
       onTouchStart={event => { startX.current = event.touches[0]?.clientX ?? null; }}
       onTouchEnd={event => {
         if (startX.current === null || slides.length < 2) return;
@@ -112,10 +109,10 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
             <div key={slide.id} className={`etos-signature-visual-slide${index === active ? ' is-current' : ''}`}
               style={{ opacity: index === active ? 1 : 0, pointerEvents: 'none' }}>
               <img className="etos-signature-image-ambient" src={slide.photo} alt=""
-                style={{ objectPosition: slide.photoPosition || '50% 50%' }} loading={index === 0 ? 'eager' : 'lazy'} decoding="async"/>
+                style={{ objectPosition: slide.photoPosition || '50% 50%' }} loading="eager" decoding="async"/>
               <img className={`etos-signature-image-main${slide.displayMode === 'cover' ? ' is-cover' : ''}`}
                 src={slide.photo} alt="" style={{ objectPosition: slide.photoPosition || '50% 50%' }}
-                loading={index === 0 ? 'eager' : 'lazy'} fetchPriority={index === 0 ? 'high' : 'auto'} decoding="async"/>
+                loading="eager" fetchPriority={index === 0 ? 'high' : 'low'} decoding="async"/>
             </div>
           ))}
           <div className="etos-signature-feather"/>
