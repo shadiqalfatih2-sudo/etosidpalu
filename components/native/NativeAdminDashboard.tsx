@@ -587,6 +587,7 @@ function Editor({ tab, value, setValue, programs, setFile, save, loading }: { ta
         <div className={`etos-admin-preview-frame ${heroDevice}`}>
           {image ? <img src={image} alt="Pratinjau foto slide" style={{ objectPosition: value.posisi || '50% 50%' }} /> : null}
           <div className="etos-admin-preview-shade" />
+          {heroDevice === 'desktop' ? <div className="etos-admin-preview-safe-zone" aria-hidden="true">Area foto aksen</div> : null}
           <div className="etos-admin-preview-copy"><span>ETOS ID PALU</span><strong>{heroHeading}</strong>{heroSupport ? <p>{heroSupport}</p> : null}</div>
         </div>
         <p className="etos-admin-preview-note">Pastikan wajah tidak tertutup teks. Foto pendamping selalu ditempatkan di bawah pada desktop dan disembunyikan pada mobile. Geser fokus dengan persentase seperti 50% 30%.</p>
