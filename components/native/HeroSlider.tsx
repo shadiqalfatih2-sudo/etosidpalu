@@ -8,6 +8,13 @@ import './EditorialPhotoMotion.css';
 import './PremiumEditorial.css';
 
 const AUTOPLAY_MS = 6900;
+const editorialFallback = [
+  { heading: 'Membentuk Nalar Kritis, Menempa Etos Peradaban.', supporting: 'Ruang pembinaan mahasiswa yang menguatkan karakter, cara berpikir, dan kepemimpinan.', href: '/#program' },
+  { heading: 'Bertumbuh Bersama. Menguatkan Karakter.', supporting: 'Setiap proses belajar membuka ruang untuk mengenal diri dan berkembang bersama.', href: '/#tentang' },
+  { heading: 'Belajar Memimpin, Berani Berkontribusi.', supporting: 'Mengenal orang-orang yang bertumbuh melalui pembinaan dan kolaborasi.', href: '/#awardee' },
+  { heading: 'Merawat Gagasan, Membangun Kolaborasi.', supporting: 'Menemukan ide dan pengalaman dari ekosistem ETOS ID Palu.', href: '/berita' },
+  { heading: 'Dari Proses, Menuju Kontribusi.', supporting: 'Menjelajahi perjalanan pembinaan, dokumentasi kegiatan, dan cerita di baliknya.', href: '/cerita-dampak' },
+];
 function safeHeroLink(link: string) {
   const value = String(link || '').trim();
   if (value.startsWith('/') && !value.startsWith('//')) return value;
@@ -79,11 +86,12 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
   };
   const current = slides[active] || slides[0];
   const titleIsGeneric = !current?.title || current.title.trim().toLowerCase() === 'etos id palu';
-  const headline = titleIsGeneric ? current?.subtitle || 'Bertumbuh dalam nilai. Bergerak membawa dampak.' : current.title;
+  const editorial = editorialFallback[active % editorialFallback.length];
+  const headline = titleIsGeneric ? current?.subtitle || editorial.heading : current.title;
   const supportingText = titleIsGeneric
-    ? 'Ruang pembinaan mahasiswa untuk menguatkan karakter, kepemimpinan, dan kontribusi.'
+    ? editorial.supporting
     : current?.subtitle || 'Menguatkan nilai, nalar, dan keberanian untuk memberi dampak.';
-  const href = safeHeroLink(current?.link || '');
+  const href = safeHeroLink(current?.link || editorial.href);
   const nextImage = slides.length > 1 ? slides[(active + 1) % slides.length] : null;
 
   return (
@@ -125,7 +133,7 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
               <h1>{headline}</h1>
               <p>{supportingText}</p>
               <div className={`${styles.heroActions} etos-hero-actions`}>
-                <a href={href} className={`${styles.heroPrimary} etos-hero-primary`}>{heroActionLabel(current?.link || '')} <span aria-hidden="true">↗</span></a>
+                <a href={href} className={`${styles.heroPrimary} etos-hero-primary`}>{heroActionLabel(href)} <span aria-hidden="true">↗</span></a>
                 <a href="/#awardee" className={`${styles.heroGhost} etos-hero-secondary`}>Kenali Ekosistem <span aria-hidden="true">→</span></a>
               </div>
             </div>
