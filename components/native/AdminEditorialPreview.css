@@ -21,3 +21,5 @@
 .etos-admin-seo-preview p{margin:0;font:400 12px/1.6 system-ui,sans-serif;color:#68786d}
 .etos-admin-seo-preview span{font:600 10px/1.4 system-ui,sans-serif;color:#578065;margin-top:3px}
 @media(max-width:620px){.etos-admin-preview-section{padding:11px}.etos-admin-preview-frame{height:170px}}
+
+.etos-admin-preview-safe-zone{position:absolute;z-index:2;right:9%;bottom:11%;width:19%;height:39%;display:flex;align-items:center;justify-content:center;padding:4px;text-align:center;border:1.5px dashed rgba(255,255,255,.85);background:rgba(245,248,242,.14);border-radius:7px;color:#fff;font:600 9px/1.4 system-ui,sans-serif;pointer-events:none}
