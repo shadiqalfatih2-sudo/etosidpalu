@@ -8,6 +8,7 @@ export type NativeHero = {
   subtitle: string;
   photo: string;
   photoPosition: string;
+  displayMode: 'cover' | 'full-frame';
   link: string;
 };
 
@@ -155,7 +156,7 @@ const getNativeHomeDataCached = unstable_cache(
       { data: newsRows, error: newsError },
       { data: articleRows, error: articleError },
     ] = await Promise.all([
-      db.from('hero_slides').select('id,title,subtitle,photo_url,photo_position,link_url,status,sort_order').order('sort_order'),
+      db.from('hero_slides').select('id,title,subtitle,photo_url,photo_position,display_mode,link_url,status,sort_order').order('sort_order'),
       db.from('programs').select('id,name,category,summary,description,preview_url,icon,status,sort_order').order('sort_order'),
       db.from('program_photos').select('id,program_id,photo_url,caption,photo_position,sort_order,status').order('sort_order'),
       db.from('awardees').select('id,name,cohort,study_program,university,profile_summary,photo_url,photo_position,display_status,awardee_status,portfolio_url,sort_order').order('sort_order'),
@@ -194,6 +195,7 @@ const getNativeHomeDataCached = unstable_cache(
         subtitle: String(row.subtitle || ''),
         photo: mediaUrl(row.photo_url),
         photoPosition: String(row.photo_position || '50% 50%'),
+        displayMode: row.display_mode === 'cover' ? 'cover' : 'full-frame',
         link: String(row.link_url || ''),
       }));
 

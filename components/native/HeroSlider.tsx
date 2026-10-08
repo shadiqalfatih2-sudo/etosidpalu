@@ -2,157 +2,151 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { NativeHero } from '@/lib/native-public';
-import styles from './HomePreview.module.css';
-import './HybridHero.css';
-import './EditorialPhotoMotion.css';
-import './PremiumEditorial.css';
+import './SeamlessEditorialHero.css';
 
-const AUTOPLAY_MS = 6900;
-const editorialFallback = [
-  { heading: 'Membentuk Nalar Kritis, Menempa Etos Peradaban.', supporting: 'Ruang pembinaan mahasiswa yang menguatkan karakter, cara berpikir, dan kepemimpinan.', href: '/#program' },
-  { heading: 'Bertumbuh Bersama. Menguatkan Karakter.', supporting: 'Setiap proses belajar membuka ruang untuk mengenal diri dan berkembang bersama.', href: '/#tentang' },
-  { heading: 'Belajar Memimpin, Berani Berkontribusi.', supporting: 'Mengenal orang-orang yang bertumbuh melalui pembinaan dan kolaborasi.', href: '/#awardee' },
-  { heading: 'Merawat Gagasan, Membangun Kolaborasi.', supporting: 'Menemukan ide dan pengalaman dari ekosistem ETOS ID Palu.', href: '/berita' },
-  { heading: 'Dari Proses, Menuju Kontribusi.', supporting: 'Menjelajahi perjalanan pembinaan, dokumentasi kegiatan, dan cerita di baliknya.', href: '/cerita-dampak' },
+const INTERVAL_MS = 7200;
+const fallback = [
+  { title: 'Membentuk Nalar Kritis, Menempa Etos Peradaban.', summary: 'Ruang pembinaan mahasiswa yang menguatkan karakter, cara berpikir, dan kepemimpinan.', link: '/#program' },
+  { title: 'Bertumbuh Bersama. Menguatkan Karakter.', summary: 'Setiap proses belajar membuka ruang untuk mengenal diri dan berkembang bersama.', link: '/#tentang' },
+  { title: 'Belajar Memimpin, Berani Berkontribusi.', summary: 'Mengenal orang-orang yang bertumbuh melalui pembinaan dan kolaborasi.', link: '/#awardee' },
+  { title: 'Merawat Gagasan, Membangun Kolaborasi.', summary: 'Menemukan ide dan pengalaman dari ekosistem ETOS ID Palu.', link: '/berita' },
+  { title: 'Dari Proses, Menuju Kontribusi.', summary: 'Menjelajahi perjalanan pembinaan, dokumentasi kegiatan, dan cerita di baliknya.', link: '/cerita-dampak' },
+  { title: 'Bertumbuh Bersama. Melangkah Membawa Dampak.', summary: 'Perjalanan pembinaan yang mempertemukan mahasiswa untuk belajar, memimpin, dan bertumbuh bersama.', link: '/#awardee' },
 ];
-function safeHeroLink(link: string) {
-  const value = String(link || '').trim();
-  if (value.startsWith('/') && !value.startsWith('//')) return value;
-  try {
-    const parsed = new URL(value);
-    if (parsed.protocol === 'https:' || parsed.protocol === 'http:') return parsed.href;
-  } catch { /* invalid or absent link falls back to programs */ }
-  return '/#program';
+function safeLink(value: string, replacement: string): string {
+  const link = String(value || '').trim();
+  if (link.startsWith('/') && !link.startsWith('//')) return link;
+  if (/^https?:\/\/[^\s]+$/i.test(link)) return link;
+  return replacement;
 }
-function heroActionLabel(link: string) {
-  const value = String(link || '').toLowerCase();
-  if (value.includes('awardee')) return 'Kenali Awardee';
-  if (value.includes('berita') || value.includes('opini')) return 'Baca Cerita';
-  if (value.includes('cerita-dampak')) return 'Jelajahi Cerita';
-  if (value.includes('tentang')) return 'Kenali ETOS';
+function actionText(link: string) {
+  if (link.includes('awardee')) return 'Kenali Awardee';
+  if (link.includes('tentang')) return 'Tentang ETOS';
+  if (link.includes('berita') || link.includes('opini')) return 'Baca Publikasi';
+  if (link.includes('cerita-dampak')) return 'Cerita Dampak';
   return 'Jelajahi Program';
 }
 
 export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
-  const slides = useMemo(() => heroes.filter(item => item.photo), [heroes]);
+  const slides = useMemo(() => heroes.filter(slide => Boolean(slide.photo)), [heroes]);
   const [active, setActive] = useState(0);
-  const [reducedMotion, setReducedMotion] = useState(false);
-  const [explicitPlay, setExplicitPlay] = useState(false);
   const [paused, setPaused] = useState(false);
-  const [interacting, setInteracting] = useState(false);
+  const [reduced, setReduced] = useState(false);
+  const [manualPlay, setManualPlay] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const [visible, setVisible] = useState(true);
-  const touchStart = useRef<number | null>(null);
-  const heroRef = useRef<HTMLElement | null>(null);
+  const [cycle, setCycle] = useState(0);
+  const startX = useRef<number | null>(null);
+  const root = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const update = () => setReducedMotion(media.matches);
-    update();
-    media.addEventListener?.('change', update);
-    return () => media.removeEventListener?.('change', update);
+    const onChange = () => setReduced(media.matches);
+    onChange();
+    media.addEventListener('change', onChange);
+    return () => media.removeEventListener('change', onChange);
   }, []);
-
   useEffect(() => {
-    const element = heroRef.current;
-    if (!element || !('IntersectionObserver' in window)) return;
+    const target = root.current;
+    if (!target || !('IntersectionObserver' in window)) return;
     const observer = new IntersectionObserver(entries => setVisible(Boolean(entries[0]?.isIntersecting)), { threshold: .12 });
-    observer.observe(element);
+    observer.observe(target);
     return () => observer.disconnect();
   }, []);
-
   useEffect(() => {
-    setActive(previous => slides.length ? Math.min(previous, slides.length - 1) : 0);
+    setActive(old => slides.length ? Math.min(old, slides.length - 1) : 0);
   }, [slides.length]);
-
+  const autoPaused = paused || hovered || !visible || (reduced && !manualPlay);
   useEffect(() => {
-    if (slides.length < 2 || paused || interacting || (reducedMotion && !explicitPlay) || !visible) return;
-    const advance = () => setActive(previous => (previous + 1) % slides.length);
-    let timer: number | null = null;
-    const resume = () => {
-      if (timer !== null) window.clearInterval(timer);
-      timer = document.hidden ? null : window.setInterval(advance, AUTOPLAY_MS);
+    if (slides.length < 2 || autoPaused) return;
+    let timer: number | undefined;
+    const run = () => {
+      if (timer !== undefined) window.clearInterval(timer);
+      timer = document.hidden ? undefined : window.setInterval(() => {
+        setActive(n => (n + 1) % slides.length);
+        setCycle(n => n + 1);
+      }, INTERVAL_MS);
     };
-    resume();
-    document.addEventListener('visibilitychange', resume);
+    run();
+    document.addEventListener('visibilitychange', run);
     return () => {
-      if (timer !== null) window.clearInterval(timer);
-      document.removeEventListener('visibilitychange', resume);
+      if (timer !== undefined) window.clearInterval(timer);
+      document.removeEventListener('visibilitychange', run);
     };
-  }, [slides.length, paused, interacting, reducedMotion, explicitPlay, visible]);
+  }, [slides.length, autoPaused]);
 
-  const goTo = (next: number) => {
+  const moveTo = (index: number) => {
     if (!slides.length) return;
-    setActive((next + slides.length) % slides.length);
+    setActive((index + slides.length) % slides.length);
+    setCycle(value => value + 1);
     setPaused(true);
   };
-  const current = slides[active] || slides[0];
-  const titleIsGeneric = !current?.title || current.title.trim().toLowerCase() === 'etos id palu';
-  const editorial = editorialFallback[active % editorialFallback.length];
-  const headline = titleIsGeneric ? current?.subtitle || editorial.heading : current.title;
-  const supportingText = titleIsGeneric
-    ? editorial.supporting
-    : current?.subtitle || 'Menguatkan nilai, nalar, dan keberanian untuk memberi dampak.';
-  const href = safeHeroLink(current?.link || editorial.href);
-  const nextImage = slides.length > 1 ? slides[(active + 1) % slides.length] : null;
+  const selected = slides[active];
+  const copy = fallback[active % fallback.length];
+  const generic = !selected?.title || selected.title.trim().toLowerCase() === 'etos id palu';
+  const headline = generic ? selected?.subtitle || copy.title : selected.title;
+  const description = generic ? copy.summary : selected?.subtitle || copy.summary;
+  const link = safeLink(selected?.link || '', copy.link);
+  const canAuto = !autoPaused;
+  const togglePlay = () => {
+    if (reduced && !manualPlay) { setManualPlay(true); setPaused(false); return; }
+    setPaused(value => !value);
+  };
 
   return (
-    <section ref={heroRef} className={`${styles.hero} etos-hero etos-hero-2026 etos-premium-hero`}
-      id="beranda" aria-label="Sorotan Etos ID Palu"
-      onPointerEnter={event => { if (event.pointerType === 'mouse') setInteracting(true); }}
-      onPointerLeave={() => setInteracting(false)}
-      onFocusCapture={() => setInteracting(true)}
-      onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setInteracting(false); }}
-      onTouchStart={event => { touchStart.current = event.touches[0]?.clientX ?? null; }}
+    <section ref={root} className="etos-signature-hero" id="beranda" aria-label="Sorotan ETOS ID Palu"
+      onPointerEnter={event => { if (event.pointerType === 'mouse') setHovered(true); }}
+      onPointerLeave={() => setHovered(false)}
+      onFocusCapture={() => setHovered(true)}
+      onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setHovered(false); }}
+      onTouchStart={event => { startX.current = event.touches[0]?.clientX ?? null; }}
       onTouchEnd={event => {
-        if (touchStart.current === null) return;
-        const delta = (event.changedTouches[0]?.clientX ?? touchStart.current) - touchStart.current;
-        touchStart.current = null;
-        if (Math.abs(delta) > 65 && slides.length > 1) goTo(active + (delta < 0 ? 1 : -1));
-      }}
-    >
-      <div className={`${styles.heroMedia} etos-hero-media`}>
-        <div className="etos-hero-slides" aria-hidden="true">
+        if (startX.current === null || slides.length < 2) return;
+        const delta = (event.changedTouches[0]?.clientX ?? startX.current) - startX.current;
+        startX.current = null;
+        if (Math.abs(delta) > 62) moveTo(active + (delta < 0 ? 1 : -1));
+      }}>
+      <div className="etos-signature-stage">
+        <div className="etos-signature-visual" aria-hidden="true">
           {slides.map((slide, index) => (
-            <img key={slide.id} src={slide.photo} alt=""
-              className={`etos-hero-slide${index === active ? ' is-active' : ''}`}
-              style={{ objectPosition: slide.photoPosition || '50% 50%',
-                opacity: index === active ? 1 : 0, zIndex: index === active ? 2 : 1,
-                transition: reducedMotion ? 'opacity .15s linear' : 'opacity 1.05s cubic-bezier(.24,.66,.27,1)' }}
-              loading={index === 0 ? 'eager' : 'lazy'}
-              fetchPriority={index === 0 ? 'high' : 'auto'}
-              decoding="async"
-            />
+            <div key={slide.id} className={`etos-signature-visual-slide${index === active ? ' is-current' : ''}`}
+              style={{ opacity: index === active ? 1 : 0, pointerEvents: 'none' }}>
+              <img className="etos-signature-image-ambient" src={slide.photo} alt=""
+                style={{ objectPosition: slide.photoPosition || '50% 50%' }} loading={index === 0 ? 'eager' : 'lazy'} decoding="async"/>
+              <img className={`etos-signature-image-main${slide.displayMode === 'cover' ? ' is-cover' : ''}`}
+                src={slide.photo} alt="" style={{ objectPosition: slide.photoPosition || '50% 50%' }}
+                loading={index === 0 ? 'eager' : 'lazy'} fetchPriority={index === 0 ? 'high' : 'auto'} decoding="async"/>
+            </div>
           ))}
+          <div className="etos-signature-feather"/>
         </div>
-        <div className={`${styles.heroOverlay} etos-hero-overlay`} aria-hidden="true" />
-        <div className="etos-hybrid-ornament" aria-hidden="true"><svg viewBox="0 0 260 260" fill="none"><path d="M43 149C-1 53 147 4 201 79c70 99-77 194-151 111C-18 115 191 5 228 157" stroke="currentColor" strokeWidth="18" strokeLinecap="round"/><path d="M39 149C-1 53 147 4 201 79c70 99-77 194-151 111C-18 115 191 5 228 157" stroke="white" strokeOpacity=".25" strokeWidth="3" strokeLinecap="round"/></svg></div>
-        {nextImage ? <div className="etos-hybrid-photo-stack" aria-hidden="true"><div className="etos-hybrid-photo-card" key={nextImage.id}><img src={nextImage.photo} alt="" style={{ objectPosition: nextImage.photoPosition || '50% 50%' }} loading="lazy" decoding="async" /></div></div> : null}
-        <div className={`${styles.heroContent} etos-hero-content`}>
-          <div className="etos-hero-copy-panel etos-editorial-hero-copy">
-            <div className={`${styles.heroKicker} etos-hero-kicker`}>ETOS ID PALU <span aria-hidden="true">—</span> WE ARE RESILIENT LEADER</div>
-            <div key={current?.id || 'empty'} className="etos-hero-type-motion">
-              <h1>{headline}</h1>
-              <p>{supportingText}</p>
-              <div className={`${styles.heroActions} etos-hero-actions`}>
-                <a href={href} className={`${styles.heroPrimary} etos-hero-primary`}>{heroActionLabel(href)} <span aria-hidden="true">↗</span></a>
-                <a href="/#awardee" className={`${styles.heroGhost} etos-hero-secondary`}>Kenali Ekosistem <span aria-hidden="true">→</span></a>
-              </div>
+        <div className="etos-signature-content">
+          <div className="etos-signature-eyebrow">ETOS ID PALU <span>—</span> WE ARE RESILIENT LEADER</div>
+          <div className="etos-signature-dynamic" key={selected?.id || 'empty'}>
+            <h1>{headline}</h1>
+            <p>{description}</p>
+            <div className="etos-signature-actions">
+              <a className="etos-signature-primary" href={link}>{actionText(link)} <span aria-hidden="true">↗</span></a>
+              <a className="etos-signature-secondary" href="/#awardee">Kenali Ekosistem <span aria-hidden="true">→</span></a>
             </div>
           </div>
         </div>
-        {slides.length > 1 ? <nav className="etos-editorial-slide-nav" aria-label="Navigasi slide hero">
-          <div className="etos-editorial-slide-tracks">
-            {slides.map((slide, index) => <button key={slide.id} type="button"
-              className={`etos-editorial-slide-track${index === active ? ' is-active' : ''}`}
-              onClick={() => goTo(index)} aria-label={`Tampilkan slide ${index + 1}`}
-              aria-current={index === active ? 'true' : undefined} />)}
+        {slides.length > 1 ? <nav className="etos-signature-nav" aria-label="Navigasi slide utama">
+          <div className="etos-signature-progress">
+            {slides.map((slide, index) => <button type="button" key={slide.id}
+              className={`etos-signature-progress-button${index === active ? ' is-current' : ''}`}
+              aria-label={`Tampilkan slide ${index + 1}`}
+              aria-current={index === active ? 'true' : undefined}
+              onClick={() => moveTo(index)}>
+              <span className="etos-signature-progress-line">
+                {index === active && canAuto ? <span key={cycle} className="etos-signature-progress-fill" style={{ animationDuration: `${INTERVAL_MS}ms` }} /> : null}
+              </span>
+            </button>)}
           </div>
-          <button type="button" className="etos-editorial-slide-pause"
-            onClick={() => { if (reducedMotion && !explicitPlay) { setExplicitPlay(true); setPaused(false); } else { setPaused(value => !value); } }}
-            aria-label={paused || (reducedMotion && !explicitPlay) ? 'Jalankan slide otomatis' : 'Jeda slide otomatis'}
-            aria-pressed={paused}
-            title={paused ? 'Lanjutkan slide' : 'Jeda slide'}>
-            <span aria-hidden="true">{paused || (reducedMotion && !explicitPlay) ? '▶' : 'Ⅱ'}</span>
+          <button type="button" onClick={togglePlay} className="etos-signature-pause"
+            aria-label={!canAuto ? 'Jalankan slide otomatis' : 'Jeda slide otomatis'}
+            aria-pressed={!canAuto} title={!canAuto ? 'Putar slide' : 'Jeda slide'}>
+            <span aria-hidden="true">{!canAuto ? '▶' : 'Ⅱ'}</span>
           </button>
         </nav> : null}
       </div>

@@ -12,7 +12,7 @@ import { HomeDirectories, ProgramPartner } from './HomeDirectories';
 import { HomepageMotion } from './HomepageMotion';
 import { MobileMenu } from './MobileMenu';
 import styles from './HomePreview.module.css';
-import './PremiumImpact.css';
+import './SignatureMarquee.css';
 
 function publicationHref(item: NativePublication) {
   return `/${item.kind === 'Berita' ? 'berita' : 'opini'}/${encodeURIComponent(item.slug)}`;
@@ -65,14 +65,26 @@ function ImpactStrip({ stats }: { stats: NativeHomeStats }) {
     { value: stats.publications, label: 'Publikasi', note: 'Berita dan gagasan' },
     { value: '2021', label: 'Universitas Tadulako', note: 'Kampus program sejak' },
   ];
+  const metrics = (copy: boolean) => (
+    <div className="etos-motion-metrics-group" aria-hidden={copy}>
+      {items.map(item => (
+        <article className="etos-motion-metric" key={item.label}>
+          <strong>{item.value}</strong>
+          <div><span>{item.label}</span><p>{item.note}</p></div>
+        </article>
+      ))}
+    </div>
+  );
   return (
-    <section className="etos-impact etos-editorial-impact" aria-label="ETOS ID Palu dalam angka">
-      <div className="etos-editorial-impact-shell">
-        <div className="etos-editorial-impact-heading"><span>ETOS ID PALU / AT A GLANCE</span><strong>Ruang tumbuh. Jejak perjalanan.</strong></div>
-        <div className="etos-editorial-impact-grid">
-          {items.map(item => <div className="etos-editorial-impact-item" key={item.label}>
-            <strong>{item.value}</strong><div><span>{item.label}</span><p>{item.note}</p></div>
-          </div>)}
+    <section className="etos-motion-metrics" aria-label="ETOS ID Palu dalam angka">
+      <div className="etos-motion-metrics-head">
+        <span>ETOS ID PALU / AT A GLANCE</span>
+        <strong>Ruang tumbuh. Jejak perjalanan.</strong>
+      </div>
+      <div className="etos-motion-metrics-window" tabIndex={0} aria-label="Statistik ETOS ID Palu. Arahkan fokus untuk menghentikan animasi.">
+        <div className="etos-motion-metrics-track">
+          {metrics(false)}
+          {metrics(true)}
         </div>
       </div>
     </section>
@@ -222,7 +234,7 @@ export function NativeHomePreview({
   publications: NativePublication[];
   stats: NativeHomeStats;
 }) {
-  const aboutVisual = heroes[1]?.photo || heroes[0]?.photo || programs.find((item) => item.preview)?.preview || awardees.find((item) => item.photo)?.photo || '';
+  const aboutVisual = heroes[0]?.photo || programs.find((item) => item.preview)?.preview || awardees.find((item) => item.photo)?.photo || '';
 
   return (
     <main className={`${styles.page} native-home native-home-2026`} id="beranda">

@@ -3,6 +3,7 @@
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import styles from './NativeForms.module.css';
+import { BrandMark } from './BrandMark';
 import './AdminEditorialPreview.css';
 
 const TOKEN_KEY = 'etos_admin_session_token';
@@ -38,9 +39,25 @@ const EMPTY_DATA: AdminData = {
 };
 
 async function parseResponse(response: Response) {
-  const body = await response.json();
-  if (!response.ok) throw Object.assign(new Error(body.error || 'Request gagal.'), { status: response.status });
-  return typeof body.result === 'string' ? JSON.parse(body.result) : body.result;
+  // A hosting proxy can return plain text (not JSON) for 413/502 errors.
+  // Never surface the browser's confusing "Unexpected token" to an editor.
+  const responseText = await response.text();
+  let body: any = null;
+  try { body = JSON.parse(responseText); } catch { /* non-JSON platform response */ }
+
+  if (!response.ok) {
+    const tooLarge = response.status === 413 || /request entity too large|payload too large/i.test(responseText);
+    const message = tooLarge
+      ? 'Ukuran permintaan melebihi batas server. Foto akan dioptimalkan otomatis; coba unggah kembali.'
+      : String(body?.error || body?.message || `Server tidak dapat memproses permintaan (HTTP ${response.status}). Silakan coba lagi.`);
+    throw Object.assign(new Error(message), { status: response.status });
+  }
+  if (!body) throw new Error('Server mengirim respons tidak valid. Muat ulang halaman dan coba lagi.');
+  if (typeof body.result === 'string') {
+    try { return JSON.parse(body.result); }
+    catch { throw new Error('Respons layanan admin tidak valid. Coba sinkronkan halaman.'); }
+  }
+  return body.result ?? body;
 }
 
 async function rpc(fn: string, args: unknown[], token: string) {
@@ -62,12 +79,60 @@ function fileToDataUrl(file: File) {
   });
 }
 
+// Vercel rejects request bodies above its platform limit before our API can
+// answer with JSON. Keep binary below 2.5 MiB (3.4 MiB after Base64 encoding).
+const SAFE_IMAGE_BYTES = Math.floor(2.5 * 1024 * 1024);
+const MAX_RAW_IMAGE_BYTES = 30 * 1024 * 1024;
+
+function encodeImage(format: string, quality: number, canvas: HTMLCanvasElement) {
+  return new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob(result => result ? resolve(result) : reject(new Error('Foto tidak dapat diproses.')), format, quality);
+  });
+}
+
+async function optimizeForUpload(file: File): Promise<File> {
+  if (!file.type.startsWith('image/')) throw new Error('Silakan pilih file foto/gambar.');
+  if (file.size > MAX_RAW_IMAGE_BYTES) throw new Error('Foto asli maksimal 30 MB.');
+  if (file.size <= SAFE_IMAGE_BYTES && /^(image\/jpeg|image\/png|image\/webp)$/i.test(file.type)) return file;
+
+  // The optimization is client-side, preserving HD for ordinary photos.
+  // Only downscale gradually when the payload cannot fit server limits.
+  let bitmap: ImageBitmap;
+  try { bitmap = await createImageBitmap(file); }
+  catch { throw new Error('Gambar tidak bisa dibaca. Gunakan JPG, PNG, atau WebP.'); }
+  try {
+    const canvas = document.createElement('canvas');
+    const naturalLongest = Math.max(bitmap.width, bitmap.height);
+    const steps = [Math.min(naturalLongest, 2560), Math.min(naturalLongest, 2200), Math.min(naturalLongest, 1920), Math.min(naturalLongest, 1600)];
+    const tries = [0.88, 0.80, 0.72, 0.65];
+    for (let i = 0; i < steps.length; i += 1) {
+      const ratio = steps[i] / naturalLongest;
+      canvas.width = Math.round(bitmap.width * ratio);
+      canvas.height = Math.round(bitmap.height * ratio);
+      const ctx = canvas.getContext('2d');
+      if (!ctx) throw new Error('Browser tidak mendukung pengolahan foto.');
+      ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      for (const quality of tries) {
+        let blob = await encodeImage('image/webp', quality, canvas);
+        if (blob.type !== 'image/webp') blob = await encodeImage('image/jpeg', quality, canvas);
+        if (blob.size <= SAFE_IMAGE_BYTES) {
+          const mime = blob.type === 'image/webp' ? 'image/webp' : 'image/jpeg';
+          const ext = mime === 'image/webp' ? 'webp' : 'jpg';
+          return new File([blob], file.name.replace(/\.[^.]+$/, '') + '-optimized.' + ext, { type: mime });
+        }
+      }
+    }
+    throw new Error('Foto masih terlalu besar setelah optimasi. Gunakan foto JPG atau WebP yang lebih ringan.');
+  } finally { bitmap.close(); }
+}
+
 async function uploadImage(file: File, token: string) {
-  if (file.size > 10 * 1024 * 1024) throw new Error('Ukuran gambar maksimal 10 MB.');
+  const prepared = await optimizeForUpload(file);
   const response = await fetch('/api/upload', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'X-Etos-Admin-Token': token },
-    body: JSON.stringify({ dataUrl: await fileToDataUrl(file), fileName: file.name }),
+    body: JSON.stringify({ dataUrl: await fileToDataUrl(prepared), fileName: prepared.name }),
+    cache: 'no-store',
   });
   const result = await parseResponse(response);
   if (result.status !== 'success' || !result.url) throw new Error(result.message || 'Upload gagal.');
@@ -79,7 +144,7 @@ function newRow(tab: Tab): AnyRow {
   if (tab === 'Artikel') return { id: '', penulis: '', aktivitas: '', judul: '', isi: '', thumbnail: '', thumbnailPosition: '50% 50%', status: 'Pending' };
   if (tab === 'Program') return { id: '', nama: '', kategori: 'Program Pembinaan Wilayah', ringkasan: '', deskripsi: '', preview: '', icon: 'ph-sparkle', urutan: 1, status: 'Aktif' };
   if (tab === 'Awardee') return { id: '', nama: '', statusAwardee: 'Aktif', angkatan: '', prodi: '', universitas: 'Universitas Tadulako', profil: '', foto: '', fotoPosition: '50% 50%', portofolio: '', urutan: 1, statusTampil: 'Aktif' };
-  if (tab === 'Hero') return { id: '', foto: '', judul: '', subjudul: '', posisi: '50% 50%', urutan: 1, tautan: '', status: 'Aktif' };
+  if (tab === 'Hero') return { id: '', foto: '', judul: '', subjudul: '', posisi: '50% 50%', modeTampil: 'full-frame', urutan: 1, tautan: '', status: 'Aktif' };
   if (tab === 'ProgramFoto') return { id: '', programId: '', foto: '', caption: '', urutan: 1, status: 'Aktif', posisi: '50% 50%', setAsPreview: false };
   return {};
 }
@@ -141,7 +206,7 @@ function normalizeRow(tab: Tab, row: AnyRow) {
   if (tab === 'Artikel') return { ...row, thumbnail: row.thumb || row.thumbnail || '', thumbnailPosition: row.thumbPosition || row.thumbnailPosition || '50% 50%' };
   if (tab === 'Program') return { ...row, preview: row.previewRaw || row.preview || '', status: row.status || 'Aktif' };
   if (tab === 'Awardee') return { ...row, foto: row.fotoRaw || row.foto || '', fotoPosition: row.fotoPosition || '50% 50%' };
-  if (tab === 'Hero') return { ...row, foto: row.fotoRaw || row.foto || '', posisi: row.posisi || '50% 50%', status: row.status || 'Aktif' };
+  if (tab === 'Hero') return { ...row, foto: row.fotoRaw || row.foto || '', posisi: row.posisi || '50% 50%', modeTampil: row.modeTampil || 'full-frame', status: row.status || 'Aktif' };
   if (tab === 'ProgramFoto') return { ...row, programId: row.programId || '', foto: row.fotoRaw || row.foto || '', posisi: row.posisi || '50% 50%', setAsPreview: false };
   return { ...row };
 }
@@ -370,6 +435,7 @@ export function NativeAdminDashboard() {
           <Link className={styles.back} href="/">← Kembali ke Portal</Link>
           <div className={styles.loginWrap}>
             <div className={styles.loginIntro}>
+              <BrandMark />
               <div className={styles.eyebrow}>ADMIN ETOS ID PALU</div>
               <h1>Ruang kerja editorial dan pengelolaan ekosistem ETOS.</h1>
               <p>Konten, awardee, program, hero, dan media dikelola melalui satu dashboard. Session tetap diverifikasi di Supabase melalui gateway server.</p>
@@ -398,8 +464,8 @@ export function NativeAdminDashboard() {
       <div className={styles.adminWorkspace}>
         <aside className={styles.adminSidebar}>
           <Link href="/" className={styles.adminBrand}>
-            <span className={styles.adminBrandMark}>E</span>
-            <span><strong>ETOS ID</strong><small>PALU • ADMIN</small></span>
+            <BrandMark compact />
+            <span><strong>PORTAL</strong><small>ADMIN ETOS</small></span>
           </Link>
           <nav className={styles.adminNav} aria-label="Modul admin">
             {NAV_ITEMS.map((item) => (
@@ -476,7 +542,7 @@ export function NativeAdminDashboard() {
                       {role.toLowerCase() !== 'superadmin' ? 'Pengelolaan slide hanya tersedia untuk akun SuperAdmin. Akun Editor tetap dapat melihat daftar tanpa mengubahnya.' : 'Kelola foto, teks, tautan, urutan, dan status setiap slide. Foto-foto lama tetap tersimpan sampai Anda mengubah atau menghapusnya. Slide nonaktif tetap tersimpan, tetapi tidak muncul di beranda.'}
                       {selected.id && role.toLowerCase() === 'superadmin' ? <div style={{marginTop:10}}><button type="button" onClick={() => void deleteHero()} disabled={loading} style={{border:'1px solid #b86464',borderRadius:8,background:'white',color:'#9b2929',padding:'9px 14px',cursor:'pointer'}}>Hapus slide terpilih</button></div> : null}
                     </div> : null}
-                    <Editor tab={tab} value={selected} setValue={setSelected} programs={data.ProgramFoto?.programs || []} setFile={setFile} save={save} loading={loading || (tab === 'Hero' && role.toLowerCase() !== 'superadmin')} />
+                    <Editor tab={tab} value={selected} setValue={setSelected} programs={data.ProgramFoto?.programs || []} file={file} setFile={setFile} save={save} loading={loading || (tab === 'Hero' && role.toLowerCase() !== 'superadmin')} />
                   </div>
                 </div>
               )}
@@ -557,15 +623,22 @@ function MediaLibrary({ rows, onCopy }: { rows: AnyRow[]; onCopy: (row: AnyRow) 
   );
 }
 
-function Editor({ tab, value, setValue, programs, setFile, save, loading }: { tab: Tab; value: AnyRow; setValue: (row: AnyRow) => void; programs: AnyRow[]; setFile: (file: File | null) => void; save: () => void; loading: boolean }) {
+function Editor({ tab, value, setValue, programs, file, setFile, save, loading }: { tab: Tab; value: AnyRow; setValue: (row: AnyRow) => void; programs: AnyRow[]; file: File | null; setFile: (file: File | null) => void; save: () => void; loading: boolean }) {
   const update = (key: string, val: any) => setValue({ ...value, [key]: val });
-  const image = rowImage(tab, value);
+  const [localPreview, setLocalPreview] = useState('');
+  useEffect(() => {
+    if (!file) { setLocalPreview(''); return; }
+    const url = URL.createObjectURL(file);
+    setLocalPreview(url);
+    return () => URL.revokeObjectURL(url);
+  }, [file]);
+  const image = localPreview || rowImage(tab, value);
   const preview = previewHref(tab, value);
   const isNew = !value.id;
   const [heroDevice, setHeroDevice] = useState<'desktop' | 'mobile'>('desktop');
   const genericTitle = !String(value.judul || '').trim() || String(value.judul).trim().toLowerCase() === 'etos id palu';
-  const fallbackCopies = ['Membentuk Nalar Kritis, Menempa Etos Peradaban.','Bertumbuh Bersama. Menguatkan Karakter.','Belajar Memimpin, Berani Berkontribusi.','Merawat Gagasan, Membangun Kolaborasi.','Dari Proses, Menuju Kontribusi.'];
-  const heroHeading = genericTitle ? String(value.subjudul || '').trim() || fallbackCopies[Math.max(0,Math.min(4,Number(value.urutan || 1)-1))] : String(value.judul);
+  const fallbackCopies = ['Membentuk Nalar Kritis, Menempa Etos Peradaban.','Bertumbuh Bersama. Menguatkan Karakter.','Belajar Memimpin, Berani Berkontribusi.','Merawat Gagasan, Membangun Kolaborasi.','Dari Proses, Menuju Kontribusi.','Bertumbuh Bersama. Melangkah Membawa Dampak.'];
+  const heroHeading = genericTitle ? String(value.subjudul || '').trim() || fallbackCopies[Math.max(0,Math.min(5,Number(value.urutan || 1)-1))] : String(value.judul);
   const heroSupport = genericTitle ? 'Ruang bertumbuh dalam karakter, kepemimpinan, dan kontribusi.' : String(value.subjudul || '');
   const seoExcerpt = String(value.isi || '').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim().slice(0,155);
   const seoTitle = String(value.judul || 'Judul berita Anda');
@@ -584,13 +657,13 @@ function Editor({ tab, value, setValue, programs, setFile, save, loading }: { ta
           <button type="button" className={heroDevice === 'desktop' ? 'is-current' : ''} onClick={() => setHeroDevice('desktop')}>Desktop</button>
           <button type="button" className={heroDevice === 'mobile' ? 'is-current' : ''} onClick={() => setHeroDevice('mobile')}>Mobile</button>
         </div></div>
-        <div className={`etos-admin-preview-frame ${heroDevice}`}>
-          {image ? <img src={image} alt="Pratinjau foto slide" style={{ objectPosition: value.posisi || '50% 50%' }} /> : null}
-          <div className="etos-admin-preview-shade" />
-          {heroDevice === 'desktop' ? <div className="etos-admin-preview-safe-zone" aria-hidden="true">Area foto aksen</div> : null}
-          <div className="etos-admin-preview-copy"><span>ETOS ID PALU</span><strong>{heroHeading}</strong>{heroSupport ? <p>{heroSupport}</p> : null}</div>
+        <div className={`etos-admin-preview-frame etos-admin-seamless-frame ${heroDevice}`}>
+          <div className="etos-admin-seamless-visual">
+            {image ? <img src={image} alt="Pratinjau foto slide" style={{ objectPosition: value.posisi || '50% 50%', objectFit: value.modeTampil === 'cover' ? 'cover' : 'contain' }} /> : null}
+          </div>
+          <div className="etos-admin-seamless-copy"><span>ETOS ID PALU — WE ARE RESILIENT LEADER</span><strong>{heroHeading}</strong>{heroSupport ? <p>{heroSupport}</p> : null}<em>Jelajahi ETOS ↗</em></div>
         </div>
-        <p className="etos-admin-preview-note">Pastikan wajah tidak tertutup teks. Foto pendamping selalu ditempatkan di bawah pada desktop dan disembunyikan pada mobile. Geser fokus dengan persentase seperti 50% 30%.</p>
+        <p className="etos-admin-preview-note">Foto dipisahkan dari headline dan menyatu melalui gradasi lembut. Gunakan mode Foto Utuh terutama untuk kelompok besar. Periksa pratinjau desktop dan HP sebelum menyimpan; ubah fokus hanya jika diperlukan.</p>
       </section> : null}
       {tab === 'Berita' ? <section className="etos-admin-seo-preview" aria-label="Pratinjau SEO">
         <strong>Pratinjau di Google (simulasi)</strong>
@@ -653,6 +726,7 @@ function Editor({ tab, value, setValue, programs, setFile, save, loading }: { ta
           <label>Status<select value={value.status || 'Aktif'} onChange={(e) => update('status', e.target.value)}><option>Aktif</option><option>Nonaktif</option></select></label>
           <label>Urutan<input type="number" min="1" value={value.urutan || 1} onChange={(e) => update('urutan', Number(e.target.value))} /></label>
           <label>Fokus Foto<input value={value.posisi || '50% 50%'} onChange={(e) => update('posisi', e.target.value)} placeholder="50% 35%" /><small>Sesuaikan titik fokus agar wajah terlihat.</small></label>
+          <label>Mode Foto<select value={value.modeTampil || 'full-frame'} onChange={(e) => update('modeTampil', e.target.value)}><option value="full-frame">Foto Utuh (rekomendasi)</option><option value="cover">Isi Bidang (hanya bila aman)</option></select></label>
           <label>Tautan<input value={value.tautan || ''} onChange={(e) => update('tautan', e.target.value)} placeholder="/program atau https://..." /></label>
           <label className={styles.full}>URL Foto<input value={value.foto || ''} onChange={(e) => update('foto', e.target.value)} /></label>
           <label className={styles.full}>Upload Foto Baru<input type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} /></label>

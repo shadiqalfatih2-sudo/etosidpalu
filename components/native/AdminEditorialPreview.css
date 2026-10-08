@@ -23,3 +23,20 @@
 @media(max-width:620px){.etos-admin-preview-section{padding:11px}.etos-admin-preview-frame{height:170px}}
 
 .etos-admin-preview-safe-zone{position:absolute;z-index:2;right:9%;bottom:11%;width:19%;height:39%;display:flex;align-items:center;justify-content:center;padding:4px;text-align:center;border:1.5px dashed rgba(255,255,255,.85);background:rgba(245,248,242,.14);border-radius:7px;color:#fff;font:600 9px/1.4 system-ui,sans-serif;pointer-events:none}
+
+/* Hero CMS now previews the real editorial left-copy / right-photo composition. */
+.etos-admin-preview-frame.etos-admin-seamless-frame{display:grid!important;grid-template-columns:46% 54%;padding:0!important;background:#f7f8f3!important;min-height:235px!important;height:235px!important;isolation:isolate}
+.etos-admin-seamless-visual{grid-column:2;grid-row:1;position:relative;min-width:0;overflow:hidden;display:flex;align-items:stretch;background:#d2e0d5}
+.etos-admin-seamless-visual:before{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,#f7f8f3 0%,rgba(247,248,243,.65) 15%,transparent 37%)}
+.etos-admin-seamless-visual img{width:100%;height:100%;position:relative!important;inset:auto!important;object-fit:contain;background:transparent}
+.etos-admin-seamless-copy{position:relative;grid-column:1;grid-row:1;z-index:2;display:flex;flex-direction:column;justify-content:center;min-width:0;padding:18px 0 18px 22px;gap:11px;overflow:hidden}
+.etos-admin-seamless-copy>span{font:750 7px/1.5 system-ui,sans-serif;letter-spacing:.12em;color:#43775b}
+.etos-admin-seamless-copy>strong{display:block;font:600 clamp(16px,2.2vw,25px)/1.09 Georgia,serif;letter-spacing:-.035em;color:#184a36;overflow-wrap:break-word}
+.etos-admin-seamless-copy>p{font:400 10px/1.5 system-ui,sans-serif;color:#668071;margin:0}
+.etos-admin-seamless-copy>em{align-self:flex-start;font:650 9px system-ui,sans-serif;color:#fff;background:#1f5b42;padding:7px 12px;border-radius:30px;font-style:normal}
+.etos-admin-preview-frame.etos-admin-seamless-frame.mobile{width:100%;max-width:200px;height:auto!important;min-height:0!important;display:flex!important;flex-direction:column-reverse;margin-inline:auto}
+.etos-admin-seamless-frame.mobile .etos-admin-seamless-visual{height:150px;display:block;width:100%}
+.etos-admin-seamless-frame.mobile .etos-admin-seamless-visual:before{background:linear-gradient(180deg,#f7f8f3 0%,transparent 16%)}
+.etos-admin-seamless-frame.mobile .etos-admin-seamless-copy{padding:16px}
+.etos-admin-seamless-frame.mobile .etos-admin-seamless-copy strong{font-size:18px}
+@media(max-width:550px){.etos-admin-preview-frame.etos-admin-seamless-frame.desktop{height:210px!important;min-height:210px!important}.etos-admin-seamless-copy{padding-left:12px;gap:5px}.etos-admin-seamless-copy strong{font-size:17px}.etos-admin-seamless-copy p{font-size:8px}.etos-admin-seamless-copy em{font-size:7px;padding:5px 8px}}
