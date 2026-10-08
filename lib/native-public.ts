@@ -242,7 +242,7 @@ const getNativeHomeDataCached = unstable_cache(
     };
 
     return {
-      heroes: heroes.slice(0, 5),
+      heroes: heroes.slice(0, 12),
       programs,
       awardees,
       publications: publications.slice(0, 6),
