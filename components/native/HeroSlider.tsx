@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { NativeHero } from '@/lib/native-public';
 import './SeamlessEditorialHero.css';
 
-const INTERVAL_MS = 2500;
+const INTERVAL_MS = 3000;
 const fallback = [
   { title: 'Membentuk Nalar Kritis, Menempa Etos Peradaban.', summary: 'Ruang pembinaan mahasiswa yang menguatkan karakter, cara berpikir, dan kepemimpinan.', link: '/#program' },
   { title: 'Bertumbuh Bersama. Menguatkan Karakter.', summary: 'Setiap proses belajar membuka ruang untuk mengenal diri dan berkembang bersama.', link: '/#tentang' },
@@ -73,7 +73,7 @@ export function HeroSlider({ heroes }: { heroes: NativeHero[] }) {
       if (timer !== undefined) window.clearInterval(timer);
       document.removeEventListener('visibilitychange', run);
     };
-  // Restart the 2.5s countdown after a manual indicator/swipe selection.
+  // Restart the 3-second countdown after a manual indicator/swipe selection.
   }, [slides.length, autoPaused, cycle]);
 
   const moveTo = (index: number) => {
