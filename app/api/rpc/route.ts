@@ -32,7 +32,7 @@ const PUBLIC_WRITE_METHODS = new Set([
 function invalidatePublicCache(fn: string) {
   if (!PUBLIC_WRITE_METHODS.has(fn)) return;
 
-  revalidateTag('public-home', 'max');
+  revalidateTag('public-home', { expire: 0 });
   revalidatePath('/', 'page');
 
   if (fn === 'saveProgramAdmin' || fn === 'saveProgramPhotoAdmin') {
@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
 
     const token = req.headers.get('x-etos-admin-token') || '';
     const result = await callEtosEdge(req, fn, args, token);
-    invalidatePublicCache(fn);
+    if (result?.status === 'success') invalidatePublicCache(fn);
     return NextResponse.json({ result: JSON.stringify(result) });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Request gagal.';
