@@ -237,10 +237,10 @@ function StoryBridge({ programs, awardees }: { programs: NativeProgram[]; awarde
         <span className="etos-story-stamp">Etos ID Palu • Resilient Leader</span>
       </div>
       <div className="etos-story-copy" data-etos-reveal="soft">
-        <div className="etos-story-kicker">Perjalanan Awardee</div>
+        <div className="etos-story-kicker">Cerita &amp; Jejak Pembinaan</div>
         <h2 id="etos-story-title">Dari penerima manfaat menjadi pemberi manfaat.</h2>
         <p>Pembinaan Etos dirancang agar pengalaman belajar berujung pada kontribusi: dari ruang diskusi dan penguatan karakter, menuju kepemimpinan serta kerja sosial yang dekat dengan kebutuhan masyarakat.</p>
-        <a href="/#awardee">Kenal lebih dekat awardee →</a>
+        <a href="/cerita-dampak">Jelajahi perjalanan &amp; cerita →</a>
       </div>
     </section>
   );

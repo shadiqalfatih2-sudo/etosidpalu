@@ -3,6 +3,7 @@
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import styles from './NativeForms.module.css';
+import './AdminEditorialPreview.css';
 
 const TOKEN_KEY = 'etos_admin_session_token';
 const MEDIA_BASE = 'https://rcenvyrtswcmllpheszn.supabase.co/storage/v1/object/public/etos-media/';
@@ -561,7 +562,14 @@ function Editor({ tab, value, setValue, programs, setFile, save, loading }: { ta
   const image = rowImage(tab, value);
   const preview = previewHref(tab, value);
   const isNew = !value.id;
-
+  const [heroDevice, setHeroDevice] = useState<'desktop' | 'mobile'>('desktop');
+  const genericTitle = !String(value.judul || '').trim() || String(value.judul).trim().toLowerCase() === 'etos id palu';
+  const fallbackCopies = ['Membentuk Nalar Kritis, Menempa Etos Peradaban.','Bertumbuh Bersama. Menguatkan Karakter.','Belajar Memimpin, Berani Berkontribusi.','Merawat Gagasan, Membangun Kolaborasi.','Dari Proses, Menuju Kontribusi.'];
+  const heroHeading = genericTitle ? String(value.subjudul || '').trim() || fallbackCopies[Math.max(0,Math.min(4,Number(value.urutan || 1)-1))] : String(value.judul);
+  const heroSupport = genericTitle ? 'Ruang bertumbuh dalam karakter, kepemimpinan, dan kontribusi.' : String(value.subjudul || '');
+  const seoExcerpt = String(value.isi || '').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim().slice(0,155);
+  const seoTitle = String(value.judul || 'Judul berita Anda');
+  const seoSlug = String(value.slug || 'judul-berita');
   return (
     <div className={styles.editor}>
       <div className={styles.editorHead}>
@@ -571,6 +579,26 @@ function Editor({ tab, value, setValue, programs, setFile, save, loading }: { ta
 
       {image ? <div className={styles.editorPreview}><img src={image} alt="Preview" style={{ objectPosition: value.thumbnailPosition || value.fotoPosition || value.posisi || '50% 50%' }} /><span>Preview media saat ini</span></div> : null}
 
+      {tab === 'Hero' ? <section className="etos-admin-preview-section">
+        <div className="etos-admin-preview-heading"><strong>Pratinjau Hero</strong><div role="group" aria-label="Ukuran pratinjau">
+          <button type="button" className={heroDevice === 'desktop' ? 'is-current' : ''} onClick={() => setHeroDevice('desktop')}>Desktop</button>
+          <button type="button" className={heroDevice === 'mobile' ? 'is-current' : ''} onClick={() => setHeroDevice('mobile')}>Mobile</button>
+        </div></div>
+        <div className={`etos-admin-preview-frame ${heroDevice}`}>
+          {image ? <img src={image} alt="Pratinjau foto slide" style={{ objectPosition: value.posisi || '50% 50%' }} /> : null}
+          <div className="etos-admin-preview-shade" />
+          {heroDevice === 'desktop' ? <div className="etos-admin-preview-safe-zone" aria-hidden="true">Area foto aksen</div> : null}
+          <div className="etos-admin-preview-copy"><span>ETOS ID PALU</span><strong>{heroHeading}</strong>{heroSupport ? <p>{heroSupport}</p> : null}</div>
+        </div>
+        <p className="etos-admin-preview-note">Pastikan wajah tidak tertutup teks. Foto pendamping selalu ditempatkan di bawah pada desktop dan disembunyikan pada mobile. Geser fokus dengan persentase seperti 50% 30%.</p>
+      </section> : null}
+      {tab === 'Berita' ? <section className="etos-admin-seo-preview" aria-label="Pratinjau SEO">
+        <strong>Pratinjau di Google (simulasi)</strong>
+        <small>www.etosidpalu.com › berita › {seoSlug}</small>
+        <h3>{seoTitle} | Etos ID Palu</h3>
+        <p>{seoExcerpt || 'Ringkasan diambil dari isi berita. Tulis pembuka yang jelas agar mudah dipahami pembaca dan mesin pencari.'}</p>
+        <span>{image ? 'Gambar tersedia' : 'Tambahkan foto utama'} · {String(value.status || 'Published').toLowerCase() === 'published' ? 'Sudah ditandai terbit' : 'Belum dipublikasikan'}</span>
+      </section> : null}
       <div className={styles.editorGrid}>
         {tab === 'Berita' ? <>
           <label className={styles.full}>Judul<input value={value.judul || ''} onChange={(e) => update('judul', e.target.value)} placeholder="Judul berita" /></label>
@@ -621,10 +649,10 @@ function Editor({ tab, value, setValue, programs, setFile, save, loading }: { ta
 
         {tab === 'Hero' ? <>
           <label className={styles.full}>Judul<input value={value.judul || ''} onChange={(e) => update('judul', e.target.value)} placeholder="Judul slide (opsional)" /></label>
-          <label className={styles.full}>Subjudul<textarea rows={4} value={value.subjudul || ''} onChange={(e) => update('subjudul', e.target.value)} /></label>
+          <label className={styles.full}>Deskripsi / Subjudul<textarea rows={3} value={value.subjudul || ''} onChange={(e) => update('subjudul', e.target.value)} placeholder="1–2 kalimat. Jika judul masih Etos ID Palu, subjudul menjadi headline." /></label>
           <label>Status<select value={value.status || 'Aktif'} onChange={(e) => update('status', e.target.value)}><option>Aktif</option><option>Nonaktif</option></select></label>
           <label>Urutan<input type="number" min="1" value={value.urutan || 1} onChange={(e) => update('urutan', Number(e.target.value))} /></label>
-          <label>Posisi Foto<input value={value.posisi || '50% 50%'} onChange={(e) => update('posisi', e.target.value)} /></label>
+          <label>Fokus Foto<input value={value.posisi || '50% 50%'} onChange={(e) => update('posisi', e.target.value)} placeholder="50% 35%" /><small>Sesuaikan titik fokus agar wajah terlihat.</small></label>
           <label>Tautan<input value={value.tautan || ''} onChange={(e) => update('tautan', e.target.value)} placeholder="/program atau https://..." /></label>
           <label className={styles.full}>URL Foto<input value={value.foto || ''} onChange={(e) => update('foto', e.target.value)} /></label>
           <label className={styles.full}>Upload Foto Baru<input type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} /></label>
